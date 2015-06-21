@@ -1,0 +1,31 @@
+{
+    "name": "cmfcmf/coremanagermodule-module",
+    "description": "A module to handle the core release process",
+    "type": "zikula-module",
+    "license": "LGPL-3.0+",
+    "authors": [
+        {
+            "name": "Christian Flach",
+            "homepage": "http://github.com/cmfcmf/CoreManager"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Cmfcmf\\Module\\CoreManagerModule\\": "" }
+    },
+    "require": {
+        "php": ">5.3.3",
+        "knplabs/github-api": "~1.2",
+        "vierbergenlars/php-semver": "~3.0",
+        "carlosio/jenkins": "dev-master"
+    },
+    "extra": {
+        "zikula": {
+            "class": "Cmfcmf\\Module\\CoreManagerModule\\CmfcmfCoreManagerModule"
+        }
+    },
+    "config": {
+        "vendor-dir": "vendor",
+        "preferred-install": "dist",
+        "optimize-autoloader": true
+    }
+}

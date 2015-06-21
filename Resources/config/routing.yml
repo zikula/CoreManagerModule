@@ -1,0 +1,3 @@
+cmfcmfcoremanagermodule:
+    resource: "@CmfcmfCoreManagerModule/Controller"
+    type:     annotation
