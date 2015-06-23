@@ -36,20 +36,6 @@
                         <p class="help-block">{gt text='Create a secrete webhook token at %s to verify payloads from the Zikula Core repository.' tag1='<a href="https://developer.github.com/webhooks/securing">https://developer.github.com/webhooks/securing/</a>'}</p>
                     </div>
                 </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" for="settings_github_app_id">{gt text="Application Client ID"}</label>
-                    <div class="col-lg-9">
-                        <input id="settings_github_app_id" type="text" class="form-control" name="settings[github_app_id]" value="{$settings.github_app_id|default:''|safetext}" maxlength="100" />
-                        <p class="help-block">{gt text='Create an application at %s to ease the process of adding a module to the Extension Library for new users.' tag1='<a href="https://github.com/settings/applications">https://github.com/settings/applications</a>'}</p>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label class="col-lg-3 control-label" for="settings_github_app_secret">{gt text="Application Client Secret"}</label>
-                    <div class="col-lg-9">
-                        <input id="settings_github_app_secret" type="password" class="form-control" name="settings[github_app_secret]" value="{$settings.github_app_secret|default:''|safetext}" maxlength="100" autocomplete="off" />
-                        <p class="help-block">{gt text='Create an application at %s to ease the process of adding a module to the Extension Library for new users.' tag1='<a href="https://github.com/settings/applications">https://github.com/settings/applications</a>'}</p>
-                    </div>
-                </div>
             </fieldset>
             <fieldset>
                 <legend>{gt text='Jenkins server'}</legend>
