@@ -336,6 +336,17 @@ class CoreReleaseEntity extends EntityAccess
         $this->news_id = $news_id;
     }
 
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        $this->extractI18n();
+        $data['namesI18n'] = $this->namesI18n;
+        $data['descriptionsI18n'] = $this->descriptionsI18n;
+
+        return $data;
+    }
+
     /**
      * Get a news text to use for this core release.
      *

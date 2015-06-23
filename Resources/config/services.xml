@@ -6,6 +6,7 @@
 
     <parameters>
         <parameter key="zikulacoremanagermodule.releasemanager.class">Zikula\Module\CoreManagerModule\Manager\ReleaseManager</parameter>
+        <parameter key="zikulacoremanagermodule.api.releases.v1.class">Zikula\Module\CoreManagerModule\Api\ReleasesV1Api</parameter>
     </parameters>
 
     <services>
@@ -13,6 +14,10 @@
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="router" />
             <argument type="service" id="event_dispatcher" />
+        </service>
+        <service id="zikulacoremanagermodule.api.releases.v1" class="%zikulacoremanagermodule.api.releases.v1.class%">
+            <argument type="service" id="doctrine.orm.entity_manager" />
+            <argument type="service" id="zikulacoremanagermodule.releasemanager" />
         </service>
     </services>
 </container>
