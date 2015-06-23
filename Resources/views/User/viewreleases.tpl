@@ -1,4 +1,4 @@
-{checkpermission component="CmfcmfCoreManagerModule::" instance="::" level="ACCESS_MODERATE" assign="admin"}
+{checkpermission component="ZikulaCoreManagerModule::" instance="::" level="ACCESS_MODERATE" assign="admin"}
 <h3>
     <span class="fa fa-th-list"></span>&nbsp;{gt text="Core releases"}
 </h3>
@@ -14,10 +14,10 @@
     </thead>
     <tbody>
     {php}
-        $this->assign('outdated', \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_OUTDATED);
-        $this->assign('supported', \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_SUPPORTED);
-        $this->assign('prerelease', \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_PRERELEASE);
-        $this->assign('development', \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_DEVELOPMENT);
+        $this->assign('outdated', \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_OUTDATED);
+        $this->assign('supported', \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_SUPPORTED);
+        $this->assign('prerelease', \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_PRERELEASE);
+        $this->assign('development', \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_DEVELOPMENT);
     {/php}
     {assign var='stateOld' value=-1}
     {foreach from=$releases item='release' name='releases'}
@@ -50,7 +50,7 @@
             {if $admin}
                 <td class="text-right">
                     {if $release->getState() == $outdated || $release->getState() == $supported}
-                        <a href="{route name='cmfcmfcoremanagermodule_admin_togglereleasestate' id=$release->getId()}" title="{if $release->getState() == $supported}{gt text='Mark release as outdated'}{else}{gt text='Mark release as supported'}{/if}" data-toggle="">
+                        <a href="{route name='zikulacoremanagermodule_admin_togglereleasestate' id=$release->getId()}" title="{if $release->getState() == $supported}{gt text='Mark release as outdated'}{else}{gt text='Mark release as supported'}{/if}" data-toggle="">
                             {if $release->getState() == $supported}
                                 <i class="fa fa-arrow-down"></i>
                             {else}

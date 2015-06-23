@@ -18,15 +18,15 @@
     },
     "autoload": {
         "psr-0": {
-            "vierbergenlars\\SemVer\\":"src/",
-            "vierbergenlars\\LibJs\\": "src/"
+            "vierbergenlars\\SemVer\\": "src",
+            "vierbergenlars\\LibJs\\": "src"
         },
         "classmap": [
-            "src/vierbergenlars/SemVer/internal.php"
+          "src/vierbergenlars/SemVer/internal.php"
         ]
     },
     "bin": [
-        "bin/semver",
+      "bin/semver",
         "bin/update-versions"
     ]
 }

@@ -1,9 +1,9 @@
-{pageaddvar name='javascript' value='@CmfcmfCoreManagerModule/Resources/public/js/Cmfcmf.CoreManager.Admin.ModifyConfig.js'}
+{pageaddvar name='javascript' value='@ZikulaCoreManagerModule/Resources/public/js/Zikula.CoreManager.Admin.ModifyConfig.js'}
 {adminheader}
     <h3>
         <span class="fa fa-wrench"></span>&nbsp;{gt text="Settings"}
     </h3>
-    <form class="form-horizontal" id="el-modify-config-form" role="form" action="{route name='cmfcmfcoremanagermodule_admin_modifyconfig'}" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
+    <form class="form-horizontal" id="el-modify-config-form" role="form" action="{route name='zikulacoremanagermodule_admin_modifyconfig'}" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
         <div>
             <fieldset>
                 <legend>{gt text='GitHub'}</legend>
@@ -50,7 +50,7 @@
                     <label class="col-lg-3 control-label" for="settings_jenkins_token">{gt text="Security token"}</label>
                     <div class="col-lg-9">
                         <input id="settings_jenkins_token" type="password" class="form-control" name="settings[jenkins_token]" value="{$settings.jenkins_token|default:''|safetext}" maxlength="100" />
-                        {route name='cmfcmfcoremanagermodule_webhook_jenkins' code='SECURITYTOKEN' absolute=true assign='route'}
+                        {route name='zikulacoremanagermodule_webhook_jenkins' code='SECURITYTOKEN' absolute=true assign='route'}
                         {assign var='route' value="<a href=\"`$route`\">`$route`</a>"}
                         <p class="help-block">{gt text='A security token to verify requests from Jenkins. Please setup Jenkins to make a POST request to the following url everytime a build has finished: %s. You can use the "Post Completed Build Result Plugin" to do the job: https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed+Build+Result+Plugin.' tag1=$route}</p>
                     </div>
@@ -75,7 +75,7 @@
                     <button class="btn btn-success" title="{gt text='Save'}">
                         {gt text="Save"}
                     </button>
-                    <a class="btn btn-danger" href="{route name='cmfcmfcoremanagermodule_admin_index'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+                    <a class="btn btn-danger" href="{route name='zikulacoremanagermodule_admin_index'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
                 </div>
             </div>
         </div>

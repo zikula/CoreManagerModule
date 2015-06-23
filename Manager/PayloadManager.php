@@ -11,12 +11,12 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Manager;
+namespace Zikula\Module\CoreManagerModule\Manager;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Cmfcmf\Module\CoreManagerModule\Exception\ClientException;
+use Zikula\Module\CoreManagerModule\Exception\ClientException;
 
 class PayloadManager {
     /**

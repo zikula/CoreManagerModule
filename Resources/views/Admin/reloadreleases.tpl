@@ -5,7 +5,7 @@
 <div class="alert alert-warning">
     {gt text='You are about to reload all core releases from GitHub as well as all development builds from jenkins. Are you sure you want to proceed?'}
 </div>
-<form class="form-horizontal" role="form" action="{route name='cmfcmfcoremanagermodule_admin_doreloadcorereleases'}" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
+<form class="form-horizontal" role="form" action="{route name='zikulacoremanagermodule_admin_doreloadcorereleases'}" method="post" enctype="application/x-www-form-urlencoded" autocomplete="off">
     <div>
         <div class="form-group">
             <div class="col-sm-3">
@@ -20,7 +20,7 @@
                 <button class="btn btn-success" title="{gt text='Reload all core releases'}">
                     {gt text="Reload all core releases"}
                 </button>
-                <a class="btn btn-danger" href="{route name='cmfcmfcoremanagermodule_admin_index'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
+                <a class="btn btn-danger" href="{route name='zikulacoremanagermodule_admin_index'}" title="{gt text="Cancel"}">{gt text="Cancel"}</a>
             </div>
         </div>
     </div>

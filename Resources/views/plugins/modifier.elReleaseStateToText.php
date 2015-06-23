@@ -24,5 +24,5 @@
  */
 function smarty_modifier_elReleaseStateToText($state, $singularPlural = 'singular')
 {
-    return \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::stateToText($state, $singularPlural);
+    return \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::stateToText($state, $singularPlural);
 }

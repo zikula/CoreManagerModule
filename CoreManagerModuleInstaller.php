@@ -1,13 +1,13 @@
 <?php
 
-namespace Cmfcmf\Module\CoreManagerModule;
+namespace Zikula\Module\CoreManagerModule;
 
 use DoctrineHelper;
 
 class CoreManagerModuleInstaller extends \Zikula_AbstractInstaller
 {
     private $entities = array(
-        'Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity'
+        'Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity'
     );
 
     public function install()

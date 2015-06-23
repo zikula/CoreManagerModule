@@ -11,9 +11,9 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Helper;
+namespace Zikula\Module\CoreManagerModule\Helper;
 
-use Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Core\RouteUrl;
 use Zikula\Module\SearchModule\AbstractSearchable;
 use SecurityUtil;
@@ -48,7 +48,7 @@ class SearchHelper extends AbstractSearchable
     public function getResults(array $words, $searchType = 'AND', $modVars = null)
     {
         // this is an 'eager' search - it doesn't compensate for search type indicated in search UI
-        $results = $this->entityManager->getRepository('CmfcmfCoreManagerModule:CoreReleaseEntity')->getByFragment($words);
+        $results = $this->entityManager->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->getByFragment($words);
 
         $sessionId = session_id();
         $records = array();
@@ -59,7 +59,7 @@ class SearchHelper extends AbstractSearchable
                 'text' => $result->getDescription(),
                 'module' => $this->name,
                 'sesid' => $sessionId,
-                'url' => new RouteUrl('cmfcmfcoremanagermodule_user_viewcorereleases'),
+                'url' => new RouteUrl('zikulacoremanagermodule_user_viewcorereleases'),
             );
         }
 

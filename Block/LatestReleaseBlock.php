@@ -11,13 +11,13 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Block;
+namespace Zikula\Module\CoreManagerModule\Block;
 
 use BlockUtil;
 use ModUtil;
 use SecurityUtil;
-use Cmfcmf\Module\CoreManagerModule\AbstractButtonBlock;
-use Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity;
+use Zikula\Module\CoreManagerModule\AbstractButtonBlock;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
 class LatestReleaseBlock extends AbstractButtonBlock
 {
@@ -26,7 +26,7 @@ class LatestReleaseBlock extends AbstractButtonBlock
      */
     public function init()
     {
-        SecurityUtil::registerPermissionSchema('CmfcmfCoreManagerModule:latestRelease:', 'Block title::');
+        SecurityUtil::registerPermissionSchema('ZikulaCoreManagerModule:latestRelease:', 'Block title::');
     }
 
     /**
@@ -36,7 +36,7 @@ class LatestReleaseBlock extends AbstractButtonBlock
     {
         return array(
             'text_type' => 'latestRelease',
-            'module' => 'CmfcmfCoreManagerModule',
+            'module' => 'ZikulaCoreManagerModule',
             'text_type_long' => $this->__('Latest release button'),
             'allow_multiple' => true,
             'form_content' => false,
@@ -51,12 +51,12 @@ class LatestReleaseBlock extends AbstractButtonBlock
      */
     public function display($blockinfo)
     {
-        if (!SecurityUtil::checkPermission('CmfcmfCoreManagerModule:latestRelease:', "$blockinfo[title]::", ACCESS_OVERVIEW) || !ModUtil::available('CmfcmfCoreManagerModule')) {
+        if (!SecurityUtil::checkPermission('ZikulaCoreManagerModule:latestRelease:', "$blockinfo[title]::", ACCESS_OVERVIEW) || !ModUtil::available('ZikulaCoreManagerModule')) {
             return "";
         }
         parent::display($blockinfo);
 
-        $releaseManager = $this->get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releases = $releaseManager->getSignificantReleases();
 
         $supportedReleases = array_filter($releases, function (CoreReleaseEntity $release) {

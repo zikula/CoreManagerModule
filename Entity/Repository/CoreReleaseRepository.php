@@ -10,7 +10,7 @@
  * Please see the NOTICE file distributed with this source code for further
  * information regarding copyright and licensing.
  */
-namespace Cmfcmf\Module\CoreManagerModule\Entity\Repository;
+namespace Zikula\Module\CoreManagerModule\Entity\Repository;
 use Doctrine\ORM\EntityRepository;
 
 /**
@@ -28,7 +28,7 @@ class CoreReleaseRepository extends EntityRepository
     {
         $qb = $this->_em->createQueryBuilder();
         $qb->select('r')
-            ->from('Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity', 'r');
+            ->from('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity', 'r');
         $or = $qb->expr()->orX();
         $i = 1;
         foreach ($fragments as $fragment) {

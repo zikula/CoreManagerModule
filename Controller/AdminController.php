@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Controller;
+namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Github\HttpClient\Message\ResponseMediator;
 use SecurityUtil;
@@ -23,9 +23,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity;
-use Cmfcmf\Module\CoreManagerModule\Manager\ReleaseManager;
-use Cmfcmf\Module\CoreManagerModule\Util;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
+use Zikula\Module\CoreManagerModule\Manager\ReleaseManager;
+use Zikula\Module\CoreManagerModule\Util;
 
 /**
  * @Route("/admin")
@@ -91,12 +91,12 @@ class AdminController extends \Zikula_AbstractController
             \LogUtil::registerError('GitHub token is invalid, authorization failed!');
         }
 
-        return new RedirectResponse($this->get('router')->generate('cmfcmfcoremanagermodule_admin_index'));
+        return new RedirectResponse($this->get('router')->generate('zikulacoremanagermodule_admin_index'));
     }
 
     /**
      * @Route("/releases/toggle-state/{id}")
-     * @ParamConverter(class="CmfcmfCoreManagerModule:CoreReleaseEntity")
+     * @ParamConverter(class="ZikulaCoreManagerModule:CoreReleaseEntity")
      */
     public function toggleReleaseStateAction(CoreReleaseEntity $release)
     {
@@ -115,7 +115,7 @@ class AdminController extends \Zikula_AbstractController
         $this->entityManager->merge($release);
         $this->entityManager->flush();
 
-        return new RedirectResponse($this->get('router')->generate('cmfcmfcoremanagermodule_user_viewcorereleases'));
+        return new RedirectResponse($this->get('router')->generate('zikulacoremanagermodule_user_viewcorereleases'));
     }
 
     /**
@@ -142,11 +142,11 @@ class AdminController extends \Zikula_AbstractController
         }
 
         /** @var ReleaseManager $releaseManager */
-        $releaseManager = $this->get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releaseManager->reloadReleases('all', (bool)$request->request->get('createnews', false));
 
         $request->getSession()->getFlashBag()->add('state', $this->__('Reloaded all core releases from GitHub.'));
 
-        return new RedirectResponse($this->get('router')->generate('cmfcmfcoremanagermodule_user_viewcorereleases'));
+        return new RedirectResponse($this->get('router')->generate('zikulacoremanagermodule_user_viewcorereleases'));
     }
 }

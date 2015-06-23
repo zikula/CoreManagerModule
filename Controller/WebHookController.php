@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Controller;
+namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -19,10 +19,10 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Zikula\Core\Response\PlainResponse;
-use Cmfcmf\Module\CoreManagerModule\Exception\ClientException;
-use Cmfcmf\Module\CoreManagerModule\Exception\ServerException;
-use Cmfcmf\Module\CoreManagerModule\Manager\ReleaseManager;
-use Cmfcmf\Module\CoreManagerModule\Manager\PayloadManager;
+use Zikula\Module\CoreManagerModule\Exception\ClientException;
+use Zikula\Module\CoreManagerModule\Exception\ServerException;
+use Zikula\Module\CoreManagerModule\Manager\ReleaseManager;
+use Zikula\Module\CoreManagerModule\Manager\PayloadManager;
 
 /**
  * Jenkins and GitHub Webhook access points.
@@ -81,7 +81,7 @@ class WebHookController extends \Zikula_AbstractController
         }
 
         /** @var ReleaseManager $releaseManager */
-        $releaseManager = $this->get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releaseManager->updateGitHubRelease($jsonPayload['release']);
 
         return new PlainResponse('Release list reloaded!', Response::HTTP_OK);
@@ -97,7 +97,7 @@ class WebHookController extends \Zikula_AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $releaseManager = $this->get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releaseManager->reloadReleases('jenkins');
 
         return new PlainResponse('Jenkins builds reloaded.', Response::HTTP_OK);

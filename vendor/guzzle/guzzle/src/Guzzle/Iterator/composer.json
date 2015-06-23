@@ -16,7 +16,7 @@
         "guzzle/common": ">=2.8.0"
     },
     "autoload": {
-        "psr-0": { "Guzzle\\Iterator": "/" }
+        "psr-0": { "Guzzle\\Iterator": "/"}
     },
     "target-dir": "Guzzle/Iterator",
     "extra": {

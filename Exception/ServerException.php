@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Exception;
+namespace Zikula\Module\CoreManagerModule\Exception;
 
 class ServerException extends \RuntimeException
 {

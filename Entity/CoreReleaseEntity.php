@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Entity;
+namespace Zikula\Module\CoreManagerModule\Entity;
 
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,7 +19,7 @@ use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Core version
- * @ORM\Entity(repositoryClass="Cmfcmf\Module\CoreManagerModule\Entity\Repository\CoreReleaseRepository")
+ * @ORM\Entity(repositoryClass="Zikula\Module\CoreManagerModule\Entity\Repository\CoreReleaseRepository")
  * @ORM\Table(name="coremanager_releases")
  */
 class CoreReleaseEntity extends EntityAccess
@@ -122,7 +122,7 @@ class CoreReleaseEntity extends EntityAccess
 
     public static function stateToText($state, $singularPlural = 'singular')
     {
-        $dom = \ZLanguage::getModuleDomain('CmfcmfCoreManagerModule');
+        $dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
 
         if ($singularPlural == 'singular') {
             $translation = array (
@@ -350,7 +350,7 @@ class CoreReleaseEntity extends EntityAccess
                 $downloadLinks .= str_replace('%link%', $asset['download_url'], str_replace('%text%', $asset['name'], $downloadLinkTpl));
             }
         } else {
-            $dom = \ZLanguage::getModuleDomain('CmfcmfCoreManagerModule');
+            $dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
             $downloadLinks .= "<div class=\"alert alert-warning\">" .
                 __('Direct download links not yet available!', $dom) . "</div>";
         }

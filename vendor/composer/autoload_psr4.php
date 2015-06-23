@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Symfony\\Component\\EventDispatcher\\' => array($vendorDir . '/symfony/event-dispatcher'),
-    'Cmfcmf\\Module\\CoreManagerModule\\' => array($baseDir . '/'),
+    'Zikula\\Module\\CoreManagerModule\\' => array($baseDir . '/'),
 );

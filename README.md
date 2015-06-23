@@ -1,3 +1,3 @@
-CmfcmfCoreManagerModule
+ZikulaCoreManagerModule
 ============
 

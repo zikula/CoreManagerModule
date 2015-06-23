@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Api;
+namespace Zikula\Module\CoreManagerModule\Api;
 
 use SecurityUtil;
 
@@ -27,19 +27,19 @@ class AdminApi extends \Zikula_AbstractApi
         $links = array();
         if (SecurityUtil::checkPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             $links[] = array(
-                'url' => $this->get('router')->generate('cmfcmfcoremanagermodule_user_viewcorereleases'),
+                'url' => $this->get('router')->generate('zikulacoremanagermodule_user_viewcorereleases'),
                 'text' => $this->__('Core releases'),
                 'title' => $this->__('View core releases'),
                 'icon' => 'th-list');
 
             $links[] = array(
-                'url' => $this->get('router')->generate('cmfcmfcoremanagermodule_admin_index'),
+                'url' => $this->get('router')->generate('zikulacoremanagermodule_admin_index'),
                 'text' => $this->__('Settings'),
                 'title' => $this->__('Edit settings'),
                 'icon' => 'wrench');
 
             $links[] = array(
-                'url' => $this->get('router')->generate('cmfcmfcoremanagermodule_admin_reloadcorereleases'),
+                'url' => $this->get('router')->generate('zikulacoremanagermodule_admin_reloadcorereleases'),
                 'text' => $this->__('Reload core releases'),
                 'title' => $this->__('Reload all core releases'),
                 'icon' => 'gears');

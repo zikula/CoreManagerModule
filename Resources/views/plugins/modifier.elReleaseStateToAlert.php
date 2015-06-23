@@ -25,13 +25,13 @@
 function smarty_modifier_elReleaseStateToAlert($state)
 {
     switch ($state) {
-        case \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_SUPPORTED:
+        case \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_SUPPORTED:
             return "";
-        case \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_OUTDATED:
+        case \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_OUTDATED:
             return "<div class=\"alert alert-warning\"><i class='fa fa-ban fa-3x pull-left'></i> " . __("You are about to download an OUTDATED and no longer supported core version. It does not receive bug fixes or maintenance any longer. Please use one of the supported versions instead.") . "</div>";
-        case \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_PRERELEASE:
+        case \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_PRERELEASE:
             return "<div class=\"alert alert-danger\"><i class='fa fa-warning fa-3x pull-left'></i> " . __("This core version is a pre-release only. NEVER use it on production sites. If you like to help, we invite you to test this version and report bugs.") . "</div>";
-        case \Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_DEVELOPMENT:
+        case \Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity::STATE_DEVELOPMENT:
             return "<div class=\"alert alert-danger\"><i class='fa fa-warning fa-3x pull-left'></i> " . __("DANGER: This is an in-development build. NEVER use it on production sites. It can likely be broken and absolutely not working. Really.") . "</div>";
     }
 }

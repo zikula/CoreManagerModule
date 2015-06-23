@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule;
+namespace Zikula\Module\CoreManagerModule;
 
 use CarlosIO\Jenkins\Exception\SourceNotAvailableException;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -21,9 +21,9 @@ use Github\HttpClient\CachedHttpClient;
 use Github\HttpClient\Message\ResponseMediator;
 use vierbergenlars\SemVer\expression;
 use vierbergenlars\SemVer\version;
-use Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity;
-use Cmfcmf\Module\CoreManagerModule\Entity\ExtensionEntity;
-use Cmfcmf\Module\CoreManagerModule\Entity\ExtensionVersionEntity;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
+use Zikula\Module\CoreManagerModule\Entity\ExtensionEntity;
+use Zikula\Module\CoreManagerModule\Entity\ExtensionVersionEntity;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 use CarlosIO\Jenkins\Dashboard;
@@ -40,7 +40,7 @@ class Util
      */
     public static function getAvailableCoreVersions($indexBy = 'stateText')
     {
-        $releaseManager = \ServiceUtil::get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = \ServiceUtil::get('zikulacoremanagermodule.releasemanager');
         $dbReleases = $releaseManager->getSignificantReleases(false);
 
         $releases = array();
@@ -73,7 +73,7 @@ class Util
         $httpClient->setCache(new FilesystemCache($cacheDir));
         $client = new GitHubClient($httpClient);
 
-        $token = \ModUtil::getVar('CmfcmfCoreManagerModule', 'github_token', null);
+        $token = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_token', null);
         if (!empty($token)) {
             $client->authenticate($token, null, GitHubClient::AUTH_HTTP_TOKEN);
             try {
@@ -103,7 +103,7 @@ class Util
      */
     public static function hasGitHubClientPushAccess(GitHubClient $client)
     {
-        $repo = \ModUtil::getVar('CmfcmfCoreManagerModule', 'github_core_repo');
+        $repo = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo');
         if (empty($repo)) {
             return false;
         }
@@ -124,12 +124,12 @@ class Util
      */
     public static function getJenkinsClient()
     {
-        $jenkinsServer = trim(\ModUtil::getVar('CmfcmfCoreManagerModule', 'jenkins_server', ''), '/');
+        $jenkinsServer = trim(\ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
         if (empty($jenkinsServer)) {
             return false;
         }
-        $jenkinsUser = \ModUtil::getVar('CmfcmfCoreManagerModule', 'jenkins_user', '');
-        $jenkinsPassword = \ModUtil::getVar('CmfcmfCoreManagerModule', 'jenkins_password', '');
+        $jenkinsUser = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_user', '');
+        $jenkinsPassword = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_password', '');
         if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
             $jenkinsServer = str_replace('://', "://" . urlencode($jenkinsUser) . ":" . urlencode($jenkinsPassword), $jenkinsServer);
         }

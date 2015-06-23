@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Controller;
+namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
@@ -25,7 +25,7 @@ class UserController extends \Zikula_AbstractController
      */
     public function viewCoreReleasesAction()
     {
-        $releaseManager = $this->get('cmfcmfcoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releases = $releaseManager->getSignificantReleases(false);
         $this->view->assign('releases', $releases);
 

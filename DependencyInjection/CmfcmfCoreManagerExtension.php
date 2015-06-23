@@ -11,7 +11,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\DependencyInjection;
+namespace Zikula\Module\CoreManagerModule\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -21,7 +21,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 /**
  * Implementation class for service definition loader using the DependencyInjection extension.
  */
-class CmfcmfCoreManagerExtension extends Extension
+class ZikulaCoreManagerExtension extends Extension
 {
     /**
      * Loads service definition file containing persistent event handlers.

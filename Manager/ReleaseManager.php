@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule\Manager;
+namespace Zikula\Module\CoreManagerModule\Manager;
 
 use CarlosIO\Jenkins\Build;
 use CarlosIO\Jenkins\Job;
@@ -24,8 +24,8 @@ use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
 use vierbergenlars\SemVer\version;
-use Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity;
-use Cmfcmf\Module\CoreManagerModule\Util;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
+use Zikula\Module\CoreManagerModule\Util;
 
 
 /**
@@ -63,8 +63,8 @@ class ReleaseManager
         $this->client = Util::getGitHubClient();
         $this->jenkinsClient = Util::getJenkinsClient();
         $this->em = $em;
-        $this->repo = \ModUtil::getVar('CmfcmfCoreManagerModule', 'github_core_repo', 'zikula/core');
-        $this->dom = \ZLanguage::getModuleDomain('CmfcmfCoreManagerModule');
+        $this->repo = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
+        $this->dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
     }
@@ -81,7 +81,7 @@ class ReleaseManager
     public function getSignificantReleases($onlyNewestVersion = true)
     {
         // Get all the releases.
-        $releases = $this->em->getRepository('Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
+        $releases = $this->em->getRepository('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
 
         // Create a version map. This makes it possible to check what kind of releases are available for one specific
         // version.
@@ -220,7 +220,7 @@ class ReleaseManager
         }
 
         if ($dbReleases === null) {
-            $dbRelease = $this->em->getRepository('CmfcmfCoreManagerModule:CoreReleaseEntity')->findOneBy(array('id' => $id));
+            $dbRelease = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findOneBy(array('id' => $id));
             if ($dbRelease) {
                 $dbReleases[$id] = $dbRelease;
             } else {
@@ -295,7 +295,7 @@ class ReleaseManager
         $repo = explode('/', $this->repo);
         $releases = $this->client->api('repo')->releases()->all($repo[0], $repo[1]);
         /** @var CoreReleaseEntity[] $dbReleases */
-        $_dbReleases = $this->em->getRepository('Cmfcmf\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
+        $_dbReleases = $this->em->getRepository('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
         $dbReleases = array();
         foreach ($_dbReleases as $_dbRelease) {
             $dbReleases[$_dbRelease->getId()] = $_dbRelease;
@@ -312,7 +312,7 @@ class ReleaseManager
         /** @var QueryBuilder $qb */
         $qb = $this->em->createQueryBuilder();
         $removedReleases = $qb->select('r')
-            ->from('CmfcmfCoreManagerModule:CoreReleaseEntity', 'r')
+            ->from('ZikulaCoreManagerModule:CoreReleaseEntity', 'r')
             ->where($qb->expr()->not($qb->expr()->in('r.id', implode(', ', $ids))))
             ->getQuery()->execute();
 
@@ -328,7 +328,7 @@ class ReleaseManager
      */
     private function reloadReleasesFromJenkins()
     {
-        $oldJenkinsBuilds = $this->em->getRepository('CmfcmfCoreManagerModule:CoreReleaseEntity')->findBy(array('state' => CoreReleaseEntity::STATE_DEVELOPMENT));
+        $oldJenkinsBuilds = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findBy(array('state' => CoreReleaseEntity::STATE_DEVELOPMENT));
         $oldJenkinsBuildIds = array();
         foreach ($oldJenkinsBuilds as $oldJenkinsBuild) {
             $oldJenkinsBuildIds[] = $oldJenkinsBuild->getId();
@@ -424,7 +424,7 @@ class ReleaseManager
      */
     private function getAssetsFromJenkinsBuild(Job $job, Build $build)
     {
-        $server = \ModUtil::getVar('CmfcmfCoreManagerModule', 'jenkins_server');
+        $server = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server');
         $assets = array();
         foreach ($build->getArtifacts() as $artifact) {
             $downloadUrl = $server . '/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
@@ -483,7 +483,7 @@ class ReleaseManager
     }
 
     /**
-     * "Markdownify" a text using GitHub's flavoured markdown (resulting in @cmfcmf and zikula/core#123 links).
+     * "Markdownify" a text using GitHub's flavoured markdown (resulting in @zikula and zikula/core#123 links).
      *
      * @param string $text The text to "markdownify".
      *
@@ -534,7 +534,7 @@ class ReleaseManager
                 'repos/' . $this->repo . '/deployments/' . $response['id'] . '/statuses',
                 json_encode(array (
                     'state' => 'success',
-                    'target_url' => $this->router->generate('cmfcmfcoremanagermodule_user_viewcorereleases', array(), RouterInterface::ABSOLUTE_URL),
+                    'target_url' => $this->router->generate('zikulacoremanagermodule_user_viewcorereleases', array(), RouterInterface::ABSOLUTE_URL),
                     'description' => 'Build has been added to the Extension Library.'
                 ))
             );

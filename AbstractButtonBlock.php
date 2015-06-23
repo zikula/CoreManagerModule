@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Cmfcmf\Module\CoreManagerModule;
+namespace Zikula\Module\CoreManagerModule;
 
 use BlockUtil;
 use Zikula_Controller_AbstractBlock;
