@@ -21,7 +21,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 class UserController extends \Zikula_AbstractController
 {
     /**
-     * @Route("/")
+     * @Route("/download", options={"zkNoBundlePrefix" = 1})
      */
     public function viewCoreReleasesAction()
     {
