@@ -55,6 +55,11 @@ class ReleaseManager
     private $eventDispatcher;
 
     /**
+     * @var bool
+     */
+    private $isMainInstance;
+
+    /**
      * @param                 $em
      * @param RouterInterface $router
      */
@@ -67,6 +72,7 @@ class ReleaseManager
         $this->dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
+        $this->isMainInstance = \ModUtil::getVar('ZikulaCoreManagerModule', 'is_main_instance', false);
     }
 
     /**
@@ -251,7 +257,7 @@ class ReleaseManager
         ));
         $dbRelease->setState($state);
 
-        if ($mode == 'new' && count($release['assets']) == 0 && $this->jenkinsClient && Util::hasGitHubClientPushAccess($this->client)) {
+        if ($mode == 'new' && count($release['assets']) == 0 && $this->jenkinsClient && Util::hasGitHubClientPushAccess($this->client) && $this->isMainInstance) {
             // Jenkins Build files are not yet uploaded to GitHub. Try to upload them manually.
             $this->moveAssetsFromJenkinsToGitHubRelease($release);
         }
@@ -405,7 +411,7 @@ class ReleaseManager
 
             $this->em->persist($jenkinsBuild);
 
-            if (!in_array($jenkinsBuild->getId(), $oldJenkinsBuildIds)) {
+            if (!in_array($jenkinsBuild->getId(), $oldJenkinsBuildIds) && $this->isMainInstance) {
                 $this->notifyBuildAdded($build);
             }
         }
@@ -510,7 +516,7 @@ class ReleaseManager
      */
     private function notifyBuildAdded($build)
     {
-        if (!Util::hasGitHubClientPushAccess($this->client)) {
+        if (!Util::hasGitHubClientPushAccess($this->client) || !$this->isMainInstance) {
             return;
         }
         $sha = $this->getShaFromJenkinsBuild($build, true);
@@ -547,10 +553,14 @@ class ReleaseManager
      *
      * @param $release
      *
-     * @return array
+     * @return void
      */
     private function moveAssetsFromJenkinsToGitHubRelease($release)
     {
+        if (!$this->isMainInstance) {
+            return;
+        }
+
         // First, get the sha of the release's tag.
         $tagName = $release['tag_name'];
         $tags = $this->client->getHttpClient()->get('repos/' . $this->repo . '/git/refs/tags');
@@ -603,8 +613,6 @@ class ReleaseManager
             $release = $client->api('repo')->releases()->show($repoOwner, $repoName, $release['id']);
             $releaseManager->updateGitHubRelease($release);
         });
-
-
     }
 
     /**

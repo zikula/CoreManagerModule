@@ -11,7 +11,7 @@ class CoreManagerModuleVersion extends \Zikula_AbstractVersion
         $meta = array();
         $meta['displayname']    = $this->__('Core Manager');
         $meta['description']    = $this->__('Manages Core Releases');
-        $meta['url']            = $this->__('core-releases');
+        $meta['url']            = $this->__('core-manager');
         $meta['version']        = '1.0.0';
         $meta['core_min']       = '1.4.0';
         $meta['core_max']       = '1.4.99';
