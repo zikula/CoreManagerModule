@@ -1,9 +1,7 @@
-
-{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
-
-<div class="alert alert-info">
-{{ __f('You may use the following placeholders in the announcement: %QATICKET%, %DATE%'])}}
-</div>
-{{ form_start(form) }}
-{{ form_widget(form) }}
-{{ form_end(form) }}
+{% extends 'ZikulaCoreManagerModule:AddRelease:base.html.twig' %}
+{% block messages %}
+    <div class="alert alert-info">
+        {{ __('You may use the following placeholders in the announcement: %QATICKETURL%')}}
+        {{ __('The release announcement must be written in Markdown.')}}
+    </div>
+{%  endblock %}

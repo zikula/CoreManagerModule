@@ -73,10 +73,12 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
     protected function getData()
     {
         $data = \UserUtil::getVar('ZikulaCoreManagerModule_release');
-        if (empty($data)) {
-            $data = '[]';
+        if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
+            return [];
         }
-        return json_decode($data, true);
+        $result = json_decode($data, true);
+
+        return (json_last_error() == JSON_ERROR_NONE) ? $result : [];
     }
 
     /**

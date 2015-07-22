@@ -79,7 +79,7 @@ class ReleaseManager
     /**
      * This returns "significant" releases only. They are sorted by (1) state ASC and (2) version DESC.
      *
-     * Example given there is
+     * Example: given there is
      * - a prerelease 1.3.5-rc1
      * - an outdated release 1.3.5
      *

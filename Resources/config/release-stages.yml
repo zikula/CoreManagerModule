@@ -21,10 +21,19 @@ stages:
     # - release announcement
         class: Zikula\Module\CoreManagerModule\Stage\BasicInformationStage
         order: 5
-    promotBuildAndCreateTag:
+    execute:
     # - promote build
     # - lock build
     # - add build description
-    # - create git tag
-        class:
+    # - create QA issue
+    # - create release
+    # - copy assets from Jenkins to GitHub
+    # - If not prerelease do optionally:
+    #   - create a new Jenkins job
+    #   - disable the old Jenkins job
+    #   - If it is a new minor version
+    #     - create new changelog file
+    #     - create new upgrading file
+    # - trigger CoreManager hooks
+        class: Zikula\Module\CoreManagerModule\Stage\ExecuteStage
         order: 6

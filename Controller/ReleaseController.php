@@ -9,6 +9,7 @@
 namespace Zikula\Module\CoreManagerModule\Controller;
 
 
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,6 +19,9 @@ use Zikula\Component\Wizard\Wizard;
 use Zikula\Component\Wizard\WizardCompleteInterface;
 use Zikula\Core\Controller\AbstractController;
 
+/**
+ * @Route("/admin")
+ */
 class ReleaseController extends AbstractController
 {
     /**
@@ -58,5 +62,54 @@ class ReleaseController extends AbstractController
         }
 
         return $this->get('templating')->renderResponse($currentStage->getTemplateName(), $templateParams);
+    }
+
+    /**
+     * @Route("/add-release/ajax", options={"i18n"=false,"expose"=true})
+     * @Method("POST")
+     *
+     * @param Request $request
+     */
+    public function ajax(Request $request)
+    {
+        $stage = $request->request->get('stage', false);
+        if ($stage === false) {
+            throw new \RuntimeException('No stage parameter received.');
+        }
+        $data = \UserUtil::getVar('ZikulaCoreManagerModule_release');
+        if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
+            return [];
+        }
+        $data = json_decode($data, true);
+        switch ($stage) {
+            case 'promote-build':
+                break;
+            case 'lock-build':
+                break;
+            case 'add-build-description':
+                //file_get_contents('http://<hostname>/job/<jobname>/1/submitDescription?desciption=newtextfordescri??ption
+                break;
+            case 'create-qa-ticket':
+                break;
+            case 'create-release':
+                break;
+            case 'copy-assets':
+                break;
+
+            case 'copy-job':
+                break;
+            case 'disable-job':
+                break;
+
+            case 'create-changelog':
+                break;
+            case 'create-upgrading':
+                break;
+
+            case 'finish':
+                break;
+            default:
+                throw new \RuntimeException('Invalid stage parameter received');
+        }
     }
 }

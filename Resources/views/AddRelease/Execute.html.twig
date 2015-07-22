@@ -1,0 +1,43 @@
+{% extends 'ZikulaCoreManagerModule:AddRelease:base.html.twig' %}
+
+{% block form %}
+    {{ pageAddVar('javascript', 'modules/Zikula/coremanager-module/Resources/public/js/Zikula.CoreManager.Release.js') }}
+    <button type="button" class="btn btn-lg btn-primary" id="startrelease">
+        {{ __('Start release') }}
+    </button>
+    <div class="progress">
+        <div id="progress-bar" class="progress-bar progress-bar-success progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">
+            <span class="sr-only">{{  __("Progress bar") }}</span>
+        </div>
+    </div>
+    <div class="row">
+        <ul id="ajaxlist" class="fa-ul text-left">
+            {% for stage in stages %}
+                <li id="{{ stage.name }}" class="text-muted col-sm-5 col-sm-offset-1 pull-left">
+                    <i class="fa-li fa fa-circle-o"></i>
+                    <span class="pre">{{ stage.pre }}</span>
+                    <span class="during" style="display: none;">{{ stage.during }} </span>
+                    <span class="success" style="display: none;">{{ stage.success }}</span>
+                    <span class="fail" style="display:none;">{{ stage.fail }}</span>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {{ parent() }}
+    {# create a javascript array of all the stages #}
+    <script>
+        var stages = [
+            {% for stage in stages %}
+            "{{ stage.name }}",
+            {% endfor %}
+        ];
+    </script>
+    <style>
+        #ajaxlist {
+            font-size: 1.2em;
+        }
+        #ajaxlist li {
+            padding-bottom: .3em;
+        }
+    </style>
+{% endblock %}

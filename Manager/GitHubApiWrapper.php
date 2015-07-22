@@ -40,8 +40,8 @@ class GitHubApiWrapper
     }
 
     /**
-     * @param The tag to check
-     * @return The version the tag is based on. Can be null.
+     * @param string $tag The tag to check
+     * @return null|array The version and the branch the tag is based on. Can be null.
      */
     private function getPreviousRelease($tag)
     {
@@ -114,7 +114,7 @@ class GitHubApiWrapper
                 $lastVersion = $currentVersion;
                 $currentVersion = self::versionToMajorMinorPatch($version);
             }
-            if ($currentPreRelease = self::vIsPreRelease($version)) {
+            if ($currentPreRelease = self::versionIsPreRelease($version)) {
                 // Seems like the newest released version is a pre release.
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
@@ -138,7 +138,7 @@ class GitHubApiWrapper
 
         // Now add all the new possible versions.
         // First of, allow a new major version, if the highest version isn't a pre release.
-        if (self::vIsPreRelease($allowedCoreVersions[0]) === false) {
+        if (self::versionIsPreRelease($allowedCoreVersions[0]) === false) {
             $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . ".0.0-rc1");
         }
 
@@ -146,11 +146,14 @@ class GitHubApiWrapper
         foreach ($allowedCoreVersions as $allowedCoreVersion) {
             if ($allowedCoreVersion->getMajor() !== $majorPrefix) {
                 $majorPrefix = $allowedCoreVersion->getMajor();
-                if (self::vIsPreRelease($allowedCoreVersion) !== false) {
+                if (self::versionIsPreRelease($allowedCoreVersion) !== false) {
                     $extraVersions[] = new version($allowedCoreVersion->getMajor() . "." . ($allowedCoreVersion->getMinor() + 1) . ".0-rc1");
                 }
             }
         }
+        /**
+         * @var $versions version[]
+         */
         $versions = array_merge($extraVersions, $allowedCoreVersions);
 
         foreach ($versions as $key => $version) {
@@ -160,12 +163,12 @@ class GitHubApiWrapper
         return $versions;
     }
 
-    private static function versionToMajorMinorPatch(version $version)
+    public function versionToMajorMinorPatch(version $version)
     {
         return $version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch();
     }
 
-    private static function vIsPreRelease(version $version)
+    public function versionIsPreRelease(version $version)
     {
         if (count($version->getPrerelease()) > 1) {
             throw new \RuntimeException('Unexpected pre release string.');

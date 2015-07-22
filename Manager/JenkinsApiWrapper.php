@@ -21,12 +21,4 @@ class JenkinsApiWrapper
         $this->coreOrganization = $core[0];
         $this->coreRepository = $core[1];
     }
-
-    public function getBuildsOfCommit($version, $commit)
-    {
-        $jobs = $dashboard->getJobs();
-        foreach ($jobs as $job) {
-            
-        }
-    }
 }
