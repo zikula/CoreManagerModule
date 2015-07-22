@@ -1,0 +1,24 @@
+stages:
+    chooseCoreVersionAndBranch:
+    # - choose version from available versions (will imply prerelease or not)
+    # - choose branch (will default to the branch of the previous release
+        class: Zikula\Module\CoreManagerModule\Stage\ChooseCoreVersionAndBranchStage
+        order: 1
+        default: true
+    giveBasicInformation:
+    # - release title
+    # - description
+        class: ASD
+        order: 2
+    selectCommitAndBuild:
+    # - select one of the latest X commits of the specified branch
+    # - then choose from the builds of this commit (there might be manual builds)
+        class:
+        order: 3
+    promotBuildAndCreateTag:
+    # - promote build
+    # - lock build
+    # - add build description
+    # - create git tag
+        class:
+        order: 4
