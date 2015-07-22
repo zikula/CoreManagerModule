@@ -1,24 +1,30 @@
 stages:
-    chooseCoreVersionAndBranch:
+    coreVersion:
     # - choose version from available versions (will imply prerelease or not)
-    # - choose branch (will default to the branch of the previous release
-        class: Zikula\Module\CoreManagerModule\Stage\ChooseCoreVersionAndBranchStage
+        class: Zikula\Module\CoreManagerModule\Stage\CoreVersionStage
         order: 1
         default: true
-    giveBasicInformation:
-    # - release title
-    # - description
-        class: ASD
+    branchSelection:
+    # - choose branch (will default to the branch of the previous release
+        class: Zikula\Module\CoreManagerModule\Stage\BranchSelectionStage
         order: 2
-    selectCommitAndBuild:
+    commit:
     # - select one of the latest X commits of the specified branch
-    # - then choose from the builds of this commit (there might be manual builds)
-        class:
+        class: Zikula\Module\CoreManagerModule\Stage\CommitStage
         order: 3
+    jenkinsBuild:
+    # - choose from the builds of this commit (there might be manual builds)
+        class: Zikula\Module\CoreManagerModule\Stage\JenkinsBuildStage
+        order: 4
+    basicInformation:
+    # - release title
+    # - release announcement
+        class: Zikula\Module\CoreManagerModule\Stage\BasicInformationStage
+        order: 5
     promotBuildAndCreateTag:
     # - promote build
     # - lock build
     # - add build description
     # - create git tag
         class:
-        order: 4
+        order: 6

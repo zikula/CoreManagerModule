@@ -17,6 +17,8 @@
         </service>
         <service id="zikula_core_manager_module.github_api_wrapper" class="Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper">
         </service>
+        <service id="zikula_core_manager_module.jenkins_api_wrapper" class="Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper">
+        </service>
         <service id="zikulacoremanagermodule.api.releases.v1" class="%zikulacoremanagermodule.api.releases.v1.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument type="service" id="zikulacoremanagermodule.releasemanager" />

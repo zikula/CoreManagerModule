@@ -50,7 +50,7 @@ class ReleaseController extends AbstractController
             $form->handleRequest($request);
             if ($form->isSubmitted() && $form->isValid()) {
                 $currentStage->handleFormResult($form);
-                $url = $this->container->get('router')->generate('zikulacoremanagermodule_addrelease_wizard', array('stage' => $wizard->getNextStage()->getName()), true);
+                $url = $this->container->get('router')->generate('zikulacoremanagermodule_release_wizard', array('stage' => $wizard->getNextStage()->getName()), true);
 
                 return new RedirectResponse($url);
             }

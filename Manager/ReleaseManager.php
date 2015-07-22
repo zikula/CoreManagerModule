@@ -331,6 +331,49 @@ class ReleaseManager
     }
 
     /**
+     * Get all Jenkins builds matching the given Zikula version and commit.
+     */
+    public function getMatchingJenkinsBuilds($version, $commit = null)
+    {
+        foreach ($this->jenkinsClient->getJobs() as $job) {
+            if ($job->isDisabled()) {
+                // Ignore disabled = old jobs.
+                continue;
+            }
+            $semVer = $this->getZikulaVersionFromJenkinsJob($job);
+            if (!is_object($semVer) || $semVer->getVersion() !== $version) {
+                continue;
+            }
+
+            /** @var Build[] $builds */
+            $builds = $job->getBuilds();
+            foreach ($builds as $key => $build) {
+                if ($build->isBuilding() || $build->getResult() != "SUCCESS") {
+                    unset($builds[$key]);
+                }
+            }
+            if ($commit !== null) {
+                $builds = array_filter($builds, function ($build) use ($commit) {
+                    return $this->getShaFromJenkinsBuild($build) === $commit;
+                });
+            }
+
+            // Sort builds by build number DESC.
+            usort($builds, function (Build $a, Build $b) {
+                $a = $a->getNumber();
+                $b = $b->getNumber();
+                if ($a === $b) {
+                    return 0;
+                }
+
+                return ($a > $b) ? -1 : 1;
+            });
+
+            return $builds;
+        }
+    }
+
+    /**
      * First, delete all Jenkins builds and then reload the newest ones.
      */
     private function reloadReleasesFromJenkins()
