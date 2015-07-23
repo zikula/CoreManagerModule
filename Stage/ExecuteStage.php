@@ -85,7 +85,7 @@ class ExecuteStage extends AbstractStage
             ],
         ];
 
-        if (0) {
+        if (!$this->getData()['isPreRelease']) {
             $stages[] = [
                 'name' => 'copy-job',
                 'pre' => 'Copy old Jenkins Job',
@@ -100,6 +100,7 @@ class ExecuteStage extends AbstractStage
                 'success' => 'Jenkins Job disabled',
                 'fail' => 'Jenkins Job could not be disabled'
             ];
+            //$version = $this->getData()
             if (0) {
                 $stages[] = [
                     'name' => 'create-changelog',

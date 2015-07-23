@@ -2,16 +2,19 @@
 
 namespace Zikula\Module\CoreManagerModule\Stage;
 
-use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
+use vierbergenlars\SemVer\version;
 use Zikula\Component\Wizard\AbortStageException;
-use Zikula\Component\Wizard\FormHandlerInterface;
-use Zikula\Component\Wizard\InjectContainerInterface;
-use Zikula\Component\Wizard\StageInterface;
 use Zikula\Module\CoreManagerModule\Form\Type\CoreVersionType;
+use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
 
 class CoreVersionStage extends AbstractStage
 {
+    /**
+     * @var GitHubApiWrapper
+     */
+    protected $gitHubApiWrapper;
+
     /**
      * Returns an instance of a Symfony Form Type
      *
@@ -19,7 +22,24 @@ class CoreVersionStage extends AbstractStage
      */
     public function getFormType()
     {
-        return new CoreVersionType($this->container->get('zikula_core_manager_module.github_api_wrapper')->getAllowedCoreVersions());
+        $this->gitHubApiWrapper = $this->container->get('zikula_core_manager_module.github_api_wrapper');
+
+        return new CoreVersionType($this->gitHubApiWrapper->getAllowedCoreVersions());
+    }
+
+    /**
+     * Handle results of previously validated form
+     *
+     * @param FormInterface $form
+     * @return boolean
+     */
+    public function handleFormResult(FormInterface $form)
+    {
+        $data = $form->getData();
+        $rc = $this->gitHubApiWrapper->versionIsPreRelease(new version($data['version']));
+        $data['isPreRelease'] = $rc !== false;
+        $data['preRelease'] = $rc;
+        $this->addData($data);
     }
 
     /**
@@ -30,7 +50,6 @@ class CoreVersionStage extends AbstractStage
      */
     public function isNecessary()
     {
-        // TODO: Implement isNecessary() method.
         return true;
     }
 }

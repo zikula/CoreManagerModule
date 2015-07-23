@@ -18,6 +18,8 @@ use Zikula\Component\Wizard\FormHandlerInterface;
 use Zikula\Component\Wizard\Wizard;
 use Zikula\Component\Wizard\WizardCompleteInterface;
 use Zikula\Core\Controller\AbstractController;
+use Zikula\Core\Response\PlainResponse;
+use Zikula\Module\CoreManagerModule\Settings;
 
 /**
  * @Route("/admin")
@@ -69,25 +71,37 @@ class ReleaseController extends AbstractController
      * @Method("POST")
      *
      * @param Request $request
+     * @return PlainResponse
      */
     public function ajax(Request $request)
     {
+        if (!\SecurityUtil::checkPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
+            throw new AccessDeniedException();
+        }
         $stage = $request->request->get('stage', false);
         if ($stage === false) {
             throw new \RuntimeException('No stage parameter received.');
         }
         $data = \UserUtil::getVar('ZikulaCoreManagerModule_release');
         if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
-            return [];
+            throw new \RuntimeException('Could not decode user data.');
         }
         $data = json_decode($data, true);
+        $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
         switch ($stage) {
             case 'promote-build':
+                $jenkinsApiWrapper->promoteBuild($data['job'], $data['build'], $data['isPreRelease'] ? Settings::RELEASE_CANDIDATE_PROMOTION_ID : Settings::RELEASE_PROMOTION_ID);
                 break;
             case 'lock-build':
+                $jenkinsApiWrapper->lockBuild($data['job'], $data['build']);
                 break;
             case 'add-build-description':
-                //file_get_contents('http://<hostname>/job/<jobname>/1/submitDescription?desciption=newtextfordescri??ption
+                if ($data['isPreRelease']) {
+                    $description = 'Release Candidate ' . $data['preRelease'];
+                } else {
+                    $description = 'Release ' . $data['version'];
+                }
+                $jenkinsApiWrapper->setBuildDescription($data['job'], $data['build'], $description);
                 break;
             case 'create-qa-ticket':
                 break;
@@ -95,21 +109,25 @@ class ReleaseController extends AbstractController
                 break;
             case 'copy-assets':
                 break;
-
+/*
             case 'copy-job':
+                $jenkinsApiWrapper->copyJob($data['job'], 'COPY');
                 break;
             case 'disable-job':
+                $jenkinsApiWrapper->disableJob($data['job']);
                 break;
 
             case 'create-changelog':
                 break;
             case 'create-upgrading':
                 break;
-
+*/
             case 'finish':
                 break;
             default:
                 throw new \RuntimeException('Invalid stage parameter received');
         }
+
+        return new PlainResponse();
     }
 }
