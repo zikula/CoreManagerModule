@@ -194,6 +194,18 @@ class GitHubApiWrapper
         ]);
     }
 
+    public function updateIssue($id, $title, $body)
+    {
+        $update = [];
+        if ($title !== null) {
+            $update['title'] = $title;
+        }
+        if ($body !== null) {
+            $update['body'] = $body;
+        }
+        return $this->githubClient->issues()->update($this->coreOrganization, $this->coreRepository, $id, $update);
+    }
+
     public function getMilestoneByCoreVersion(version $version)
     {
         // Remove pre release from version.

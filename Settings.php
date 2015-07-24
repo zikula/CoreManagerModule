@@ -35,8 +35,8 @@ Notes, References, and/or Special Instructions
 Do not vote negatively if you find non-release blocking bugs.  Minor and major bugs may be scheduled in a future version.
 
 Announcement
---------------------
-> %ANNOUNCEMENT%
+------------
+%DESCRIPTION%
 EOD;
 
 }

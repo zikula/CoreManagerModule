@@ -91,12 +91,13 @@ class ReleaseController extends AbstractController
         $data = json_decode($data, true);
         $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
         $githubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
+        $result = false;
         switch ($stage) {
             case 'promote-build':
-                $jenkinsApiWrapper->promoteBuild($data['job'], $data['build'], $data['isPreRelease'] ? Settings::RELEASE_CANDIDATE_PROMOTION_ID : Settings::RELEASE_PROMOTION_ID);
+                $result = $jenkinsApiWrapper->promoteBuild($data['job'], $data['build'], $data['isPreRelease'] ? Settings::RELEASE_CANDIDATE_PROMOTION_ID : Settings::RELEASE_PROMOTION_ID);
                 break;
             case 'lock-build':
-                $jenkinsApiWrapper->lockBuild($data['job'], $data['build']);
+                $result = $jenkinsApiWrapper->lockBuild($data['job'], $data['build']);
                 break;
             case 'add-build-description':
                 $description = $jenkinsApiWrapper->getBuildDescription($data['job'], $data['build']);
@@ -108,15 +109,42 @@ class ReleaseController extends AbstractController
                 } else {
                     $description = 'Release ' . $data['version'] . $description;
                 }
-                $jenkinsApiWrapper->setBuildDescription($data['job'], $data['build'], $description);
+                $result = $jenkinsApiWrapper->setBuildDescription($data['job'], $data['build'], $description);
                 break;
             case 'create-qa-ticket':
+                // Guess the milestone to use.
                 $milestone = $githubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
+                // Create title.
                 $title = 'QA testing for release of ' . $data['version'] . ' build #' . $data['build'];
-                $body = strtr(Settings::$QA_ISSUE_TEMPLATE, array_fill_keys(array_map('strtoupper', array_keys($data)), array_values($data)));
-                $githubApiWrapper->createIssue($title, $body, $milestone, Settings::$QA_ISSUE_LABELS);
+
+                // Create issue without body.
+                $return = $githubApiWrapper->createIssue($title, "Further information follows in just a second my dear email reader. Checkout the issue already!.", $milestone, Settings::$QA_ISSUE_LABELS);
+                if (!isset($return['number'])) {
+                    break;
+                }
+                $issueNumber = $return['number'];
+
+                $description = preg_replace('#\r\n?#', "\n", $data['description']);
+                $description = "> " . str_replace("\n\n", "\n\n> ", $description);
+
+                // Prepare replacement array.
+                $keys = array_map(function ($val) {
+                    return '%' . strtoupper($val) . '%';
+                }, array_keys($data));
+                $values = array_values($data);
+                $replacement = array_combine($keys, $values);
+                $replacement['%QAISSUE%'] = $issueNumber;
+                $description = strtr($description, $replacement);
+                $replacement['%DESCRIPTION%'] = $description;
+
+                // Replace placeholders in issue body and edit issue.
+                $body = strtr(Settings::$QA_ISSUE_TEMPLATE, $replacement);
+                $return = $githubApiWrapper->updateIssue($issueNumber, null, $body);
+
+                $result = isset($return['number']);
                 break;
             case 'create-release':
+                $githubApiWrapper->createRelease($data['version'], $data['isPreRelease'], $data['commmit'], $replacement['%DESCRIPTION%'])
                 break;
             case 'copy-assets':
                 break;
@@ -139,6 +167,6 @@ class ReleaseController extends AbstractController
                 throw new \RuntimeException('Invalid stage parameter received');
         }
 
-        return new JsonResponse(['status' => 1]);
+        return new JsonResponse(['status' => $result]);
     }
 }

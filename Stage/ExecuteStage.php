@@ -40,49 +40,49 @@ class ExecuteStage extends AbstractStage
      */
     public function getTemplateParams()
     {
-        $stages = [
-            [
-                'name' => 'promote-build',
-                'pre' => 'Promote Jenkins Build',
-                'during' => 'Promoting Jenkins Build',
-                'success' => 'Jenkins Build promoted',
-                'fail' => 'Jenkins Build could not be promoted'
-            ],
-            [
-                'name' => 'lock-build',
-                'pre' => 'Lock Jenkins Build',
-                'during' => 'Locking Jenkins Build',
-                'success' => 'Jenkins Build locked',
-                'fail' => 'Jenkins Build could not be locked.'
-            ],
-            [
-                'name' => 'add-build-description',
-                'pre' => 'Add Jenkins Build description',
-                'during' => 'Adding Jenkins Build description',
-                'success' => 'Jenkins Build description added',
-                'fail' => 'Jenkins Build description could not be added'
-            ],
-            [
+        $stages[] = [
+            'name' => 'promote-build',
+            'pre' => 'Promote Jenkins Build',
+            'during' => 'Promoting Jenkins Build',
+            'success' => 'Jenkins Build promoted',
+            'fail' => 'Jenkins Build could not be promoted'
+        ];
+        $stages[] = [
+            'name' => 'lock-build',
+            'pre' => 'Lock Jenkins Build',
+            'during' => 'Locking Jenkins Build',
+            'success' => 'Jenkins Build locked',
+            'fail' => 'Jenkins Build could not be locked.'
+        ];
+        $stages[] = [
+            'name' => 'add-build-description',
+            'pre' => 'Add Jenkins Build description',
+            'during' => 'Adding Jenkins Build description',
+            'success' => 'Jenkins Build description added',
+            'fail' => 'Jenkins Build description could not be added'
+        ];
+        if ($this->getData()['isPreRelease']) {
+            $stages[] = [
                 'name' => 'create-qa-ticket',
                 'pre' => 'Create QA ticket',
                 'during' => 'Creating QA ticket',
                 'success' => 'QA ticket created',
                 'fail' => 'QA ticket could not be created'
-            ],
-            [
-                'name' => 'create-release',
-                'pre' => 'Create GitHub Release',
-                'during' => 'Creating GitHub Release',
-                'success' => 'GitHub Release created',
-                'fail' => 'GitHub Release could not be created'
-            ],
-            [
-                'name' => 'copy-assets',
-                'pre' => 'Copy assets from Jenkins to GitHub',
-                'during' => 'Copying assets from Jenkins to GitHub (takes longer)',
-                'success' => 'Assets copied',
-                'fail' => 'Assets could not be copied'
-            ],
+            ];
+        }
+        $stages[] = [
+            'name' => 'create-release',
+            'pre' => 'Create GitHub Release',
+            'during' => 'Creating GitHub Release',
+            'success' => 'GitHub Release created',
+            'fail' => 'GitHub Release could not be created'
+        ];
+        $stages[] = [
+            'name' => 'copy-assets',
+            'pre' => 'Copy assets from Jenkins to GitHub',
+            'during' => 'Copying assets from Jenkins to GitHub (takes longer)',
+            'success' => 'Assets copied',
+            'fail' => 'Assets could not be copied'
         ];
 
         if (!$this->getData()['isPreRelease']) {
