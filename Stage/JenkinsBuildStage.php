@@ -43,7 +43,8 @@ class JenkinsBuildStage extends AbstractStage
      */
     public function handleFormResult(FormInterface $form)
     {
-        list($build, $job) = explode('|', $form->getData());
+        $data = $form->getData();
+        list($build, $job) = explode('|', $data['build']);
         $data['build'] = $build;
         $data['job'] = $job;
         $this->addData($data);

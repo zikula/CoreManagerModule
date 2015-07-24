@@ -183,4 +183,31 @@ class GitHubApiWrapper
         }
         return $matches[1];
     }
+
+    public function createIssue($title, $body, $milestone, $labels)
+    {
+        return $this->githubClient->issues()->create($this->coreOrganization, $this->coreRepository, [
+            'title' => $title,
+            'body' => $body,
+            'milestone' => $milestone,
+            'labels' => $labels
+        ]);
+    }
+
+    public function getMilestoneByCoreVersion(version $version)
+    {
+        // Remove pre release from version.
+        $version = new version($version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch());
+
+        // Look through open milestones.
+        $milestones = $this->githubClient->issues()->milestones()->all($this->coreOrganization, $this->coreRepository, ['state' => 'open']);
+        foreach ($milestones as $milestone) {
+            $milestoneTitle = $milestone['title'];
+            if (version::eq($version, new version($milestoneTitle))) {
+                return $milestone;
+            }
+        }
+
+        return null;
+    }
 }

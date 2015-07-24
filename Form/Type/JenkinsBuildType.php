@@ -32,7 +32,7 @@ class JenkinsBuildType extends AbstractType
         $builder->add('build', 'choice', [
             'label' => __('Jenkins build', 'ZikulaCoreManagerModule'),
             'label_attr' => ['class' => 'col-sm-3'],
-            'choice_list' => new ChoiceList($this->builds, $this->builds),
+            'choice_list' => new ChoiceList(array_keys($this->builds), array_values($this->builds)),
         ])->add('next', 'submit', [
             'label' => __('Next', 'ZikulaCoreManagerModule'),
         ]);

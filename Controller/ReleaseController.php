@@ -11,9 +11,11 @@ namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use vierbergenlars\SemVer\version;
 use Zikula\Component\Wizard\FormHandlerInterface;
 use Zikula\Component\Wizard\Wizard;
 use Zikula\Component\Wizard\WizardCompleteInterface;
@@ -67,13 +69,13 @@ class ReleaseController extends AbstractController
     }
 
     /**
-     * @Route("/add-release/ajax", options={"i18n"=false,"expose"=true})
+     * @Route("/add-release-ajax", options={"i18n"=false,"expose"=true})
      * @Method("POST")
      *
      * @param Request $request
      * @return PlainResponse
      */
-    public function ajax(Request $request)
+    public function ajaxAction(Request $request)
     {
         if (!\SecurityUtil::checkPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
@@ -88,6 +90,7 @@ class ReleaseController extends AbstractController
         }
         $data = json_decode($data, true);
         $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
+        $githubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
         switch ($stage) {
             case 'promote-build':
                 $jenkinsApiWrapper->promoteBuild($data['job'], $data['build'], $data['isPreRelease'] ? Settings::RELEASE_CANDIDATE_PROMOTION_ID : Settings::RELEASE_PROMOTION_ID);
@@ -96,14 +99,22 @@ class ReleaseController extends AbstractController
                 $jenkinsApiWrapper->lockBuild($data['job'], $data['build']);
                 break;
             case 'add-build-description':
+                $description = $jenkinsApiWrapper->getBuildDescription($data['job'], $data['build']);
+                if (!empty($description)) {
+                    $description = " & " . $description;
+                }
                 if ($data['isPreRelease']) {
-                    $description = 'Release Candidate ' . $data['preRelease'];
+                    $description = 'Release Candidate ' . $data['preRelease'] . $description;
                 } else {
-                    $description = 'Release ' . $data['version'];
+                    $description = 'Release ' . $data['version'] . $description;
                 }
                 $jenkinsApiWrapper->setBuildDescription($data['job'], $data['build'], $description);
                 break;
             case 'create-qa-ticket':
+                $milestone = $githubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
+                $title = 'QA testing for release of ' . $data['version'] . ' build #' . $data['build'];
+                $body = strtr(Settings::$QA_ISSUE_TEMPLATE, array_fill_keys(array_map('strtoupper', array_keys($data)), array_values($data)));
+                $githubApiWrapper->createIssue($title, $body, $milestone, Settings::$QA_ISSUE_LABELS);
                 break;
             case 'create-release':
                 break;
@@ -128,6 +139,6 @@ class ReleaseController extends AbstractController
                 throw new \RuntimeException('Invalid stage parameter received');
         }
 
-        return new PlainResponse();
+        return new JsonResponse(['status' => 1]);
     }
 }

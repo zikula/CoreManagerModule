@@ -13,6 +13,8 @@ class JenkinsApiWrapper
     protected $coreRepository;
     protected $coreOrganization;
     protected $jenkinsURL;
+    
+    private $OK_STATI = [200, 302];
 
     public function __construct()
     {
@@ -26,8 +28,8 @@ class JenkinsApiWrapper
 
     public function promoteBuild($job, $build, $level)
     {
-        list ($status, ) = $this->doGet("/job/$job/$build/promote", ['level' => $level]);
-        if ($status != 200) {
+        list ($status, ) = $this->doGet("/job/$job/$build/promote/", ['level' => $level]);
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
@@ -36,13 +38,13 @@ class JenkinsApiWrapper
     public function lockBuild($job, $build)
     {
         list ($status, $response) = $this->doGet("/job/$job/$build/api/json", []);
-        if ($status != 200) {
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
-        $build = json_decode($response, true);
-        if (!$build['keepLog']) {
+        $buildArr = json_decode($response, true);
+        if (!$buildArr['keepLog']) {
             list ($status, ) = $this->doPost("/job/$job/$build/toggleLogKeep", []);
-            if ($status != 200) {
+            if (!in_array($status, $this->OK_STATI)) {
                 return false;
             }
             return true;
@@ -50,10 +52,21 @@ class JenkinsApiWrapper
         return true;
     }
 
+    public function getBuildDescription($job, $build)
+    {
+        list ($status, $response) = $this->doGet("/job/$job/$build/api/json", []);
+        if (!in_array($status, $this->OK_STATI)) {
+            return false;
+        }
+        $buildArr = json_decode($response, true);
+
+        return $buildArr['description'];
+    }
+
     public function setBuildDescription($job, $build, $description)
     {
         list ($status, ) = $this->doGet("/job/$job/$build/submitDescription", ['description' => $description]);
-        if ($status != 200) {
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
@@ -62,21 +75,16 @@ class JenkinsApiWrapper
     public function copyJob($job, $newName)
     {
         list ($status, ) = $this->doPost("/api", ['name' => $newName, 'mode' => 'copy', 'from' => $job]);
-        if ($status != 200) {
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
     }
 
-    public function setConfigXML($job)
-    {
-        return false;
-    }
-
     public function enableJob($job)
     {
         list ($status, ) = $this->doPost("/job/$job/enable", []);
-        if ($status != 200) {
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
@@ -85,7 +93,7 @@ class JenkinsApiWrapper
     public function disableJob($job)
     {
         list ($status, ) = $this->doPost("/job/$job/disable", []);
-        if ($status != 200) {
+        if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
