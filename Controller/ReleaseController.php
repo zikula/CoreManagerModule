@@ -144,7 +144,7 @@ class ReleaseController extends AbstractController
                 $result = isset($return['number']);
                 break;
             case 'create-release':
-                $githubApiWrapper->createRelease($data['version'], $data['isPreRelease'], $data['commmit'], $replacement['%DESCRIPTION%'])
+                //$githubApiWrapper->createRelease($data['version'], $data['isPreRelease'], $data['commmit'], $replacement['%DESCRIPTION%'])
                 break;
             case 'copy-assets':
                 break;
