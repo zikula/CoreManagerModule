@@ -186,6 +186,9 @@ class GitHubApiWrapper
 
     public function createIssue($title, $body, $milestone, $labels)
     {
+        if ($milestone != null) {
+            $milestone = $milestone['number'];
+        }
         return $this->githubClient->issues()->create($this->coreOrganization, $this->coreRepository, [
             'title' => $title,
             'body' => $body,
@@ -206,6 +209,18 @@ class GitHubApiWrapper
         return $this->githubClient->issues()->update($this->coreOrganization, $this->coreRepository, $id, $update);
     }
 
+    public function createRelease($title, $body, $preRelease, $tag, $target)
+    {
+        return $this->githubClient->repo()->releases()->create($this->coreOrganization, $this->coreRepository, [
+            'tag_name' => $tag,
+            'target_commitish' => $target,
+            'name' => $title,
+            'body' => $body,
+            'draft' => false,
+            'prerelease' => $preRelease
+        ]);
+    }
+
     public function getMilestoneByCoreVersion(version $version)
     {
         // Remove pre release from version.
@@ -221,5 +236,38 @@ class GitHubApiWrapper
         }
 
         return null;
+    }
+
+    public function createReleaseAsset($releaseId, $asset)
+    {
+        return $this->githubClient->repo()->releases()->assets()->create(
+            $this->coreOrganization,
+            $this->coreRepository,
+            $releaseId,
+            $asset['name'],
+            $asset['content_type'],
+            file_get_contents($asset['download_url'])
+        );
+    }
+
+    public function closeMilestone($milestone)
+    {
+        return $this->githubClient->issues()->milestones()->update($this->coreOrganization, $this->coreRepository, $milestone['number'], [
+            'state' => 'closed'
+        ]);
+    }
+
+    public function getFile($file, $ref)
+    {
+        $exists = $this->githubClient->repo()->contents()->exists($this->coreOrganization, $this->coreRepository, $file, $ref);
+        if (!$exists) {
+            return false;
+        }
+        return $this->githubClient->repo()->contents()->download($this->coreOrganization, $this->coreRepository, $file, $ref);
+    }
+
+    public function updateFile($path, $content, $commitMessage, $ref)
+    {
+        return $this->githubClient->repo()->contents()->update($this->coreOrganization, $this->coreRepository, $path, $content, $commitMessage, $ref);
     }
 }

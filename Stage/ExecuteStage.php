@@ -2,6 +2,7 @@
 
 namespace Zikula\Module\CoreManagerModule\Stage;
 
+use vierbergenlars\SemVer\version;
 use Zikula\Component\Wizard\AbortStageException;
 use Zikula\Module\CoreManagerModule\Form\Type\ExecuteType;
 
@@ -40,6 +41,7 @@ class ExecuteStage extends AbstractStage
      */
     public function getTemplateParams()
     {
+        // Assert core version correct
         $stages[] = [
             'name' => 'promote-build',
             'pre' => 'Promote Jenkins Build',
@@ -95,28 +97,27 @@ class ExecuteStage extends AbstractStage
             ];
             $stages[] = [
                 'name' => 'disable-job',
-                'pre' => 'Dsiable old Jenkins Job',
+                'pre' => 'Disable old Jenkins Job',
                 'during' => 'Disabling Jenkins Job',
                 'success' => 'Jenkins Job disabled',
                 'fail' => 'Jenkins Job could not be disabled'
             ];
-            //$version = $this->getData()
-            if (0) {
-                $stages[] = [
-                    'name' => 'create-changelog',
-                    'pre' => 'Create new changelog',
-                    'during' => 'Creating new changelog',
-                    'success' => 'New changelog created',
-                    'fail' => 'New changelog could not be created'
-                ];
-                $stages[] = [
-                    'name' => 'create-upgrading',
-                    'pre' => 'Create new upgrading file',
-                    'during' => 'Creating new upgrading file',
-                    'success' => 'New upgrading file created',
-                    'fail' => 'New upgrading file could not be created'
-                ];
-            }
+            $stages[] = [
+                'name' => 'update-core-version',
+                'pre' => 'Update Core version',
+                'during' => 'Updating Core version',
+                'success' => 'Core version updated',
+                'fail' => 'Core version could not be updated'
+            ];
+            $stages[] = [
+                'name' => 'close-milestone',
+                'pre' => 'Close milestone',
+                'during' => 'Closing milestone',
+                'success' => 'Milestone closed',
+                'fail' => 'Milestone could not be closed'
+            ];
+            // Update Core Version
+            // Close milestone
         }
         $stages[] = [
             'name' => 'finish',

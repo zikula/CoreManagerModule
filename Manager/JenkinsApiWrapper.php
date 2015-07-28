@@ -28,7 +28,7 @@ class JenkinsApiWrapper
 
     public function promoteBuild($job, $build, $level)
     {
-        list ($status, ) = $this->doGet("/job/$job/$build/promote/", ['level' => $level]);
+        list ($status, ) = $this->doGet("/job/" . urlencode($job) . "/$build/promote/", ['level' => $level]);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -37,13 +37,13 @@ class JenkinsApiWrapper
 
     public function lockBuild($job, $build)
     {
-        list ($status, $response) = $this->doGet("/job/$job/$build/api/json", []);
+        list ($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         $buildArr = json_decode($response, true);
         if (!$buildArr['keepLog']) {
-            list ($status, ) = $this->doPost("/job/$job/$build/toggleLogKeep", []);
+            list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/toggleLogKeep", []);
             if (!in_array($status, $this->OK_STATI)) {
                 return false;
             }
@@ -54,7 +54,7 @@ class JenkinsApiWrapper
 
     public function getBuildDescription($job, $build)
     {
-        list ($status, $response) = $this->doGet("/job/$job/$build/api/json", []);
+        list ($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -65,7 +65,7 @@ class JenkinsApiWrapper
 
     public function setBuildDescription($job, $build, $description)
     {
-        list ($status, ) = $this->doGet("/job/$job/$build/submitDescription", ['description' => $description]);
+        list ($status, ) = $this->doGet("/job/" . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -74,7 +74,7 @@ class JenkinsApiWrapper
 
     public function copyJob($job, $newName)
     {
-        list ($status, ) = $this->doPost("/api", ['name' => $newName, 'mode' => 'copy', 'from' => $job]);
+        list ($status, ) = $this->doPost("/createItem", ['name' => $newName, 'mode' => 'copy', 'from' => $job]);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -83,7 +83,7 @@ class JenkinsApiWrapper
 
     public function enableJob($job)
     {
-        list ($status, ) = $this->doPost("/job/$job/enable", []);
+        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/enable", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -92,11 +92,47 @@ class JenkinsApiWrapper
 
     public function disableJob($job)
     {
-        list ($status, ) = $this->doPost("/job/$job/disable", []);
+        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/disable", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         return true;
+    }
+
+    public function getAssets($job, $build)
+    {
+        list($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
+        if (!in_array($status, $this->OK_STATI)) {
+            return false;
+        }
+        $artifacts = json_decode($response);
+        $artifacts = $artifacts->artifacts;
+        $assets = array();
+        foreach ($artifacts as $artifact) {
+            $downloadUrl = $this->jenkinsURL . '/job/' . urlencode($job) . '/' . $build . '/artifact/' . $artifact->relativePath;
+            $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
+            $contentType = null;
+            switch ($fileExtension) {
+                case 'zip':
+                    $contentType = 'application/zip';
+                    break;
+                case 'gz':
+                    $contentType = 'application/gzip';
+                    break;
+                case 'txt':
+                    $contentType = 'text/plain';
+                    break;
+                default:
+                    $contentType = null;
+            }
+            $assets[] = array (
+                'name' => $artifact->fileName,
+                'download_url' => $downloadUrl,
+                'content_type' => $contentType
+            );
+        }
+
+        return $assets;
     }
 
     private function doPost($api, $data)

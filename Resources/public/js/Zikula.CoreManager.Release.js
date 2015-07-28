@@ -30,6 +30,7 @@ jQuery( document ).ready(function( $ ) {
             data: {
                 stage: stagename
             },
+            timeout: 30000,
             url: Routing.generate(route),
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 1) {

@@ -21,6 +21,8 @@ use Zikula\Component\Wizard\Wizard;
 use Zikula\Component\Wizard\WizardCompleteInterface;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\PlainResponse;
+use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
+use Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper;
 use Zikula\Module\CoreManagerModule\Settings;
 
 /**
@@ -80,6 +82,9 @@ class ReleaseController extends AbstractController
         if (!\SecurityUtil::checkPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
+        set_time_limit(300);
+        ignore_user_abort(true);
+
         $stage = $request->request->get('stage', false);
         if ($stage === false) {
             throw new \RuntimeException('No stage parameter received.');
@@ -90,7 +95,7 @@ class ReleaseController extends AbstractController
         }
         $data = json_decode($data, true);
         $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
-        $githubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
+        $gitHubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
         $result = false;
         switch ($stage) {
             case 'promote-build':
@@ -113,19 +118,16 @@ class ReleaseController extends AbstractController
                 break;
             case 'create-qa-ticket':
                 // Guess the milestone to use.
-                $milestone = $githubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
+                $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
                 // Create title.
                 $title = 'QA testing for release of ' . $data['version'] . ' build #' . $data['build'];
 
                 // Create issue without body.
-                $return = $githubApiWrapper->createIssue($title, "Further information follows in just a second my dear email reader. Checkout the issue already!.", $milestone, Settings::$QA_ISSUE_LABELS);
+                $return = $gitHubApiWrapper->createIssue($title, "Further information follows in just a second my dear email reader. Checkout the issue already!.", $milestone, Settings::$QA_ISSUE_LABELS);
                 if (!isset($return['number'])) {
                     break;
                 }
                 $issueNumber = $return['number'];
-
-                $description = preg_replace('#\r\n?#', "\n", $data['description']);
-                $description = "> " . str_replace("\n\n", "\n\n> ", $description);
 
                 // Prepare replacement array.
                 $keys = array_map(function ($val) {
@@ -134,33 +136,78 @@ class ReleaseController extends AbstractController
                 $values = array_values($data);
                 $replacement = array_combine($keys, $values);
                 $replacement['%QAISSUE%'] = $issueNumber;
-                $description = strtr($description, $replacement);
-                $replacement['%DESCRIPTION%'] = $description;
 
                 // Replace placeholders in issue body and edit issue.
                 $body = strtr(Settings::$QA_ISSUE_TEMPLATE, $replacement);
-                $return = $githubApiWrapper->updateIssue($issueNumber, null, $body);
+                $return = $gitHubApiWrapper->updateIssue($issueNumber, null, $body);
 
-                $result = isset($return['number']);
+                if (isset($return['number'])) {
+                    $data['github_qa_ticket_url'] = $return['html_url'];
+                    \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode($data));
+                    $result = true;
+                }
                 break;
             case 'create-release':
-                //$githubApiWrapper->createRelease($data['version'], $data['isPreRelease'], $data['commmit'], $replacement['%DESCRIPTION%'])
+                $description = str_replace('%QATICKETURL%', $data['github_qa_ticket_url'], $data['description']);
+                $return = $gitHubApiWrapper->createRelease($data['title'], $description, $data['isPreRelease'], $data['version'], $data['commit']);
+                if (isset($return['id'])) {
+                    $data['github_release_id'] = $return['id'];
+                    \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode($data));
+                    $result = true;
+                }
                 break;
             case 'copy-assets':
+                $assets = $jenkinsApiWrapper->getAssets($data['job'], $data['build']);
+                if ($assets === false) {
+                    return false;
+                }
+                $result = true;
+                foreach ($assets as $asset) {
+                    if (!$asset['content_type']) {
+                        // GitHub won't allow us to upload files without specifying the content type.
+                        // Skip those files (but there shouldn't be any).
+                        continue;
+                    }
+                    //$return = $gitHubApiWrapper->createReleaseAsset($data['github_release_id'], $asset);
+                    //if (!isset($return['id'])) {
+                    //    $result = false;
+                    //    break;
+                    //}
+                }
                 break;
-/*
             case 'copy-job':
-                $jenkinsApiWrapper->copyJob($data['job'], 'COPY');
+                $nextPatchVersion = new version($data['version']);
+                $nextPatchVersion->inc('patch');
+                $newName = str_replace($data['version'], $nextPatchVersion->getVersion(), $data['job']);
+                $result = $jenkinsApiWrapper->copyJob($data['job'], $newName);
                 break;
             case 'disable-job':
-                $jenkinsApiWrapper->disableJob($data['job']);
+                $result = $jenkinsApiWrapper->disableJob($data['job']);
                 break;
+            case 'update-core-version':
+                $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
+                if ($coreFile === false) {
+                    break;
+                }
+                $version = new version($data['version']);
+                $version->inc('patch');
+                $coreFile = preg_replace(Settings::CORE_PHP_FILE_VERSION_REGEXP, $version->getVersion(), $coreFile);
 
-            case 'create-changelog':
+                $return = $gitHubApiWrapper->updateFile(Settings::CORE_PHP_FILE, $coreFile, "Update Core version.", $data['commit']);
+                if (isset($return['commit'])) {
+                    $result = true;
+                }
                 break;
-            case 'create-upgrading':
+            case 'close-milestone':
+                // Guess the milestone to close.
+                $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
+                if ($milestone !== null) {
+                    $return = $gitHubApiWrapper->closeMilestone($milestone);
+                    $result = isset($return['number']);
+                } else {
+                    $result = true;
+                }
                 break;
-*/
             case 'finish':
                 break;
             default:
