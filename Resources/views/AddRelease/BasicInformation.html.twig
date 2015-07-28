@@ -1,0 +1,7 @@
+{% extends 'ZikulaCoreManagerModule:AddRelease:base.html.twig' %}
+{% block messages %}
+    <div class="alert alert-info">
+        {{ __('You may use the following placeholders in the announcement: %QATICKETURL%')}}
+        {{ __('The release announcement must be written in Markdown.')}}
+    </div>
+{%  endblock %}

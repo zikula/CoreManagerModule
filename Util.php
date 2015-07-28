@@ -124,14 +124,9 @@ class Util
      */
     public static function getJenkinsClient()
     {
-        $jenkinsServer = trim(\ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
-        if (empty($jenkinsServer)) {
+        $jenkinsServer = self::getJenkinsURL();
+        if ($jenkinsServer === false) {
             return false;
-        }
-        $jenkinsUser = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_user', '');
-        $jenkinsPassword = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_password', '');
-        if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
-            $jenkinsServer = str_replace('://', "://" . urlencode($jenkinsUser) . ":" . urlencode($jenkinsPassword), $jenkinsServer);
         }
 
         $dashboard = new Dashboard();
@@ -144,5 +139,22 @@ class Util
         }
 
         return $dashboard;
+    }
+
+    /**
+     * @return bool|mixed|string
+     */
+    public static function getJenkinsURL()
+    {
+        $jenkinsServer = trim(\ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
+        if (empty($jenkinsServer)) {
+            return false;
+        }
+        $jenkinsUser = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_user', '');
+        $jenkinsPassword = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_password', '');
+        if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
+            $jenkinsServer = str_replace('://', "://" . urlencode($jenkinsUser) . ":" . urlencode($jenkinsPassword) . '@', $jenkinsServer);
+        }
+        return $jenkinsServer;
     }
 } 

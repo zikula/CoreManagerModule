@@ -73,14 +73,14 @@
                         <label class="col-lg-3 control-label" for="settings_jenkins_user">{gt text="Username"}</label>
                         <div class="col-lg-9">
                             <input id="settings_jenkins_user" type="text" class="form-control" name="settings[jenkins_user]" value="{$settings.jenkins_user|default:''|safetext}" maxlength="100" />
-                            <p class="help-block">{gt text='Can be left empty if the server isn\'t private.'}</p>
+                            <p class="help-block">{gt text='Must be set to the User ID found under the API Token section at your user account\'s settings.'}</p>
                         </div>
                     </div>
                     <div class="form-group">
                         <label class="col-lg-3 control-label" for="settings_jenkins_password">{gt text="Password"}</label>
                         <div class="col-lg-9">
                             <input id="settings_jenkins_password" type="password" class="form-control" name="settings[jenkins_password]" value="{$settings.jenkins_password|default:''|safetext}" maxlength="100" />
-                            <p class="help-block">{gt text='Can be left empty if the server isn\'t private.'}</p>
+                            <p class="help-block">{gt text='Must be set to the API Token found under the API Token section at your user account\'s settings.'}</p>
                         </div>
                     </div>
                 </div>

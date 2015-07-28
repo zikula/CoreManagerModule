@@ -33,6 +33,12 @@ class AdminApi extends \Zikula_AbstractApi
                 'icon' => 'th-list');
 
             $links[] = array(
+                'url' => $this->get('router')->generate('zikulacoremanagermodule_release_wizard'),
+                'text' => $this->__('Add release'),
+                'title' => $this->__('Add new release'),
+                'icon' => 'wrench');
+
+            $links[] = array(
                 'url' => $this->get('router')->generate('zikulacoremanagermodule_admin_index'),
                 'text' => $this->__('Settings'),
                 'title' => $this->__('Edit settings'),

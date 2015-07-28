@@ -1,0 +1,7 @@
+{% block messages %}{% endblock %}
+{% form_theme form 'bootstrap_3_horizontal_layout.html.twig' %}
+{% block form %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+{% endblock %}

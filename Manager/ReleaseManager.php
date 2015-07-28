@@ -23,6 +23,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
+use Symfony\Component\Validator\Constraints\All;
 use vierbergenlars\SemVer\version;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Module\CoreManagerModule\Util;
@@ -78,7 +79,7 @@ class ReleaseManager
     /**
      * This returns "significant" releases only. They are sorted by (1) state ASC and (2) version DESC.
      *
-     * Example given there is
+     * Example: given there is
      * - a prerelease 1.3.5-rc1
      * - an outdated release 1.3.5
      *
@@ -95,7 +96,7 @@ class ReleaseManager
         foreach ($releases as $release) {
             // As the version could be 1.3.5-rc1, we need to transform them into x.y.z to be able to compare.
             $version = new version($release->getSemver());
-            $version = $version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch();
+            $version = $this->versionToMajorMinorPatch($version);
             $versionMap[$version][$release->getState()][] = $release->getId();
         }
 
@@ -330,6 +331,61 @@ class ReleaseManager
     }
 
     /**
+     * @param string $version
+     *
+     * @return Job
+     */
+    public function getJobMatchingZikulaVersion($version)
+    {
+        /** @var Job $job */
+        foreach ($this->jenkinsClient->getJobs() as $job) {
+            if ($job->isDisabled()) {
+                // Ignore disabled = old jobs.
+                continue;
+            }
+            $semVer = $this->getZikulaVersionFromJenkinsJob($job);
+            if (is_object($semVer) && $semVer->getVersion() === $version) {
+                return $job;
+            }
+        }
+        throw new \RuntimeException('No matching job for version ' . $version);
+    }
+
+    /**
+     * Get all Jenkins builds matching the given Zikula version and commit.
+     */
+    public function getMatchingJenkinsBuilds($version, $commit = null)
+    {
+        $job = $this->getJobMatchingZikulaVersion($version);
+
+        /** @var Build[] $builds */
+        $builds = $job->getBuilds();
+        foreach ($builds as $key => $build) {
+            if ($build->isBuilding() || $build->getResult() != "SUCCESS") {
+                unset($builds[$key]);
+            }
+        }
+        if ($commit !== null) {
+            $builds = array_filter($builds, function ($build) use ($commit) {
+                return $this->getShaFromJenkinsBuild($build) === $commit;
+            });
+        }
+
+        // Sort builds by build number DESC.
+        usort($builds, function (Build $a, Build $b) {
+            $a = $a->getNumber();
+            $b = $b->getNumber();
+            if ($a === $b) {
+                return 0;
+            }
+
+            return ($a > $b) ? -1 : 1;
+        });
+
+        return $builds;
+    }
+
+    /**
      * First, delete all Jenkins builds and then reload the newest ones.
      */
     private function reloadReleasesFromJenkins()
@@ -348,12 +404,9 @@ class ReleaseManager
                 // Ignore disabled = old jobs.
                 continue;
             }
-            $name = $job->getName();
-            if (!preg_match('#^Zikula(?:_Core|)-([0-9]+\.[0-9]+\.[0-9]+)$#', $name, $matches)) {
-                // Ignore jobs not matching the standard pattern.
+            if (!($version = $this->getZikulaVersionFromJenkinsJob($job))) {
                 continue;
             }
-            $version = $matches[1];
 
             /** @var Build[] $builds */
             $builds = $job->getBuilds();
@@ -577,14 +630,21 @@ class ReleaseManager
         }
         // We got the release's sha. Now check the latest builds on jenkins for that sha.
         $correspondingBuild = false;
+        $buildNr = 0;
         /** @var Job $job */
         foreach ($this->jenkinsClient->getJobs() as $job) {
+            $version = $this->getZikulaVersionFromJenkinsJob($job);
+            if (!$version || $this->versionToMajorMinorPatch($version) != $this->versionToMajorMinorPatch(new version($tagName))) {
+                continue;
+            }
             /** @var Build $build */
             foreach ($job->getBuilds() as $build) {
-                if ($sha == $this->getShaFromJenkinsBuild($build)) {
+                if ($sha == $this->getShaFromJenkinsBuild($build) && $build->getNumber() > $buildNr) {
                     $correspondingBuild = $build;
+                    $buildNr = $build->getNumber();
                 }
             }
+            break;
         }
         if (!$correspondingBuild) {
             // We did not find the corresponding build for that sha.
@@ -690,5 +750,30 @@ class ReleaseManager
         $article['unlimited'] = 1;
         $article['to'] = 1;
         \ModUtil::apiFunc('News', 'admin', 'update', $article);
+    }
+
+    /**
+     * Extract the core version from the Jenkins job name.
+     *
+     * @param Job $job
+     * @return false|version false if the name doesn't match the standard pattern, the core version otherwise.
+     */
+    private function getZikulaVersionFromJenkinsJob(Job $job)
+    {
+        if (!preg_match('#^Zikula(?:_Core|)-([0-9]+\.[0-9]+\.[0-9]+)$#', $job->getName(), $matches)) {
+            // Ignore jobs not matching the standard pattern.
+            return false;
+        }
+        $version = $matches[1];
+        return new version($version);
+    }
+
+    /**
+     * @param $version
+     * @return string
+     */
+    private function versionToMajorMinorPatch($version)
+    {
+        return $version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch();
     }
 }
