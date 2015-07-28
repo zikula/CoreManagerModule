@@ -168,11 +168,11 @@ class ReleaseController extends AbstractController
                         // Skip those files (but there shouldn't be any).
                         continue;
                     }
-                    //$return = $gitHubApiWrapper->createReleaseAsset($data['github_release_id'], $asset);
-                    //if (!isset($return['id'])) {
-                    //    $result = false;
-                    //    break;
-                    //}
+                    $return = $gitHubApiWrapper->createReleaseAsset($data['github_release_id'], $asset);
+                    if (!isset($return['id'])) {
+                        $result = false;
+                        break;
+                    }
                 }
                 break;
             case 'copy-job':
