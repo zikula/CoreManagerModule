@@ -30,7 +30,7 @@ jQuery( document ).ready(function( $ ) {
             data: {
                 stage: stagename
             },
-            timeout: 30000,
+            timeout: 180000, // = 3 minutes. It's only really needed for the asset copy stage. 
             url: Routing.generate(route),
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 1) {
