@@ -114,12 +114,14 @@ class GitHubApiWrapper
                 $lastVersion = $currentVersion;
                 $currentVersion = self::versionToMajorMinorPatch($version);
             }
-            if ($currentPreRelease = self::versionIsPreRelease($version)) {
+            // @todo Temporarily disabled the checks.
+            //if ($currentPreRelease = self::versionIsPreRelease($version)) {
                 // Seems like the newest released version is a pre release.
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . "-rc" . ++$currentPreRelease);
-            } else {
+            
+            //} else {
                 // This is a full version. Allow to release a higher version if the previous version isn't equal to
                 // the higher one.
                 if (!is_int($version->getPatch())) {
@@ -130,7 +132,7 @@ class GitHubApiWrapper
                 if ($newVersion != $lastVersion) {
                     $allowedCoreVersions[] = new version($newVersion . "-rc1");
                 }
-            }
+            //}
         }
         usort($allowedCoreVersions, function (version $a, version $b) {
             return version::rcompare($a, $b);
