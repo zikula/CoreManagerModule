@@ -87,7 +87,7 @@ class GitHubApiWrapper
         }
         
         // @todo Fix this.
-        return ['1.4.1'];
+        return ['1.4.2'];
 
         /**
          * @var $semVerVersions version[]
