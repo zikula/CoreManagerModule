@@ -85,9 +85,6 @@ class GitHubApiWrapper
                 '1.0.0-rc1'
             ];
         }
-        
-        // @todo Fix this.
-        return ['1.4.2'];
 
         /**
          * @var $semVerVersions version[]
