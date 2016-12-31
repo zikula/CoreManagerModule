@@ -37,3 +37,6 @@ stages:
     # - trigger CoreManager hooks
         class: Zikula\Module\CoreManagerModule\Stage\ExecuteStage
         order: 6
+    complete:
+        class: Zikula\Module\CoreManagerModule\Stage\CompleteStage
+        order: 7

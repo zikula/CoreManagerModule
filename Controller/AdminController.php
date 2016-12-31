@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Module\CoreManagerModule\Manager\ReleaseManager;
 use Zikula\Module\CoreManagerModule\Util;
+use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
  * @Route("/admin")
@@ -37,6 +38,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("")
      * @Method("GET")
+     * @Theme("admin")
      * The default entry point.
      *
      * @return Response
@@ -70,6 +72,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("")
      * @Method("POST")
+     * @Theme("admin")
      *
      * @return RedirectResponse
      * @throws AccessDeniedException
@@ -121,6 +124,7 @@ class AdminController extends \Zikula_AbstractController
     /**
      * @Route("/releases/reload")
      * @Method("GET")
+     * @Theme("admin")
      */
     public function reloadCoreReleasesAction()
     {

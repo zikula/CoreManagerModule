@@ -34,6 +34,11 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
      */
     abstract public function getFormType();
 
+    public function getFormOptions()
+    {
+        // default
+    }
+
     /**
      * Handle results of previously validated form
      *
@@ -42,7 +47,7 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
      */
     public function handleFormResult(FormInterface $form)
     {
-        $this->addData($form->getData());
+        return $this->addData($form->getData());
     }
 
     /**
@@ -82,7 +87,7 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
 
     protected function addData($data)
     {
-        \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode(array_merge($this->getData(), $data)));
+        return \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode(array_merge($this->getData(), $data)));
     }
 
     /**

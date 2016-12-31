@@ -24,6 +24,7 @@ use Zikula\Core\Response\PlainResponse;
 use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
 use Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper;
 use Zikula\Module\CoreManagerModule\Settings;
+use Zikula\ThemeModule\Engine\Annotation\Theme;
 
 /**
  * @Route("/admin")
@@ -32,6 +33,7 @@ class ReleaseController extends AbstractController
 {
     /**
      * @Route("/add-release/{stage}")
+     * @Theme("admin")
      * @param Request $request
      * @param $stage
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
