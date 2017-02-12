@@ -5,7 +5,6 @@ namespace Github\HttpClient\Listener;
 use Github\Exception\TwoFactorAuthenticationRequiredException;
 use Github\HttpClient\Message\ResponseMediator;
 use Guzzle\Common\Event;
-use Guzzle\Http\Message\Response;
 use Github\Exception\ApiLimitExceedException;
 use Github\Exception\ErrorException;
 use Github\Exception\RuntimeException;
@@ -71,7 +70,11 @@ class ErrorListener
                                 break;
 
                             case 'invalid':
-                                $errors[] = sprintf('Field "%s" is invalid, for resource "%s"', $error['field'], $error['resource']);
+                                if (isset($error['message'])) {
+                                    $errors[] = sprintf('Field "%s" is invalid, for resource "%s": "%s"', $error['field'], $error['resource'], $error['message']);
+                                } else {
+                                    $errors[] = sprintf('Field "%s" is invalid, for resource "%s"', $error['field'], $error['resource']);
+                                }
                                 break;
 
                             case 'already_exists':

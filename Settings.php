@@ -35,14 +35,26 @@ class Settings
     const RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT = <<<EOD
 
 
-Immediate testing is encouraged. You may download the RC from our [links at zikula.org](http://zikula.org/library/releases). Release testing guidelines may be found in [the Core wiki](https://github.com/zikula/core/wiki/Release-Testing-Guidelines). Installation and upgrade documentation can be found in the /docs directory.
+Immediate testing is encouraged. You may download the RC from our [links at zikula.org](http://zikula.org/library/releases). 
+Release testing guidelines may be found in [the Core wiki](https://github.com/zikula/core/wiki/Release-Testing-Guidelines). 
+Installation and upgrade documentation can be found in the /docs directory.
 
-Our Quality Assurance cycle, explained also in [the Core wiki](https://github.com/zikula/core/wiki/Release-Management#release-candidates-rc), will be followed in order to achieve our General Release. Please register your vote on the promotion of this build in the [promotion ticket](%QATICKETURL%).
+Our Quality Assurance cycle, explained also in [the Core wiki](https://github.com/zikula/core/wiki/Release-Management#release-candidates-rc), 
+will be followed in order to achieve our General Release. Please register your vote on the promotion of this build in the [promotion ticket](%QATICKETURL%).
 
-Please report all bugs and concerns to our [issue tracker on Github](https://github.com/zikula/core/issues). Please understand that bugs will not necessarily halt the release of this build. Bugs may be fixed or postponed to another release.
+Please report all bugs and concerns to our [issue tracker on Github](https://github.com/zikula/core/issues). Please 
+understand that bugs will not necessarily halt the release of this build. Bugs may be fixed or postponed to another release.
 EOD;
-    const CORE_PHP_FILE = 'src/lib/legacy/Zikula/Core.php';
-    const CORE_PHP_FILE_VERSION_REGEXP = 'VERSION_NUM\s*=\s*(?:\'|")(.*?)(?:\'|")';
+
+    /**
+     * The core file containing the static version number.
+     */
+    const CORE_PHP_FILE = 'src/lib/Zikula/Bundle/CoreBundle/HttpKernel/ZikulaKernel.php';
+
+    /**
+     * Regexp to match the version string in the above file.
+     */
+    const CORE_PHP_FILE_VERSION_REGEXP = '[^_]VERSION\s*=\s*(?:\'|")(.*?)(?:\'|")';
 
     /**
      * @var array Labels to add to the quality assurance issue.
@@ -58,9 +70,9 @@ __Anyone may participate in the testing process.__
 
 Testing guidelines can be found in [Release Testing Guideline](https://github.com/zikula/core/wiki/Release-Testing-Guidelines)
 
-We require five +1 votes to promote this build and a minimum testing period of three days testing before the build can pass.
 Two "-1" votes (with reason) will cause us to fail the build. If this build fails, __votes cannot be transferred__ to
 the new release candidate, __testing must resume from the beginning__.
+If the negative threshold is not reached before the posted deadline, then the build passes automatically.
 
 Please **do not** report bugs in this ticket, only register your approval or disapproval. You must give a reason and
 reference if appropriate (e.g. link to a ticket) for negative votes.
