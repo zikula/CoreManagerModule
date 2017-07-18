@@ -86,7 +86,6 @@ class ReleaseController extends AbstractController
         if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
             throw new \RuntimeException('Could not decode user data.');
         }
-        $data = json_decode($data, true);
         $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
         $gitHubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
         $result = false;
