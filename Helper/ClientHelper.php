@@ -110,9 +110,9 @@ class ClientHelper
      *
      * @return bool|Dashboard
      */
-    public static function getJenkinsClient()
+    public function getJenkinsClient()
     {
-        $jenkinsServer = self::getJenkinsURL();
+        $jenkinsServer = $this->getJenkinsURL();
         if ($jenkinsServer === false) {
             return false;
         }
