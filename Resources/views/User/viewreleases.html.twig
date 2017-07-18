@@ -40,14 +40,14 @@
                 </td>
             </tr>
         {% endif %}
-        <tr class="{% if release.state == prerelease || release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
+        <tr class="{% if release.state == prerelease or release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
             {% if admin|default %}<td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver|safetext }}</td>
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n|safetext }}</td>
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{release.state|elReleaseStateToText:'singular'|safetext }}</td>
             {% if admin|default %}
                 <td class="text-right">
-                    {if release.state == outdated || release.state == supported}
+                    {if release.state == outdated or release.state == supported}
                         <a href="{{ path('zikulacoremanagermodule_admin_togglereleasestate', {id: release.id}) }}" title="{% if release.state == supported %}{{ __('Mark release as outdated') }}{% else %}{{ __('Mark release as supported') }}{% endif %}" data-toggle="">
                             {if release.state == supported}
                                 <i class="fa fa-arrow-down"></i>
