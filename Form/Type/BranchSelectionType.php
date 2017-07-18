@@ -51,11 +51,12 @@ class BranchSelectionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = new ArrayChoiceList($this->branches);
         $builder
             ->add('branch', ChoiceType::class, [
                 'label' => $this->translator->__('Branch'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choices' => new ArrayChoiceList($this->branches),
+                'choices' => $choices->getChoices(),
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

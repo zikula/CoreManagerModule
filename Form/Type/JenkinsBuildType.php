@@ -52,11 +52,12 @@ class JenkinsBuildType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = new ArrayChoiceList($this->builds);
         $builder
             ->add('build', ChoiceType::class, [
                 'label' => $this->translator->__('Jenkins build'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choices' => new ArrayChoiceList($this->builds),
+                'choices' => $choices->getChoices(),
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

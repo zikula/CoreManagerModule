@@ -38,11 +38,12 @@ class CoreVersionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $choices = new ArrayChoiceList($this->versions);
         $builder
             ->add('version', ChoiceType::class, [
                 'label' => $this->translator->__('Core version'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choices' => new ArrayChoiceList($this->versions),
+                'choices' => $choices->getChoices(),
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
