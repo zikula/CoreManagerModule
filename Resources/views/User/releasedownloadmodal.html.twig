@@ -12,7 +12,7 @@
                     {{ modalRelease.descriptionI18n }}
                 </div>
                 <div class="modal-footer">
-                    {% for asset in modalRelase.assets %}
+                    {% for asset in modalRelease.assets %}
                         <a href="{{ asset.download_url }}" class="btn btn-sm btn-success">{{ asset.name }}</a>
                     {% else %}
                         <div class="alert alert-warning">{{ __('Direct download links not yet available!') }}</div>
