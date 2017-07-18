@@ -45,12 +45,11 @@ class CommitType extends AbstractType
         foreach ($this->commits as $commit) {
             $commits[$commit['sha']] = substr($commit['sha'], 0, 8) . " - " . $commit['commit']['message'];
         }
-        $choices = new ArrayChoiceList($commits);
         $builder
             ->add('commit', ChoiceType::class, [
                 'label' => $this->translator->__('Commit'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choices' => $choices->getChoices(),
+                'choices' => $commits,
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
