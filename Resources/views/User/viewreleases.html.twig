@@ -21,31 +21,31 @@
     {% for release in releases %}
         {% if stateOld != release.state and release.state == outdated %}
             <tr>
-                <td colspan="{% if admin|default }}5{% else %}3{% endif %}">
+                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
                     {{ __('Outdated releases:') }}
                 </td>
             </tr>
         {% endif %}
         {% if stateOld != release.state and release.state == prerelease %}
             <tr>
-                <td colspan="{% if admin|default }}5{% else %}3{% endif %}">
+                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
                     {{ __('Pre-releases:') }}
                 </td>
             </tr>
         {% endif %}
         {% if stateOld != release.state and release.state == development %}
             <tr>
-                <td colspan="{% if admin|default }}5{% else %}3{% endif %}">
+                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
                     {{ __('Development builds:') }}
                 </td>
             </tr>
         {% endif %}
         <tr class="{% if release.state == prerelease || release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
-            {% if admin|default }}<td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
+            {% if admin|default %}<td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver|safetext }}</td>
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n|safetext }}</td>
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{release.state|elReleaseStateToText:'singular'|safetext }}</td>
-            {% if admin|default }}
+            {% if admin|default %}
                 <td class="text-right">
                     {if release.state == outdated || release.state == supported}
                         <a href="{{ path('zikulacoremanagermodule_admin_togglereleasestate', {id: release.id}) }}" title="{% if release.state == supported %}{{ __('Mark release as outdated') }}{% else %}{{ __('Mark release as supported') }}{% endif %}" data-toggle="">
@@ -62,11 +62,11 @@
         {{ include('@ZikulaCoreManagerModule:User:releasedownloadmodal.html.twig', {'modalRelease': release, 'id': 'el-download-release-modal-'~loop.index}) }}
         {% set stateOld = release.state %}
     {% else %}
-        <tr><td colspan="{% if admin|default }}5{% else %}3{% endif %}">{{ __('No releases available') }}</td></tr>
+        <tr><td colspan="{% if admin|default %}5{% else %}3{% endif %}">{{ __('No releases available') }}</td></tr>
     {% endfor %}
     </tbody>
 </table>
-{% if admin|default }}
+{% if admin|default %}
     <hr />
     <div class="alert alert-info">
         {{ __('The release names and descriptions can be made multilingual, if the correct format is used at GitHub:') }}
