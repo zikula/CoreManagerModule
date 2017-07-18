@@ -5,4 +5,4 @@
         {% if not loop.last %}/{% endif %}
     {% endfor %}</span>
 </a>
-{{ include('@ZikulaCoreManagerModule:User:releasedownloadmodal.html.twig', {'modalRelease': developmentReleases, 'id': 'el-block-jenkins-build-modal-'~id}) }}
+{{ include('@ZikulaCoreManagerModule/User/releasedownloadmodal.html.twig', {'modalRelease': developmentReleases, 'id': 'el-block-jenkins-build-modal-'~id}) }}

@@ -59,7 +59,7 @@
                 </td>
             {% endif %}
         </tr>
-        {{ include('@ZikulaCoreManagerModule:User:releasedownloadmodal.html.twig', {'modalRelease': release, 'id': 'el-download-release-modal-'~loop.index}) }}
+        {{ include('@ZikulaCoreManagerModule/User/releasedownloadmodal.html.twig', {'modalRelease': release, 'id': 'el-download-release-modal-'~loop.index}) }}
         {% set stateOld = release.state %}
     {% else %}
         <tr><td colspan="{% if admin|default %}5{% else %}3{% endif %}">{{ __('No releases available') }}</td></tr>
