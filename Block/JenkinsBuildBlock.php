@@ -13,6 +13,7 @@
 
 namespace Zikula\Module\CoreManagerModule\Block;
 
+use Zikula\Module\CoreManagerModule\AbstractButtonBlock;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
 class JenkinsBuildBlock extends AbstractButtonBlock

@@ -12,7 +12,7 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\CoreManagerModule\Block;
+namespace Zikula\Module\CoreManagerModule;
 
 use Zikula\BlocksModule\AbstractBlockHandler;
 use Zikula\CoreManagerModule\Block\Form\Type\ButtonBlockType;
