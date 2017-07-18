@@ -611,7 +611,7 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Stage\\ExecuteStage' => __DIR__ . '/../..' . '/Stage/ExecuteStage.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\JenkinsBuildStage' => __DIR__ . '/../..' . '/Stage/JenkinsBuildStage.php',
         'Zikula\\Module\\CoreManagerModule\\ClientHelper' => __DIR__ . '/../..',
-        'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => __DIR__ . '/../..' . '/ZikulaCoreManagerModule.php',
+        'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => __DIR__ . '/../..' . '/zikula_core_manager_module.php',
         'vierbergenlars\\LibJs\\JObject' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JObject.php',
         'vierbergenlars\\LibJs\\JSArray' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JSArray.php',
         'vierbergenlars\\LibJs\\JString' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JString.php',

@@ -26,7 +26,7 @@ class PreReleaseBlock extends AbstractButtonBlock
             return "";
         }
 
-        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
         $releases = $releaseManager->getSignificantReleases();
 
         $preReleases = array_filter($releases, function (CoreReleaseEntity $release) {

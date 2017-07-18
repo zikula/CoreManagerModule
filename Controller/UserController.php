@@ -26,7 +26,7 @@ class UserController extends AbstractController
      */
     public function viewCoreReleasesAction()
     {
-        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
 
         return $this->renderView('@ZikulaCoreManagerModule/User/viewreleases.html.twig', [
             'releases' => $releaseManager->getSignificantReleases(false)

@@ -548,7 +548,7 @@ return array(
     'Zikula\\Module\\CoreManagerModule\\Stage\\ExecuteStage' => $baseDir . '/Stage/ExecuteStage.php',
     'Zikula\\Module\\CoreManagerModule\\Stage\\JenkinsBuildStage' => $baseDir . '/Stage/JenkinsBuildStage.php',
     'Zikula\\Module\\CoreManagerModule\\ClientHelper' => $baseDir . '/Util.php',
-    'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => $baseDir . '/ZikulaCoreManagerModule.php',
+    'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => $baseDir . '/zikula_core_manager_module.php',
     'vierbergenlars\\LibJs\\JObject' => $vendorDir . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JObject.php',
     'vierbergenlars\\LibJs\\JSArray' => $vendorDir . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JSArray.php',
     'vierbergenlars\\LibJs\\JString' => $vendorDir . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JString.php',

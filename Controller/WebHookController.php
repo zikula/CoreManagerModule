@@ -82,7 +82,7 @@ class WebHookController extends AbstractController
         }
 
         /** @var ReleaseManager $releaseManager */
-        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
         $releaseManager->updateGitHubRelease($jsonPayload['release']);
 
         return new PlainResponse('Release list reloaded!', Response::HTTP_OK);
@@ -98,7 +98,7 @@ class WebHookController extends AbstractController
             throw new AccessDeniedHttpException();
         }
 
-        $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
+        $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
         $releaseManager->reloadReleases('jenkins');
 
         return new PlainResponse('Jenkins builds reloaded.', Response::HTTP_OK);
