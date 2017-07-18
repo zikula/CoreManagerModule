@@ -57,13 +57,11 @@ class BasicInformationType extends AbstractType
         $builder
             ->add('title', TextType::class, [
                 'label' => $this->translator->__('Release title'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'data' => $this->defaultTitle
             ])
             ->add('description', TextareaType::class, [
                 'attr' => ['rows' => 20],
                 'label' => $this->translator->__('Release announcement'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'data' => $this->defaultAnnouncement,
             ])
             ->add('next', SubmitType::class, [

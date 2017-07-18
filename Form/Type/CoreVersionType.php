@@ -42,7 +42,6 @@ class CoreVersionType extends AbstractType
         $builder
             ->add('version', ChoiceType::class, [
                 'label' => $this->translator->__('Core version'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'choices' => $choices->getChoices(),
             ])
             ->add('next', SubmitType::class, [

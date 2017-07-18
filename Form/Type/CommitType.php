@@ -48,7 +48,6 @@ class CommitType extends AbstractType
         $builder
             ->add('commit', ChoiceType::class, [
                 'label' => $this->translator->__('Commit'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'choices' => $commits,
             ])
             ->add('next', SubmitType::class, [

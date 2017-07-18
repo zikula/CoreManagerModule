@@ -55,7 +55,6 @@ class JenkinsBuildType extends AbstractType
         $builder
             ->add('build', ChoiceType::class, [
                 'label' => $this->translator->__('Jenkins build'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'choices' => $this->builds,
             ])
             ->add('next', SubmitType::class, [

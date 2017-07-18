@@ -55,7 +55,6 @@ class BranchSelectionType extends AbstractType
         $builder
             ->add('branch', ChoiceType::class, [
                 'label' => $this->translator->__('Branch'),
-                'label_attr' => ['class' => 'col-sm-3'],
                 'choices' => $choices->getChoices(),
             ])
             ->add('next', SubmitType::class, [
