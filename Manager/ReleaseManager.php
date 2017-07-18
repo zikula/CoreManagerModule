@@ -82,6 +82,7 @@ class ReleaseManager
      * @param EntityManagerInterface $em
      * @param RouterInterface $router
      * @param EventDispatcherInterface $eventDispatcher
+     * @param ClientHelper $clientHelper
      */
     public function __construct(
         TranslatorInterface $translator,
@@ -92,13 +93,14 @@ class ReleaseManager
         ClientHelper $clientHelper
     ) {
         $this->clientHelper = $clientHelper;
+        $this->variableApi = $variableApi;
         $this->client = $clientHelper->getGitHubClient();
         $this->jenkinsClient = $clientHelper->getJenkinsClient();
         $this->em = $em;
-        $this->repo = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
+        $this->repo = $variableApi->get('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
-        $this->isMainInstance = $this->variableApi->get('ZikulaCoreManagerModule', 'is_main_instance', false);
+        $this->isMainInstance = $variableApi->get('ZikulaCoreManagerModule', 'is_main_instance', false);
         $this->setTranslator($translator);
     }
 
