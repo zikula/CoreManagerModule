@@ -42,7 +42,7 @@ class CoreVersionType extends AbstractType
             ->add('version', ChoiceType::class, [
                 'label' => $this->translator->__('Core version'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choice_list' => new ArrayChoiceList($this->versions),
+                'choices' => new ArrayChoiceList($this->versions),
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

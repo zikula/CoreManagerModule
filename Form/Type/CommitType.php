@@ -49,7 +49,7 @@ class CommitType extends AbstractType
             ->add('commit', ChoiceType::class, [
                 'label' => $this->translator->__('Commit'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choice_list' => new ArrayChoiceList($commits),
+                'choices' => new ArrayChoiceList($commits),
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
