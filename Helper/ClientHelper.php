@@ -84,12 +84,15 @@ class ClientHelper
     /**
      * Determines if the GitHub client has push access to a specifc repository.
      *
-     * @param GitHubClient $client
+     * @param $client
      *
      * @return bool
      */
-    public function hasGitHubClientPushAccess(GitHubClient $client)
+    public function hasGitHubClientPushAccess($client)
     {
+        if (!($client instanceof GitHubClient)) {
+            return false;
+        }
         $repo = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo');
         if (empty($repo)) {
             return false;

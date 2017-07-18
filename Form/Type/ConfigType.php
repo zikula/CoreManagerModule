@@ -56,10 +56,12 @@ class ConfigType extends AbstractType
                 'help' => $this->__('Fill in the name of the core repository. This should always be "zikula/core"')
             ])
             ->add('github_token', PasswordType::class, [
+                'always_empty' => false,
                 'label' => $this->__('Access Token'),
                 'help' => $this->__f('Create a personal access token at %s to raise your api limits.', ['%s' => '<a href="https://github.com/settings/applications">https://github.com/settings/applications</a>'])
             ])
             ->add('github_webhook_token', PasswordType::class, [
+                'always_empty' => false,
                 'label' => $this->__('Webhook Security Token'),
                 'help' => $this->__f('Create a secrete webhook token at %s to verify payloads from the Zikula Core repository.', ['%s' => '<a href="https://developer.github.com/webhooks/securing">https://developer.github.com/webhooks/securing/</a>'])
             ])
@@ -68,6 +70,7 @@ class ConfigType extends AbstractType
                 'help' => $this->__('Make sure to include "http://". Do not include "www". Example: "http://ci.zikula.org"')
             ])
             ->add('jenkins_token', PasswordType::class, [
+                'always_empty' => false,
                 'label' => $this->__('Jenkins Security token'),
                 'help' => $this->__f('A security token to verify requests from Jenkins. Please setup Jenkins to make a POST request to the following url everytime a build has finished: %s. You can use the "Post Completed Build Result Plugin" to do the job: https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed+Build+Result+Plugin.', ['%s' => '<a href="' . $route . '">' . $route . '</a>'])
             ])
@@ -76,6 +79,7 @@ class ConfigType extends AbstractType
                 'help' => $this->__('Must be set to the User ID found under the API Token section at your user account\'s settings.')
             ])
             ->add('jenkins_password', PasswordType::class, [
+                'always_empty' => false,
                 'label' => $this->__('Jenkins Password'),
                 'help' => $this->__('Must be set to the API Token found under the API Token section at your user account\'s settings .')
             ])
