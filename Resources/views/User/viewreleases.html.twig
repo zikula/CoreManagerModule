@@ -47,9 +47,9 @@
             <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{release.state|elReleaseStateToText:'singular' }}</td>
             {% if admin|default %}
                 <td class="text-right">
-                    {if release.state == outdated or release.state == supported}
+                    {% if release.state == outdated or release.state == supported %}
                         <a href="{{ path('zikulacoremanagermodule_admin_togglereleasestate', {id: release.id}) }}" title="{% if release.state == supported %}{{ __('Mark release as outdated') }}{% else %}{{ __('Mark release as supported') }}{% endif %}" data-toggle="">
-                            {if release.state == supported}
+                            {% if release.state == supported %}
                                 <i class="fa fa-arrow-down"></i>
                             {% else %}
                                 <i class="fa fa-arrow-up"></i>
