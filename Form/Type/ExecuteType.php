@@ -3,20 +3,37 @@
 namespace Zikula\Module\CoreManagerModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use vierbergenlars\SemVer\version;
+use Zikula\Common\Translator\TranslatorInterface;
 
 class ExecuteType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct(
+        TranslatorInterface $translator
+    ) {
+        $this->translator = $translator;
+    }
+
     /**
      * {@inheritdoc}
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('finish', 'submit', [
-            'label' => __('Finish', 'ZikulaCoreManagerModule'),
-            'attr' => ['disabled' => true]
-        ]);
+        $builder
+            ->add('finish', SubmitType::class, [
+                'label' => $this->translator->__('Finish'),
+                'attr' => ['disabled' => true]
+            ])
+        ;
     }
 
     /**

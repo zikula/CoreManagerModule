@@ -2,20 +2,22 @@
 
 namespace Zikula\Module\CoreManagerModule\Stage;
 
-use vierbergenlars\SemVer\version;
+use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\Component\Wizard\AbortStageException;
 use Zikula\Module\CoreManagerModule\Form\Type\ExecuteType;
 
 class ExecuteStage extends AbstractStage
 {
-    /**
-     * Returns an instance of a Symfony Form Type
-     *
-     * @return \Symfony\Component\Form\FormTypeInterface
-     */
+    use TranslatorTrait;
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
+    }
+
     public function getFormType()
     {
-        return new ExecuteType();
+        return ExecuteType::class;
     }
 
     /**
@@ -41,90 +43,91 @@ class ExecuteStage extends AbstractStage
      */
     public function getTemplateParams()
     {
+        $this->setTranslator($this->container->get('translator.default'));
         // Assert core version correct
         $stages[] = [
-            'name' => 'promote-build',
-            'pre' => 'Promote Jenkins Build',
-            'during' => 'Promoting Jenkins Build',
-            'success' => 'Jenkins Build promoted',
-            'fail' => 'Jenkins Build could not be promoted'
+            'name' => $this->__('promote-build'),
+            'pre' => $this->__('Promote Jenkins Build'),
+            'during' => $this->__('Promoting Jenkins Build'),
+            'success' => $this->__('Jenkins Build promoted'),
+            'fail' => $this->__('Jenkins Build could not be promoted')
         ];
         $stages[] = [
-            'name' => 'lock-build',
-            'pre' => 'Lock Jenkins Build',
-            'during' => 'Locking Jenkins Build',
-            'success' => 'Jenkins Build locked',
-            'fail' => 'Jenkins Build could not be locked.'
+            'name' => $this->__('lock-build'),
+            'pre' => $this->__('Lock Jenkins Build'),
+            'during' => $this->__('Locking Jenkins Build'),
+            'success' => $this->__('Jenkins Build locked'),
+            'fail' => $this->__('Jenkins Build could not be locked.')
         ];
         $stages[] = [
-            'name' => 'add-build-description',
-            'pre' => 'Add Jenkins Build description',
-            'during' => 'Adding Jenkins Build description',
-            'success' => 'Jenkins Build description added',
-            'fail' => 'Jenkins Build description could not be added'
+            'name' => $this->__('add-build-description'),
+            'pre' => $this->__('Add Jenkins Build description'),
+            'during' => $this->__('Adding Jenkins Build description'),
+            'success' => $this->__('Jenkins Build description added'),
+            'fail' => $this->__('Jenkins Build description could not be added')
         ];
         if ($this->getData()['isPreRelease']) {
             $stages[] = [
-                'name' => 'create-qa-ticket',
-                'pre' => 'Create QA ticket',
-                'during' => 'Creating QA ticket',
-                'success' => 'QA ticket created',
-                'fail' => 'QA ticket could not be created'
+                'name' => $this->__('create-qa-ticket'),
+                'pre' => $this->__('Create QA ticket'),
+                'during' => $this->__('Creating QA ticket'),
+                'success' => $this->__('QA ticket created'),
+                'fail' => $this->__('QA ticket could not be created')
             ];
         }
         $stages[] = [
-            'name' => 'create-release',
-            'pre' => 'Create GitHub Release',
-            'during' => 'Creating GitHub Release',
-            'success' => 'GitHub Release created',
-            'fail' => 'GitHub Release could not be created'
+            'name' => $this->__('create-release'),
+            'pre' => $this->__('Create GitHub Release'),
+            'during' => $this->__('Creating GitHub Release'),
+            'success' => $this->__('GitHub Release created'),
+            'fail' => $this->__('GitHub Release could not be created')
         ];
         $stages[] = [
-            'name' => 'copy-assets',
-            'pre' => 'Copy assets from Jenkins to GitHub',
-            'during' => 'Copying assets from Jenkins to GitHub (takes longer)',
-            'success' => 'Assets copied',
-            'fail' => 'Assets could not be copied'
+            'name' => $this->__('copy-assets'),
+            'pre' => $this->__('Copy assets from Jenkins to GitHub'),
+            'during' => $this->__('Copying assets from Jenkins to GitHub (takes longer)'),
+            'success' => $this->__('Assets copied'),
+            'fail' => $this->__('Assets could not be copied')
         ];
 
         if (!$this->getData()['isPreRelease']) {
             $stages[] = [
-                'name' => 'copy-job',
-                'pre' => 'Copy old Jenkins Job',
-                'during' => 'Copying Jenkins Job',
-                'success' => 'Jenkins Job copied',
-                'fail' => 'Jenkins Job could not be copied'
+                'name' => $this->__('copy-job'),
+                'pre' => $this->__('Copy old Jenkins Job'),
+                'during' => $this->__('Copying Jenkins Job'),
+                'success' => $this->__('Jenkins Job copied'),
+                'fail' => $this->__('Jenkins Job could not be copied')
             ];
             $stages[] = [
-                'name' => 'disable-job',
-                'pre' => 'Disable old Jenkins Job',
-                'during' => 'Disabling Jenkins Job',
-                'success' => 'Jenkins Job disabled',
-                'fail' => 'Jenkins Job could not be disabled'
+                'name' => $this->__('disable-job'),
+                'pre' => $this->__('Disable old Jenkins Job'),
+                'during' => $this->__('Disabling Jenkins Job'),
+                'success' => $this->__('Jenkins Job disabled'),
+                'fail' => $this->__('Jenkins Job could not be disabled')
             ];
             $stages[] = [
-                'name' => 'update-core-version',
-                'pre' => 'Update Core version',
-                'during' => 'Updating Core version',
-                'success' => 'Core version updated',
-                'fail' => 'Core version could not be updated'
+                'name' => $this->__('update-core-version'),
+                'pre' => $this->__('Update Core version'),
+                'during' => $this->__('Updating Core version'),
+                'success' => $this->__('Core version updated'),
+                'fail' => $this->__('Core version could not be updated')
             ];
             $stages[] = [
-                'name' => 'close-milestone',
-                'pre' => 'Close milestone',
-                'during' => 'Closing milestone',
-                'success' => 'Milestone closed',
-                'fail' => 'Milestone could not be closed'
+                'name' => $this->__('close-milestone'),
+                'pre' => $this->__('Close milestone'),
+                'during' => $this->__('Closing milestone'),
+                'success' => $this->__('Milestone closed'),
+                'fail' => $this->__('Milestone could not be closed')
             ];
             // Update Core Version
             // Close milestone
         }
         $stages[] = [
-            'name' => 'finish',
-            'pre' => 'Finish',
-            'during' => 'Finishing',
-            'success' => 'Finished',
-            'fail' => 'Error while finishing'
+            'name' => $this->__('finish'),
+            'pre' => $this->__('Finish'),
+            'during' => $this->__('Finishing'),
+            'success' => $this->__('Finished'),
+            'fail' => $this->__('Error while finishing')
         ];
 
         return ['stages' => $stages];

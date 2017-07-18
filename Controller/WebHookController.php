@@ -18,6 +18,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\Module\CoreManagerModule\Exception\ClientException;
 use Zikula\Module\CoreManagerModule\Exception\ServerException;
@@ -27,7 +28,7 @@ use Zikula\Module\CoreManagerModule\Manager\PayloadManager;
 /**
  * Jenkins and GitHub Webhook access points.
  */
-class WebHookController extends \Zikula_AbstractController
+class WebHookController extends AbstractController
 {
     /**
      * @Route("/webhook-core", options={"i18n"=false})
@@ -54,7 +55,7 @@ class WebHookController extends \Zikula_AbstractController
             }
         }
 
-        $event = $this->request->headers->get('X-Github-Event');
+        $event = $request->headers->get('X-Github-Event');
         if (empty($event)) {
             return new PlainResponse('"X-Github-Event" header is missing!', Response::HTTP_BAD_REQUEST);
         }

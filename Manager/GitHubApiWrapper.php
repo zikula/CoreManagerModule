@@ -2,21 +2,29 @@
 
 namespace Zikula\Module\CoreManagerModule\Manager;
 
-use Github\HttpClient\Message\ResponseMediator;
-use Zikula\Module\CoreManagerModule\Util;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 use vierbergenlars\SemVer\version;
 
 class GitHubApiWrapper
 {
+    /**
+     * @var VariableApiInterface
+     */
+    private $variableApi;
+
     protected $githubClient;
     protected $core;
     protected $coreRepository;
     protected $coreOrganization;
 
-    public function __construct()
-    {
-        $this->githubClient = Util::getGitHubClient(false);
-        $this->core = $core = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo');
+    public function __construct(
+        VariableApiInterface $variableApi,
+        ClientHelper $clientHelper
+    ) {
+        $this->variableApi = $variableApi;
+        $this->githubClient = $clientHelper->getGitHubClient(false);
+        $this->core = $core = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo');
         $core = explode('/', $core);
         $this->coreOrganization = $core[0];
         $this->coreRepository = $core[1];
@@ -119,7 +127,7 @@ class GitHubApiWrapper
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . "-rc" . ++$currentPreRelease);
-            
+
             } else {
                 // This is a full version. Allow to release a higher version if the previous version isn't equal to
                 // the higher one.

@@ -1,0 +1,68 @@
+services:
+    zikula_core_manager_module.helper.search_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\SearchHelper
+        arguments:
+          - '@doctrine.orm.entity_manager'
+          - '@session'
+        tags:
+            - { name: zikula.searchable_module, bundleName: ZikulaCoreManagerModule }
+
+    zikula_core_manager_module.releasemanager:
+        class: Zikula\Module\CoreManagerModule\Manager\ReleaseManager
+        arguments:
+          - '@translator.default'
+          - '@zikula_extensions_module.api.variable'
+          - '@doctrine.orm.entity_manager'
+          - '@router'
+          - '@event_dispatcher'
+          - '@zikula_core_manager_module.client_helper'
+
+    zikula_core_manager_module.github_api_wrapper:
+        class: Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper
+        arguments:
+          - '@zikula_extensions_module.api.variable'
+          - '@zikula_core_manager_module.client_helper'
+
+    zikula_core_manager_module.jenkins_api_wrapper:
+        class: Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper
+        arguments:
+          - '@zikula_extensions_module.api.variable'
+          - '@zikula_core_manager_module.client_helper'
+
+    zikula_core_manager_module.api.releases.v1:
+        class: Zikula\Module\CoreManagerModule\Api\ReleasesV1Api
+        arguments:
+          - '@doctrine.orm.entity_manager'
+          - '@zikula_core_manager_module.releasemanager'
+          - '@zikula_core_manager_module.core_release_entity_helper'
+
+    zikula_core_manager_module.container.link_container:
+        class: Zikula\Module\CoreManagerModule\Container\LinkContainer
+        arguments:
+          - '@translator.default'
+          - '@router'
+          - '@zikula_permissions_module.api.permission'
+        tags:
+            - { name: zikula.link_container }
+
+    zikula_core_manager_module.twig.extension.core_manager_extension:
+        class: Zikula\Module\CoreManagerModule\Twig\Extension\CoreManagerExtension
+        arguments:
+          - '@translator.default'
+          - '@zikula_core_manager_module.core_release_entity_helper'
+        tags:
+            - { name: twig.extension }
+
+    zikula_core_manager_module.helper.progress_data_storage_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\ProgressDataStorageHelper
+        arguments: ['@session']
+
+    zikula_core_manager_module.client_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\ClientHelper
+        arguments:
+          - '@zikula_extensions_module.api.variable'
+          - '%kernel.cache_dir%'
+
+    zikula_core_manager_module.core_release_entity_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper
+        arguments: ['@translator.default']

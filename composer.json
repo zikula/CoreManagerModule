@@ -1,6 +1,7 @@
 {
     "name": "zikula/coremanagermodule-module",
-    "description": "A module to handle the core release process",
+    "version": "1.1.0",
+    "description": "Manages Core releases",
     "type": "zikula-module",
     "license": "LGPL-3.0+",
     "authors": [
@@ -20,7 +21,17 @@
     },
     "extra": {
         "zikula": {
-            "class": "Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule"
+            "core-compatibility": ">=2.0.0",
+            "class": "Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule",
+            "displayname": "Core Manager",
+            "url": "core-manager",
+            "capabilities": {
+                "admin": {"route": "zikulacoremanagermodule_admin_index"},
+                "user": {"route": "zikulacoremanagermodule_user_viewcorereleases"}
+            },
+            "securityschema": {
+                "ZikulaCoreManagerModule::": ""
+            }
         }
     },
     "config": {

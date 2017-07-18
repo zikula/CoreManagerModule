@@ -6,25 +6,12 @@ use Symfony\Component\Form\FormInterface;
 use vierbergenlars\SemVer\version;
 use Zikula\Component\Wizard\AbortStageException;
 use Zikula\Module\CoreManagerModule\Form\Type\CoreVersionType;
-use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
 
 class CoreVersionStage extends AbstractStage
 {
-    /**
-     * @var GitHubApiWrapper
-     */
-    protected $gitHubApiWrapper;
-
-    /**
-     * Returns an instance of a Symfony Form Type
-     *
-     * @return \Symfony\Component\Form\FormTypeInterface
-     */
     public function getFormType()
     {
-        $this->gitHubApiWrapper = $this->container->get('zikula_core_manager_module.github_api_wrapper');
-
-        return new CoreVersionType($this->gitHubApiWrapper->getAllowedCoreVersions());
+        return CoreVersionType::class;
     }
 
     /**
@@ -36,7 +23,7 @@ class CoreVersionStage extends AbstractStage
     public function handleFormResult(FormInterface $form)
     {
         $data = $form->getData();
-        $rc = $this->gitHubApiWrapper->versionIsPreRelease(new version($data['version']));
+        $rc = $this->container->get('zikula_core_manager_module.github_api_wrapper')->versionIsPreRelease(new version($data['version']));
         $data['isPreRelease'] = $rc !== false;
         $data['preRelease'] = $rc;
         $this->addData($data);

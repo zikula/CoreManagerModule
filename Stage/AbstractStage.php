@@ -4,11 +4,9 @@ namespace Zikula\Module\CoreManagerModule\Stage;
 
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Form\FormInterface;
-use Zikula\Component\Wizard\AbortStageException;
 use Zikula\Component\Wizard\FormHandlerInterface;
 use Zikula\Component\Wizard\InjectContainerInterface;
 use Zikula\Component\Wizard\StageInterface;
-use Zikula\Module\CoreManagerModule\Form\Type\BranchSelectionType;
 
 abstract class AbstractStage implements StageInterface, FormHandlerInterface, InjectContainerInterface
 {
@@ -76,18 +74,12 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
 
     protected function getData()
     {
-        $data = \UserUtil::getVar('ZikulaCoreManagerModule_release');
-        if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
-            return [];
-        }
-        $result = json_decode($data, true);
-
-        return (json_last_error() == JSON_ERROR_NONE) ? $result : [];
+        return $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper')->getData();
     }
 
     protected function addData($data)
     {
-        return \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode(array_merge($this->getData(), $data)));
+        return $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper')->addData($data);
     }
 
     /**

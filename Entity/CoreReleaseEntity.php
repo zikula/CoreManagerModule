@@ -15,7 +15,6 @@ namespace Zikula\Module\CoreManagerModule\Entity;
 
 use Zikula\Core\Doctrine\EntityAccess;
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Core version
@@ -120,29 +119,6 @@ class CoreReleaseEntity extends EntityAccess
         $this->id = (string)$id;
     }
 
-    public static function stateToText($state, $singularPlural = 'singular')
-    {
-        $dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
-
-        if ($singularPlural == 'singular') {
-            $translation = array (
-                self::STATE_OUTDATED => __('Outdated version', $dom),
-                self::STATE_DEVELOPMENT => __('Development version', $dom),
-                self::STATE_PRERELEASE => __('Prerelease', $dom),
-                self::STATE_SUPPORTED => __('Supported version', $dom)
-            );
-        } else {
-            $translation = array (
-                self::STATE_OUTDATED => __('Outdated versions', $dom),
-                self::STATE_DEVELOPMENT => __('Development versions', $dom),
-                self::STATE_PRERELEASE => __('Prereleases', $dom),
-                self::STATE_SUPPORTED => __('Supported versions', $dom)
-            );
-        }
-
-        return $translation[$state];
-    }
-
     /**
      * @param array $assets
      */
@@ -242,13 +218,12 @@ class CoreReleaseEntity extends EntityAccess
     /**
      * Get the release description in the user's or given language. Defaults to English.
      *
-     * @param null $lang The language to use (default: user's language)
+     * @param string $lang The language to use (default: user's language)
      *
      * @return string
      */
-    public function getDescriptionI18n($lang = null)
+    public function getDescriptionI18n($lang = 'en')
     {
-        $lang = $lang !== null ? $lang : \ZLanguage::getLocale();
         $this->extractI18n();
 
         if (isset($this->descriptionsI18n[$lang])) {
@@ -277,13 +252,12 @@ class CoreReleaseEntity extends EntityAccess
     /**
      * Get the release name in the user's or given language. Defaults to English.
      *
-     * @param null $lang The language to use (default: user's language)
+     * @param string $lang The language to use (default: user's language)
      *
      * @return string
      */
-    public function getNameI18n($lang = null)
+    public function getNameI18n($lang = 'en')
     {
-        $lang = $lang !== null ? $lang : \ZLanguage::getLocale();
         $this->extractI18n();
 
         if (isset($this->namesI18n[$lang])) {
@@ -295,10 +269,6 @@ class CoreReleaseEntity extends EntityAccess
 
     /**
      * Extracts the multilingual names and descriptions.
-     *
-     * @param null $lang The language to use (default: user's language)
-     *
-     * @return string
      */
     private function extractI18n()
     {
@@ -345,29 +315,5 @@ class CoreReleaseEntity extends EntityAccess
         $data['descriptionsI18n'] = $this->descriptionsI18n;
 
         return $data;
-    }
-
-    /**
-     * Get a news text to use for this core release.
-     *
-     * @return string
-     */
-    public function getNewsText()
-    {
-        $downloadLinks = "";
-        if (count($this->getAssets()) > 0) {
-            $downloadLinkTpl = '<a href="%link%" class="btn btn-success btn-sm">%text%</a>';
-            foreach ($this->getAssets() as $asset) {
-                $downloadLinks .= str_replace('%link%', $asset['download_url'], str_replace('%text%', $asset['name'], $downloadLinkTpl));
-            }
-        } else {
-            $dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
-            $downloadLinks .= "<div class=\"alert alert-warning\">" .
-                __('Direct download links not yet available!', $dom) . "</div>";
-        }
-
-        return self::NEWS_DESCRIPTION_START .
-            $this->getDescriptionI18n() . $downloadLinks .
-            self::NEWS_DESCRIPTION_END;
     }
 }

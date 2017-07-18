@@ -23,17 +23,25 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpKernel\Event\PostResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Routing\RouterInterface;
-use Symfony\Component\Validator\Constraints\All;
 use vierbergenlars\SemVer\version;
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Common\Translator\TranslatorTrait;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
-use Zikula\Module\CoreManagerModule\Util;
-
+use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 
 /**
  * Class ReleaseManager.
  */
 class ReleaseManager
 {
+    use TranslatorTrait;
+
+    /**
+     * @var VariableApiInterface
+     */
+    private $variableApi;
+
     /**
      * @var EntityManagerInterface
      */
@@ -48,12 +56,20 @@ class ReleaseManager
 
     private $jenkinsClient;
 
+    /**
+     * @var RouterInterface
+     */
     private $router;
 
     /**
-     * @var \Symfony\Component\EventDispatcher\EventDispatcherInterface
+     * @var EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var ClientHelper
+     */
+    private $clientHelper;
 
     /**
      * @var bool
@@ -61,19 +77,34 @@ class ReleaseManager
     private $isMainInstance;
 
     /**
-     * @param                 $em
+     * @param TranslatorInterface $translator
+     * @param VariableApiInterface $variableApi
+     * @param EntityManagerInterface $em
      * @param RouterInterface $router
+     * @param EventDispatcherInterface $eventDispatcher
      */
-    public function __construct($em, RouterInterface $router, EventDispatcherInterface $eventDispatcher)
-    {
-        $this->client = Util::getGitHubClient();
-        $this->jenkinsClient = Util::getJenkinsClient();
+    public function __construct(
+        TranslatorInterface $translator,
+        VariableApiInterface $variableApi,
+        EntityManagerInterface $em,
+        RouterInterface $router,
+        EventDispatcherInterface $eventDispatcher,
+        ClientHelper $clientHelper
+    ) {
+        $this->clientHelper = $clientHelper;
+        $this->client = $clientHelper->getGitHubClient();
+        $this->jenkinsClient = $clientHelper->getJenkinsClient();
         $this->em = $em;
-        $this->repo = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
-        $this->dom = \ZLanguage::getModuleDomain('ZikulaCoreManagerModule');
+        $this->repo = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
         $this->router = $router;
         $this->eventDispatcher = $eventDispatcher;
-        $this->isMainInstance = \ModUtil::getVar('ZikulaCoreManagerModule', 'is_main_instance', false);
+        $this->isMainInstance = $this->variableApi->get('ZikulaCoreManagerModule', 'is_main_instance', false);
+        $this->setTranslator($translator);
+    }
+
+    public function setTranslator($translator)
+    {
+        $this->translator = $translator;
     }
 
     /**
@@ -258,7 +289,7 @@ class ReleaseManager
         ));
         $dbRelease->setState($state);
 
-        if ($mode == 'new' && count($release['assets']) == 0 && $this->jenkinsClient && Util::hasGitHubClientPushAccess($this->client) && $this->isMainInstance) {
+        if ($mode == 'new' && count($release['assets']) == 0 && $this->jenkinsClient && $this->clientHelper->hasGitHubClientPushAccess($this->client) && $this->isMainInstance) {
             // Jenkins Build files are not yet uploaded to GitHub. Try to upload them manually.
             $this->moveAssetsFromJenkinsToGitHubRelease($release);
         }
@@ -285,11 +316,12 @@ class ReleaseManager
 
         $this->em->flush();
 
-        if ($mode == 'new' && $createNewsArticle) {
-            $this->createNewsArticle($dbRelease);
-        } else if($dbRelease->getNewsId() !== null) {
-            $this->updateNewsArticle($dbRelease);
-        }
+        // @todo disabled
+//        if ($mode == 'new' && $createNewsArticle) {
+//            $this->createNewsArticle($dbRelease);
+//        } else if($dbRelease->getNewsId() !== null) {
+//            $this->updateNewsArticle($dbRelease);
+//        }
 
         return true;
     }
@@ -446,7 +478,7 @@ class ReleaseManager
                 if (!empty($description)) {
                     $description .= "<br /><br />";
                 }
-                $description .= '<h4>' . __('Latest changes:', $this->dom) . '</h4><ul>';
+                $description .= '<h4>' . $this->__('Latest changes:') . '</h4><ul>';
 
                 foreach ($changeSet['items'] as $item) {
                     $description .= '<li><p>' . $this->markdown($item['msg']) . ' <a href="https://github.com/' . $this->repo . '/commit/' . urlencode($item['commitId']) . '">view at GitHub <i class="fa fa-github"></i></a></p></li>';
@@ -483,7 +515,7 @@ class ReleaseManager
      */
     private function getAssetsFromJenkinsBuild(Job $job, Build $build)
     {
-        $server = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server');
+        $server = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server');
         $assets = array();
         foreach ($build->getArtifacts() as $artifact) {
             $downloadUrl = $server . '/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
@@ -569,7 +601,7 @@ class ReleaseManager
      */
     private function notifyBuildAdded($build)
     {
-        if (!Util::hasGitHubClientPushAccess($this->client) || !$this->isMainInstance) {
+        if (!$this->clientHelper->hasGitHubClientPushAccess($this->client) || !$this->isMainInstance) {
             return;
         }
         $sha = $this->getShaFromJenkinsBuild($build, true);
@@ -682,47 +714,48 @@ class ReleaseManager
      */
     private function createNewsArticle(CoreReleaseEntity $newRelease)
     {
-        if (!\ModUtil::available('News')) {
-            return;
-        }
-        switch ($newRelease->getState()) {
-            case CoreReleaseEntity::STATE_SUPPORTED:
-                $title = __f('%s released!', array($newRelease->getNameI18n()), $this->dom);
-                $teaser = '<p>' . __f('The core development team is proud to announce the availabilty of %s.', array($newRelease->getNameI18n())) . '</p>';
-                break;
-            case CoreReleaseEntity::STATE_PRERELEASE:
-                $title = __f('%s ready for testing!', array($newRelease->getNameI18n()), $this->dom);
-                $teaser = '<p>' . __f('The core development team is proud to announce a pre-release of %s. Please help testing and report bugs!', array($newRelease->getNameI18n())) . '</p>';
-                break;
-            case CoreReleaseEntity::STATE_DEVELOPMENT:
-            case CoreReleaseEntity::STATE_OUTDATED:
-            default:
-                // Do not create news post.
-                return;
-        }
-
-        $args = array();
-        $now = \DateUtil::getDatetime();
-        $args['title'] = $title;
-        $args['hometext'] = $teaser;
-        $args['hometextcontenttype'] = 0;
-        $args['bodytextcontenttype'] = 0;
-        $args['bodytext'] = $newRelease->getNewsText();
-        $args['notes'] = '';
-        $args['published_status'] = \News_Api_User::STATUS_PENDING;
-        $args['displayonindex'] = 1;
-        $args['allowcomments'] = 1;
-        $args['from'] = $now;
-        $args['cr_date'] = $now;
-        $args['tonolimit'] = true;
-
-        $id = \ModUtil::apiFunc('News', 'user', 'create', $args);
-
-        if (is_numeric($id) && $id > 0) {
-            $newRelease->setNewsId($id);
-            $this->em->merge($newRelease);
-            $this->em->flush();
-        }
+        // @todo disabled
+//        if (!\ModUtil::available('News')) {
+//            return;
+//        }
+//        switch ($newRelease->getState()) {
+//            case CoreReleaseEntity::STATE_SUPPORTED:
+//                $title = $this->__f('%s released!', array('%s' => $newRelease->getNameI18n()));
+//                $teaser = '<p>' . $this->__f('The core development team is proud to announce the availabilty of %s.', array(('%s' => $newRelease->getNameI18n())) . '</p>';
+//                break;
+//            case CoreReleaseEntity::STATE_PRERELEASE:
+//                $title = $this->__f('%s ready for testing!', array(('%s' => $newRelease->getNameI18n()));
+//                $teaser = '<p>' . $this->__f('The core development team is proud to announce a pre-release of %s. Please help testing and report bugs!', array(('%s' => $newRelease->getNameI18n())) . '</p>';
+//                break;
+//            case CoreReleaseEntity::STATE_DEVELOPMENT:
+//            case CoreReleaseEntity::STATE_OUTDATED:
+//            default:
+//                // Do not create news post.
+//                return;
+//        }
+//
+//        $args = array();
+//        $now = new \DateTime();
+//        $args['title'] = $title;
+//        $args['hometext'] = $teaser;
+//        $args['hometextcontenttype'] = 0;
+//        $args['bodytextcontenttype'] = 0;
+//        $args['bodytext'] = $newRelease->getNewsText(); change to \Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper::getNewsText
+//        $args['notes'] = '';
+//        $args['published_status'] = 1; //\News_Api_User::STATUS_PENDING;
+//        $args['displayonindex'] = 1;
+//        $args['allowcomments'] = 1;
+//        $args['from'] = $now->format('%Y-%m-%d %H:%M:%S');
+//        $args['cr_date'] = $now->format('%Y-%m-%d %H:%M:%S');
+//        $args['tonolimit'] = true;
+//
+//        $id = \ModUtil::apiFunc('News', 'user', 'create', $args);
+//
+//        if (is_numeric($id) && $id > 0) {
+//            $newRelease->setNewsId($id);
+//            $this->em->merge($newRelease);
+//            $this->em->flush();
+//        }
     }
 
     /**
@@ -732,24 +765,26 @@ class ReleaseManager
      */
     private function updateNewsArticle(CoreReleaseEntity $release)
     {
-        if ($release->getNewsId() === null || !\ModUtil::available('News')) {
-            return;
-        }
+        // @todo disabled
 
-        $article = \ModUtil::apiFunc('News', 'user', 'get', array ('sid' => $release->getNewsId()));
-        if (!$article) {
-            return;
-        }
-
-        $article['bodytext'] = preg_replace('#' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_START) . '.*?' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_END) . '#',
-            $release->getNewsText(),
-            $article['bodytext']
-        );
-        $article['hometextcontenttype'] = 0;
-        $article['bodytextcontenttype'] = 0;
-        $article['unlimited'] = 1;
-        $article['to'] = 1;
-        \ModUtil::apiFunc('News', 'admin', 'update', $article);
+//        if ($release->getNewsId() === null || !\ModUtil::available('News')) {
+//            return;
+//        }
+//
+//        $article = \ModUtil::apiFunc('News', 'user', 'get', array ('sid' => $release->getNewsId()));
+//        if (!$article) {
+//            return;
+//        }
+//
+//        $article['bodytext'] = preg_replace('#' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_START) . '.*?' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_END) . '#',
+//            $release->getNewsText(), change to \Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper::getNewsText
+//            $article['bodytext']
+//        );
+//        $article['hometextcontenttype'] = 0;
+//        $article['bodytextcontenttype'] = 0;
+//        $article['unlimited'] = 1;
+//        $article['to'] = 1;
+//        \ModUtil::apiFunc('News', 'admin', 'update', $article);
     }
 
     /**

@@ -2,9 +2,9 @@
 
 namespace Zikula\Module\CoreManagerModule;
 
-use DoctrineHelper;
+use Zikula\Core\AbstractExtensionInstaller;
 
-class CoreManagerModuleInstaller extends \Zikula_AbstractInstaller
+class CoreManagerModuleInstaller extends AbstractExtensionInstaller
 {
     private $entities = array(
         'Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity'
@@ -13,9 +13,9 @@ class CoreManagerModuleInstaller extends \Zikula_AbstractInstaller
     public function install()
     {
         try {
-            DoctrineHelper::createSchema($this->entityManager, $this->entities);
+            $this->schemaTool->create($this->entities);
         } catch (\Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
             return false;
         }
 
@@ -30,9 +30,9 @@ class CoreManagerModuleInstaller extends \Zikula_AbstractInstaller
     public function uninstall()
     {
         try {
-            DoctrineHelper::dropSchema($this->entityManager, $this->entities);
+            $this->schemaTool->drop($this->entities);
         } catch (\Exception $e) {
-            $this->request->getSession()->getFlashBag()->add('error', $e->getMessage());
+            $this->addFlash('error', $e->getMessage());
             return false;
         }
 

@@ -2,15 +2,21 @@
 
 namespace Zikula\Module\CoreManagerModule\Form\Type;
 
-
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use vierbergenlars\SemVer\version;
+use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
 
 class CoreVersionType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     /**
      * @var array
      */
@@ -19,9 +25,12 @@ class CoreVersionType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $versions)
-    {
-        $this->versions = $versions;
+    public function __construct(
+        TranslatorInterface $translator,
+        GitHubApiWrapper $api
+    ) {
+        $this->translator = $translator;
+        $this->versions = $api->getAllowedCoreVersions();
     }
 
     /**
@@ -29,13 +38,16 @@ class CoreVersionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('version', 'choice', [
-            'label' => __('Core version', 'ZikulaCoreManagerModule'),
-            'label_attr' => ['class' => 'col-sm-3'],
-            'choice_list' => new ChoiceList($this->versions, $this->versions),
-        ])->add('next', 'submit', [
-            'label' => __('Next', 'ZikulaCoreManagerModule'),
-        ]);
+        $builder
+            ->add('version', ChoiceType::class, [
+                'label' => $this->translator->__('Core version'),
+                'label_attr' => ['class' => 'col-sm-3'],
+                'choice_list' => new ArrayChoiceList($this->versions),
+            ])
+            ->add('next', SubmitType::class, [
+                'label' => $this->translator->__('Next'),
+            ])
+        ;
     }
 
     /**

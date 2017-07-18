@@ -7,61 +7,61 @@ namespace Composer\Autoload;
 class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
 {
     public static $prefixLengthsPsr4 = array (
-        'Z' => 
+        'Z' =>
         array (
             'Zikula\\Module\\CoreManagerModule\\' => 32,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Component\\EventDispatcher\\' => 34,
         ),
-        'G' => 
+        'G' =>
         array (
             'Github\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Zikula\\Module\\CoreManagerModule\\' => 
+        'Zikula\\Module\\CoreManagerModule\\' =>
         array (
             0 => __DIR__ . '/../..' . '/',
         ),
-        'Symfony\\Component\\EventDispatcher\\' => 
+        'Symfony\\Component\\EventDispatcher\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
         ),
-        'Github\\' => 
+        'Github\\' =>
         array (
             0 => __DIR__ . '/..' . '/knplabs/github-api/lib/Github',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'v' => 
+        'v' =>
         array (
-            'vierbergenlars\\SemVer\\' => 
+            'vierbergenlars\\SemVer\\' =>
             array (
                 0 => __DIR__ . '/..' . '/vierbergenlars/php-semver/src',
             ),
-            'vierbergenlars\\LibJs\\' => 
+            'vierbergenlars\\LibJs\\' =>
             array (
                 0 => __DIR__ . '/..' . '/vierbergenlars/php-semver/src',
             ),
         ),
-        'G' => 
+        'G' =>
         array (
-            'Guzzle\\Tests' => 
+            'Guzzle\\Tests' =>
             array (
                 0 => __DIR__ . '/..' . '/guzzle/guzzle/tests',
             ),
-            'Guzzle' => 
+            'Guzzle' =>
             array (
                 0 => __DIR__ . '/..' . '/guzzle/guzzle/src',
             ),
         ),
-        'C' => 
+        'C' =>
         array (
-            'CarlosIO' => 
+            'CarlosIO' =>
             array (
                 0 => __DIR__ . '/..' . '/carlosio/jenkins/src',
             ),
@@ -575,8 +575,7 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Symfony\\Component\\EventDispatcher\\EventSubscriberInterface' => __DIR__ . '/..' . '/symfony/event-dispatcher/EventSubscriberInterface.php',
         'Symfony\\Component\\EventDispatcher\\GenericEvent' => __DIR__ . '/..' . '/symfony/event-dispatcher/GenericEvent.php',
         'Symfony\\Component\\EventDispatcher\\ImmutableEventDispatcher' => __DIR__ . '/..' . '/symfony/event-dispatcher/ImmutableEventDispatcher.php',
-        'Zikula\\Module\\CoreManagerModule\\AbstractButtonBlock' => __DIR__ . '/../..' . '/AbstractButtonBlock.php',
-        'Zikula\\Module\\CoreManagerModule\\Api\\AdminApi' => __DIR__ . '/../..' . '/Api/AdminApi.php',
+        'Zikula\\Module\\CoreManagerModule\\AbstractButtonBlock' => __DIR__ . '/../..',
         'Zikula\\Module\\CoreManagerModule\\Api\\ReleasesV1Api' => __DIR__ . '/../..' . '/Api/ReleasesV1Api.php',
         'Zikula\\Module\\CoreManagerModule\\Block\\JenkinsBuildBlock' => __DIR__ . '/../..' . '/Block/JenkinsBuildBlock.php',
         'Zikula\\Module\\CoreManagerModule\\Block\\LatestReleaseBlock' => __DIR__ . '/../..' . '/Block/LatestReleaseBlock.php',
@@ -586,7 +585,6 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Controller\\UserController' => __DIR__ . '/../..' . '/Controller/UserController.php',
         'Zikula\\Module\\CoreManagerModule\\Controller\\WebHookController' => __DIR__ . '/../..' . '/Controller/WebHookController.php',
         'Zikula\\Module\\CoreManagerModule\\CoreManagerModuleInstaller' => __DIR__ . '/../..' . '/CoreManagerModuleInstaller.php',
-        'Zikula\\Module\\CoreManagerModule\\CoreManagerModuleVersion' => __DIR__ . '/../..' . '/CoreManagerModuleVersion.php',
         'Zikula\\Module\\CoreManagerModule\\DependencyInjection\\ZikulaCoreManagerExtension' => __DIR__ . '/../..' . '/DependencyInjection/ZikulaCoreManagerExtension.php',
         'Zikula\\Module\\CoreManagerModule\\Entity\\CoreReleaseEntity' => __DIR__ . '/../..' . '/Entity/CoreReleaseEntity.php',
         'Zikula\\Module\\CoreManagerModule\\Entity\\Repository\\CoreReleaseRepository' => __DIR__ . '/../..' . '/Entity/Repository/CoreReleaseRepository.php',
@@ -612,11 +610,11 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Stage\\CoreVersionStage' => __DIR__ . '/../..' . '/Stage/CoreVersionStage.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\ExecuteStage' => __DIR__ . '/../..' . '/Stage/ExecuteStage.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\JenkinsBuildStage' => __DIR__ . '/../..' . '/Stage/JenkinsBuildStage.php',
-        'Zikula\\Module\\CoreManagerModule\\Util' => __DIR__ . '/../..' . '/Util.php',
+        'Zikula\\Module\\CoreManagerModule\\ClientHelper' => __DIR__ . '/../..',
         'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => __DIR__ . '/../..' . '/ZikulaCoreManagerModule.php',
+        'vierbergenlars\\LibJs\\JObject' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JObject.php',
         'vierbergenlars\\LibJs\\JSArray' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JSArray.php',
         'vierbergenlars\\LibJs\\JString' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JString.php',
-        'vierbergenlars\\LibJs\\Object' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/Object.php',
         'vierbergenlars\\LibJs\\RegExp' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/RegExp.php',
         'vierbergenlars\\LibJs\\Util' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/Util.php',
         'vierbergenlars\\SemVer\\Internal\\Comparator' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/SemVer/internal.php',

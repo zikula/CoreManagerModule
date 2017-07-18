@@ -3,13 +3,21 @@
 namespace Zikula\Module\CoreManagerModule\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\ChoiceList\ChoiceList;
+use Symfony\Component\Form\ChoiceList\ArrayChoiceList;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
-use vierbergenlars\SemVer\version;
+use Zikula\Common\Translator\TranslatorInterface;
+use Zikula\Module\CoreManagerModule\Helper\ProgressDataStorageHelper;
 use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
 
 class CommitType extends AbstractType
 {
+    /**
+     * @var TranslatorInterface
+     */
+    private $translator;
+
     /**
      * @var array
      */
@@ -18,9 +26,14 @@ class CommitType extends AbstractType
     /**
      * {@inheritdoc}
      */
-    public function __construct(array $commits)
-    {
-        $this->commits = $commits;
+    public function __construct(
+        TranslatorInterface $translator,
+        GitHubApiWrapper $api,
+        ProgressDataStorageHelper $storageHelper
+    ) {
+        $this->translator = $translator;
+        $branch = $storageHelper->getData()['branch'];
+        $this->commits = $api->getLastNCommitsOfBranch($branch, 10);
     }
 
     /**
@@ -32,13 +45,16 @@ class CommitType extends AbstractType
         foreach ($this->commits as $commit) {
             $commits[$commit['sha']] = substr($commit['sha'], 0, 8) . " - " . $commit['commit']['message'];
         }
-        $builder->add('commit', 'choice', [
-            'label' => __('Commit', 'ZikulaCoreManagerModule'),
-            'label_attr' => ['class' => 'col-sm-3'],
-            'choice_list' => new ChoiceList(array_keys($commits), array_values($commits)),
-        ])->add('next', 'submit', [
-            'label' => __('Next', 'ZikulaCoreManagerModule'),
-        ]);
+        $builder
+            ->add('commit', ChoiceType::class, [
+                'label' => $this->translator->__('Commit'),
+                'label_attr' => ['class' => 'col-sm-3'],
+                'choice_list' => new ArrayChoiceList($commits),
+            ])
+            ->add('next', SubmitType::class, [
+                'label' => $this->translator->__('Next'),
+            ])
+        ;
     }
 
     /**

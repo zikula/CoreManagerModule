@@ -14,11 +14,12 @@
 namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Zikula\Core\Controller\AbstractController;
 
 /**
  * UI operations executable by general users.
  */
-class UserController extends \Zikula_AbstractController
+class UserController extends AbstractController
 {
     /**
      * @Route("/download", options={"zkNoBundlePrefix" = 1})
@@ -26,9 +27,9 @@ class UserController extends \Zikula_AbstractController
     public function viewCoreReleasesAction()
     {
         $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
-        $releases = $releaseManager->getSignificantReleases(false);
-        $this->view->assign('releases', $releases);
 
-        return $this->response($this->view->fetch('User/viewreleases.tpl'));
+        return $this->renderView('@ZikulaCoreManagerModule/User/viewreleases.html.twig', [
+            'releases' => $releaseManager->getSignificantReleases(false)
+        ]);
     }
 }

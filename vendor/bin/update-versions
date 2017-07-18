@@ -1,7 +1,1 @@
-#!/usr/bin/env sh
-SRC_DIR="`pwd`"
-cd "`dirname "$0"`"
-cd "../vierbergenlars/php-semver/bin"
-BIN_TARGET="`pwd`/update-versions"
-cd "$SRC_DIR"
-"$BIN_TARGET" "$@"
+../vierbergenlars/php-semver/bin/update-versions

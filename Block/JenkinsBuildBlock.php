@@ -13,48 +13,18 @@
 
 namespace Zikula\Module\CoreManagerModule\Block;
 
-use BlockUtil;
-use ModUtil;
-use SecurityUtil;
-use Zikula\Module\CoreManagerModule\AbstractButtonBlock;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
 class JenkinsBuildBlock extends AbstractButtonBlock
 {
     /**
-     * initialise block
-     */
-    public function init()
-    {
-        SecurityUtil::registerPermissionSchema('ZikulaCoreManagerModule:jenkinsBuild:', 'Block title::');
-    }
-
-    /**
-     * get information on block
-     */
-    public function info()
-    {
-        return array(
-            'text_type' => 'jenkinsBuild',
-            'module' => 'ZikulaCoreManagerModule',
-            'text_type_long' => $this->__('Jenkins build button'),
-            'allow_multiple' => true,
-            'form_content' => false,
-            'form_refresh' => false,
-            'show_preview' => true,
-            'admin_tableless' => true
-        );
-    }
-
-    /**
      * {@inheritdoc}
      */
-    public function display($blockinfo)
+    public function display(array $properties)
     {
-        if (!SecurityUtil::checkPermission('ZikulaCoreManagerModule:jenkinsBuild:', "$blockinfo[title]::", ACCESS_OVERVIEW) || !ModUtil::available('ZikulaCoreManagerModule')) {
+        if (!$this->hasPermission('ZikulaCoreManagerModule:jenkinsBuild:', "$properties[title]::", ACCESS_OVERVIEW)) {
             return "";
         }
-        parent::display($blockinfo);
 
         $releaseManager = $this->get('zikulacoremanagermodule.releasemanager');
         $releases = $releaseManager->getSignificantReleases(false);
@@ -66,10 +36,11 @@ class JenkinsBuildBlock extends AbstractButtonBlock
         if (empty($developmentReleases)) {
             return "";
         }
-        $this->view->assign('developmentReleases', $developmentReleases);
-        $this->view->assign('id', uniqid());
-        $blockinfo['content'] = $this->view->fetch('Blocks/jenkinsbuilds.tpl');
 
-        return BlockUtil::themeBlock($blockinfo);
+        return $this->renderView('@ZikulaBlocksModule/Block/jenkinsbuilds.html.twig', [
+            'content' => $properties['content'],
+            'developmentReleases', $developmentReleases,
+            'id' => uniqid()
+        ]);
     }
 }

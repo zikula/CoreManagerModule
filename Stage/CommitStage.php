@@ -12,17 +12,9 @@ use Zikula\Module\CoreManagerModule\Form\Type\CommitType;
 
 class CommitStage extends AbstractStage
 {
-    /**
-     * Returns an instance of a Symfony Form Type
-     *
-     * @return \Symfony\Component\Form\FormTypeInterface
-     */
     public function getFormType()
     {
-        $branch = $this->getData()['branch'];
-        $commits = $this->container->get('zikula_core_manager_module.github_api_wrapper')->getLastNCommitsOfBranch($branch, 10);
-
-        return new CommitType($commits);
+        return CommitType::class;
     }
 
     /**

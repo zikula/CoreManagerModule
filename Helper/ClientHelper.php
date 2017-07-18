@@ -11,49 +11,38 @@
  * information regarding copyright and licensing.
  */
 
-namespace Zikula\Module\CoreManagerModule;
+namespace Zikula\Module\CoreManagerModule\Helper;
 
 use CarlosIO\Jenkins\Exception\SourceNotAvailableException;
-use Doctrine\Common\Collections\ArrayCollection;
 use Github\Client as GitHubClient;
 use Github\HttpClient\Cache\FilesystemCache;
 use Github\HttpClient\CachedHttpClient;
 use Github\HttpClient\Message\ResponseMediator;
-use vierbergenlars\SemVer\expression;
-use vierbergenlars\SemVer\version;
-use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
-use Zikula\Module\CoreManagerModule\Entity\ExtensionEntity;
-use Zikula\Module\CoreManagerModule\Entity\ExtensionVersionEntity;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use CarlosIO\Jenkins\Dashboard;
 use CarlosIO\Jenkins\Source;
 
-class Util
+class ClientHelper
 {
     /**
-     * Get all available core versions.
-     *
-     * @return array An array of arrays providing "outdated", "supported" and "dev" core versions.
-     *
-     * @todo Fetch from GitHub.
+     * @var VariableApiInterface
      */
-    public static function getAvailableCoreVersions($indexBy = 'stateText')
+    private $variableApi;
+
+    /**
+     * @var string
+     */
+    private $cacheDir;
+
+    /**
+     * ClientHelper constructor.
+     * @param VariableApiInterface $variableApi
+     * @param string $cacheDir
+     */
+    public function __construct(VariableApiInterface $variableApi, $cacheDir)
     {
-        $releaseManager = \ServiceUtil::get('zikulacoremanagermodule.releasemanager');
-        $dbReleases = $releaseManager->getSignificantReleases(false);
-
-        $releases = array();
-        foreach ($dbReleases as $dbRelease) {
-            if ($indexBy == 'stateText') {
-                $key = CoreReleaseEntity::stateToText($dbRelease->getState(), 'plural');
-            } else {
-                $key = $dbRelease->getState();
-            }
-            $releases[$key][$dbRelease->getSemver()] = '';
-        }
-
-        return $releases;
+        $this->variableApi = $variableApi;
+        $this->cacheDir = $cacheDir;
     }
 
     /**
@@ -65,15 +54,13 @@ class Util
      * @return GitHubClient|bool The authenticated GitHub client, or false if $fallBackToNonAuthenticatedClient
      * is false and the client could not be authenticated.
      */
-    public static function getGitHubClient($fallBackToNonAuthenticatedClient = true)
+    public function getGitHubClient($fallBackToNonAuthenticatedClient = true)
     {
-        $cacheDir = \CacheUtil::getLocalDir('el/github-api');
-
         $httpClient = new CachedHttpClient();
-        $httpClient->setCache(new FilesystemCache($cacheDir));
+        $httpClient->setCache(new FilesystemCache($this->cacheDir . 'el/github-api'));
         $client = new GitHubClient($httpClient);
 
-        $token = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_token', null);
+        $token = $this->variableApi->get('ZikulaCoreManagerModule', 'github_token', null);
         if (!empty($token)) {
             $client->authenticate($token, null, GitHubClient::AUTH_HTTP_TOKEN);
             try {
@@ -83,7 +70,7 @@ class Util
                 if ($fallBackToNonAuthenticatedClient) {
                     // Replace client with one not using authentication.
                     $httpClient = new CachedHttpClient();
-                    $httpClient->setCache(new FilesystemCache($cacheDir));
+                    $httpClient->setCache(new FilesystemCache($this->cacheDir . 'el/github-api'));
                     $client = new GitHubClient($httpClient);
                 } else {
                     $client = false;
@@ -101,15 +88,16 @@ class Util
      *
      * @return bool
      */
-    public static function hasGitHubClientPushAccess(GitHubClient $client)
+    public function hasGitHubClientPushAccess(GitHubClient $client)
     {
-        $repo = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo');
+        $repo = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo');
         if (empty($repo)) {
             return false;
         }
         try {
             // One can only show collaborators if one has push access.
             ResponseMediator::getContent($client->getHttpClient()->get('repos/' . $repo . "/collaborators"));
+
             return true;
         } catch (\Github\Exception\RuntimeException $e) {
             return false;
@@ -144,17 +132,18 @@ class Util
     /**
      * @return bool|mixed|string
      */
-    public static function getJenkinsURL()
+    public function getJenkinsURL()
     {
-        $jenkinsServer = trim(\ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
+        $jenkinsServer = trim($this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
         if (empty($jenkinsServer)) {
             return false;
         }
-        $jenkinsUser = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_user', '');
-        $jenkinsPassword = \ModUtil::getVar('ZikulaCoreManagerModule', 'jenkins_password', '');
+        $jenkinsUser = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_user', '');
+        $jenkinsPassword = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_password', '');
         if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
             $jenkinsServer = str_replace('://', "://" . urlencode($jenkinsUser) . ":" . urlencode($jenkinsPassword) . '@', $jenkinsServer);
         }
+
         return $jenkinsServer;
     }
-} 
+}

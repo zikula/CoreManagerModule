@@ -2,25 +2,32 @@
 
 namespace Zikula\Module\CoreManagerModule\Manager;
 
-use Github\HttpClient\Message\ResponseMediator;
-use Zikula\Module\CoreManagerModule\Util;
-use vierbergenlars\SemVer\version;
+use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
+use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 
 class JenkinsApiWrapper
 {
+    /**
+     * @var VariableApiInterface
+     */
+    private $variableApi;
+
     protected $jenkinsClient;
     protected $core;
     protected $coreRepository;
     protected $coreOrganization;
     protected $jenkinsURL;
-    
+
     private $OK_STATI = [200, 302];
 
-    public function __construct()
-    {
-        $this->jenkinsClient = Util::getJenkinsClient();
-        $this->jenkinsURL = Util::getJenkinsURL();
-        $this->core = $core = \ModUtil::getVar('ZikulaCoreManagerModule', 'github_core_repo');
+    public function __construct(
+        VariableApiInterface $variableApi,
+        ClientHelper $clientHelper
+    ) {
+        $this->variableApi = $variableApi;
+        $this->jenkinsClient = $clientHelper->getJenkinsClient();
+        $this->jenkinsURL = $clientHelper->getJenkinsURL();
+        $this->core = $core = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo');
         $core = explode('/', $core);
         $this->coreOrganization = $core[0];
         $this->coreRepository = $core[1];

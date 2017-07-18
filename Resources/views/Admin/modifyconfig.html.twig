@@ -1,0 +1,51 @@
+{% form_theme form with [
+'ZikulaCategoriesModule:Form:filter_layout_customizations.html.twig',
+'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+{{ pageAddAsset('javascript', zasset('@ZikulaCoreManagerModule:js/Zikula.CoreManager.Admin.ModifyConfig.js')) }}
+{{ adminHeader() }}
+    <h3>
+        <span class="fa fa-wrench"></span>&nbsp;{{ __('Settings') }}
+    </h3>
+        {{ form_start(form) }}
+        {{ form_errors(form) }}
+        <div>
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs" role="tablist">
+                <li role="presentation" class="active"><a href="#general" aria-controls="general" role="tab" data-toggle="tab">{{ __('General Settings') }}</a></li>
+                <li role="presentation"><a href="#github" aria-controls="github" role="tab" data-toggle="tab">{{ __('Github') }}</a></li>
+                <li role="presentation"><a href="#jenkins" aria-controls="jenkins" role="tab" data-toggle="tab">{{ __('Jenkins Server') }}</a></li>
+            </ul>
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane fade in active" id="general">
+                    {{ form_row(form.is_main_instance) }}
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="github">
+                    <div class="alert alert-info">
+                        {{ __f('Rate limit remaining for the next %mins minutes: %remain / %limit', {'%mins': rate.minutesUntilReset, '%remain':rate.remaining, '%limit':rate.limit}) }}
+                    </div>
+                    {% if hasPushAccess %}
+                        <div class="alert alert-success">{{ __('Great! The GitHub client has push access to the core repository!') }}</div>
+                    {% else %}
+                        <div class="alert alert-warning">{{ __('The GitHub client does not have push access to the core repository. Auto-loading Jenkins Build Assets into GitHub Core releases has been disabled.') }}</div>
+                    {% endif %}
+                    {{ form_row(form.github_core_repo) }}
+                    {{ form_row(form.github_token) }}
+                    {{ form_row(form.github_webhook_token) }}
+                </div>
+                <div role="tabpanel" class="tab-pane fade" id="jenkins">
+                    {{ form_row(form.jenkins_server) }}
+                    {{ form_row(form.jenkins_token) }}
+                    {{ form_row(form.jenkins_user) }}
+                    {{ form_row(form.jenkins_password) }}
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-offset-3 col-lg-9">
+                    {{ form_widget(form.save) }}
+                    <a class="btn btn-danger" href="{{ path('zikulacoremanagermodule_admin_index') }}" title="{{ __('Cancel') }}">{{ __('Cancel') }}</a>
+                </div>
+            </div>
+        </div>
+    {{ form_end(form) }}
+{{ adminFooter() }}

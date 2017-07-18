@@ -14,6 +14,7 @@
 namespace Zikula\Module\CoreManagerModule\Api;
 
 use Doctrine\ORM\EntityManager;
+use Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Module\CoreManagerModule\Manager\ReleaseManager;
 
@@ -29,8 +30,16 @@ class ReleasesV1Api
      */
     protected $releaseManager;
 
-    public function __construct(EntityManager $entityManager, ReleaseManager $releaseManager)
-    {
+    /**
+     * @var CoreReleaseEntityHelper
+     */
+    private $entityHelper;
+
+    public function __construct(
+        EntityManager $entityManager,
+        ReleaseManager $releaseManager,
+        CoreReleaseEntityHelper $entityHelper
+    ) {
         $this->em = $entityManager;
         $this->releaseManager = $releaseManager;
     }
@@ -55,8 +64,8 @@ class ReleasesV1Api
         );
         foreach ($states as $state) {
             $return[$state] =  array(
-                'text' => CoreReleaseEntity::stateToText($state),
-                'textPlural' => CoreReleaseEntity::stateToText($state, 'plural')
+                'text' => $this->entityHelper->stateToText($state),
+                'textPlural' => $this->entityHelper->stateToText($state, 'plural')
             );
         }
         return $return;

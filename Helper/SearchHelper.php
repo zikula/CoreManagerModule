@@ -13,28 +13,44 @@
 
 namespace Zikula\Module\CoreManagerModule\Helper;
 
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Core\RouteUrl;
-use Zikula\Module\SearchModule\AbstractSearchable;
-use SecurityUtil;
+use Zikula\SearchModule\Entity\SearchResultEntity;
+use Zikula\SearchModule\SearchableInterface;
 
-class SearchHelper extends AbstractSearchable
+class SearchHelper implements SearchableInterface
 {
     /**
-     * get the UI options for search form
-     *
-     * @param boolean $active
-     * @param array|null $modVars
-     * @return string
+     * @var EntityManagerInterface
      */
-    public function getOptions($active, $modVars = null)
-    {
-        if (SecurityUtil::checkPermission($this->name . '::', '::', ACCESS_READ)) {
-            $this->view->assign('active', $active);
-            return $this->view->fetch('Search/options.tpl');
-        }
+    private $entityManager;
 
-        return '';
+    /**
+     * @var SessionInterface
+     */
+    private $session;
+
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param SessionInterface $session
+     */
+    public function __construct(
+        EntityManagerInterface $entityManager,
+        SessionInterface $session
+    ) {
+        $this->entityManager = $entityManager;
+        $this->session = $session;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function amendForm(FormBuilderInterface $form)
+    {
+        // not needed because `active` child object is already added and that is all that is needed.
     }
 
     /**
@@ -50,19 +66,24 @@ class SearchHelper extends AbstractSearchable
         // this is an 'eager' search - it doesn't compensate for search type indicated in search UI
         $results = $this->entityManager->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->getByFragment($words);
 
-        $sessionId = session_id();
         $records = array();
         foreach ($results as $result) {
             /** @var $result CoreReleaseEntity */
-            $records[] = array(
-                'title' => $result->getName(),
-                'text' => $result->getDescription(),
-                'module' => $this->name,
-                'sesid' => $sessionId,
-                'url' => new RouteUrl('zikulacoremanagermodule_user_viewcorereleases'),
-            );
+            $result = new SearchResultEntity();
+            $result->setTitle($result->getName())
+                ->setText($result->getDescription())
+                ->setModule('ZikulaCoreManagerModule')
+                ->setCreated(new \DateTime())
+                ->setUrl(RouteUrl::createFromRoute('zikulacoremanagermodule_user_viewcorereleases'))
+                ->setSesid($this->session->getId());
+            $records[] = $result;
         }
 
         return $records;
     }
-} 
+
+    public function getErrors()
+    {
+        return [];
+    }
+}

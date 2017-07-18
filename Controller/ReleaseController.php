@@ -1,13 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Christian
- * Date: 21.07.2015
- * Time: 19:39
- */
 
 namespace Zikula\Module\CoreManagerModule\Controller;
-
 
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -20,9 +13,6 @@ use Zikula\Component\Wizard\FormHandlerInterface;
 use Zikula\Component\Wizard\Wizard;
 use Zikula\Component\Wizard\WizardCompleteInterface;
 use Zikula\Core\Controller\AbstractController;
-use Zikula\Core\Response\PlainResponse;
-use Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper;
-use Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper;
 use Zikula\Module\CoreManagerModule\Settings;
 use Zikula\ThemeModule\Engine\Annotation\Theme;
 
@@ -40,7 +30,7 @@ class ReleaseController extends AbstractController
      */
     public function wizardAction(Request $request, $stage = null)
     {
-        if (!\SecurityUtil::checkPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
+        if (!$this->hasPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
         $request->attributes->set('_legacy', true);
@@ -51,10 +41,10 @@ class ReleaseController extends AbstractController
             return $currentStage->getResponse($request);
         }
         if ($wizard->isHalted()) {
-            $request->getSession()->getFlashBag()->add('danger', $wizard->getWarning());
+            $this->addFlash('danger', $wizard->getWarning());
 
             // @todo..
-            return $this->container->get('templating')->renderResponse('');
+            return $this->render('');
         }
         $templateParams = $currentStage->getTemplateParams();
         if ($currentStage instanceof FormHandlerInterface) {
@@ -69,7 +59,7 @@ class ReleaseController extends AbstractController
             $templateParams['form'] = $form->createView();
         }
 
-        return $this->get('templating')->renderResponse($currentStage->getTemplateName(), $templateParams);
+        return $this->render($currentStage->getTemplateName(), $templateParams);
     }
 
     /**
@@ -77,11 +67,11 @@ class ReleaseController extends AbstractController
      * @Method("POST")
      *
      * @param Request $request
-     * @return PlainResponse
+     * @return JsonResponse
      */
     public function ajaxAction(Request $request)
     {
-        if (!\SecurityUtil::checkPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
+        if (!$this->hasPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
         set_time_limit(300);
@@ -91,7 +81,8 @@ class ReleaseController extends AbstractController
         if ($stage === false) {
             throw new \RuntimeException('No stage parameter received.');
         }
-        $data = \UserUtil::getVar('ZikulaCoreManagerModule_release');
+        $dataHelper = $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper');
+        $data = $dataHelper->getData();
         if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
             throw new \RuntimeException('Could not decode user data.');
         }
@@ -145,7 +136,7 @@ class ReleaseController extends AbstractController
 
                 if (isset($return['number'])) {
                     $data['github_qa_ticket_url'] = $return['html_url'];
-                    \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode($data));
+                    $dataHelper->setData($data);
                     $result = true;
                 }
                 break;
@@ -154,14 +145,14 @@ class ReleaseController extends AbstractController
                 $return = $gitHubApiWrapper->createRelease($data['title'], $description, $data['isPreRelease'], $data['version'], $data['commit']);
                 if (isset($return['id'])) {
                     $data['github_release_id'] = $return['id'];
-                    \UserUtil::setVar('ZikulaCoreManagerModule_release', json_encode($data));
+                    $dataHelper->setData($data);
                     $result = true;
                 }
                 break;
             case 'copy-assets':
                 $assets = $jenkinsApiWrapper->getAssets($data['job'], $data['build']);
                 if ($assets === false) {
-                    return false;
+                    return new JsonResponse(['status' => false]);
                 }
                 $result = true;
                 foreach ($assets as $asset) {

@@ -1,0 +1,24 @@
+{% form_theme form with [
+'ZikulaCategoriesModule:Form:filter_layout_customizations.html.twig',
+'ZikulaFormExtensionBundle:Form:form_div_layout.html.twig'
+] %}
+{{ adminHeader() }}
+<h3>
+    <span class="fa fa-gears"></span>&nbsp;{{ __('Reload all core releases') }}
+</h3>
+<div class="alert alert-warning">
+    {{ __('You are about to reload all core releases from GitHub as well as all development builds from jenkins. Are you sure you want to proceed?') }}
+</div>
+{{ form_start(form) }}
+{{ form_errors(form) }}
+    <div>
+        {{ form_row(form.createnews) }}
+        <div class="form-group">
+            <div class="col-sm-offset-3 col-sm-9">
+                {{ form_widget(form.save) }}
+                <a class="btn btn-danger" href="{{ path('zikulacoremanagermodule_admin_index') }}" title="{{ __('Cancel') }}">{{ __('Cancel') }}</a>
+            </div>
+        </div>
+    </div>
+{{ form_end(form) }}
+{{ adminFooter() }}
