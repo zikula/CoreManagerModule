@@ -38,7 +38,7 @@ class JenkinsBuildType extends AbstractType
         $job = $manager->getJobMatchingZikulaVersion($version);
         $builds = [];
         foreach ($buildsArr as $build) {
-            $builds[$build->getNumber() . "|" . $job->getName()] = "#" . $build->getNumber();
+            $builds["#" . $build->getNumber()] = $build->getNumber() . "|" . $job->getName();
         }
         if (count($builds) == 0) {
             throw new \RuntimeException('No matching Jenkins builds for commit ' . $storageHelper->getData()['commit']);
@@ -52,12 +52,11 @@ class JenkinsBuildType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = new ArrayChoiceList($this->builds);
         $builder
             ->add('build', ChoiceType::class, [
                 'label' => $this->translator->__('Jenkins build'),
                 'label_attr' => ['class' => 'col-sm-3'],
-                'choices' => $choices->getChoices(),
+                'choices' => $this->builds,
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
