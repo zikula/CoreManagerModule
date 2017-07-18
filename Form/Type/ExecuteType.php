@@ -31,7 +31,11 @@ class ExecuteType extends AbstractType
         $builder
             ->add('finish', SubmitType::class, [
                 'label' => $this->translator->__('Finish'),
-                'attr' => ['disabled' => true]
+                'icon' => 'fa-angle-double-right',
+                'attr' => [
+                    'disabled' => true,
+                    'class' => 'btn btn-success'
+                ]
             ])
         ;
     }

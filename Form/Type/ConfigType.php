@@ -81,6 +81,10 @@ class ConfigType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => $this->__('Save'),
+                'icon' => 'fa-check',
+                'attr' => [
+                    'class' => 'btn btn-success'
+                ]
             ])
         ;
     }

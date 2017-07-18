@@ -47,6 +47,10 @@ class CoreVersionType extends AbstractType
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
+                'icon' => 'fa-angle-double-right',
+                'attr' => [
+                    'class' => 'btn btn-success'
+                ]
             ])
         ;
     }

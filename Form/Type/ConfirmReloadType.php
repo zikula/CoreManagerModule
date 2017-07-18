@@ -23,6 +23,10 @@ class ConfirmReloadType extends AbstractType
             ])
             ->add('save', SubmitType::class, [
                 'label' => $options['translator']->__('Reload all core releases'),
+                'icon' => 'fa-check',
+                'attr' => [
+                    'class' => 'btn btn-success'
+                ]
             ])
         ;
     }
