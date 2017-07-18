@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">{{ __('Close') }}</span></button>
-                    <h4 class="modal-title"><strong>{{ modalRelease.nameI18n|safetext }}</strong></h4>
+                    <h4 class="modal-title"><strong>{{ modalRelease.nameI18n }}</strong></h4>
                 </div>
                 <div class="modal-body">
                     {{ modalRelease.state|elReleaseStateToAlert }}
@@ -34,7 +34,7 @@
                     <ul class="nav nav-tabs" role="tablist">
                         {% for releases in modalReleases %}
                             <li{% if loop.first %} class="active"{% endif %}>
-                                <a href="#{{ id }}-tab-{{ loop.index }}" role="tab" data-toggle="tab">{{ release.nameI18n|safetext }}</a>
+                                <a href="#{{ id }}-tab-{{ loop.index }}" role="tab" data-toggle="tab">{{ release.nameI18n }}</a>
                             </li>
                         {% endfor %}
                     </ul>

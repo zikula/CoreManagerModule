@@ -42,9 +42,9 @@
         {% endif %}
         <tr class="{% if release.state == prerelease or release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
             {% if admin|default %}<td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver|safetext }}</td>
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n|safetext }}</td>
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{release.state|elReleaseStateToText:'singular'|safetext }}</td>
+            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver }}</td>
+            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n }}</td>
+            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{release.state|elReleaseStateToText:'singular' }}</td>
             {% if admin|default %}
                 <td class="text-right">
                     {if release.state == outdated or release.state == supported}
