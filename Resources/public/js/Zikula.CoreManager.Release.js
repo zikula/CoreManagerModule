@@ -35,6 +35,10 @@ jQuery( document ).ready(function( $ ) {
             success: function(data, textStatus, jqXHR) {
                 if (data.status == 1) {
                     indicateStageSuccessful(stageitem);
+
+                    var nextstage = getNextStage(stagename);
+                    updateProgressBar(nextstage);
+                    processStage(nextstage)
                 } else {
                     indicateStageFailure(stageitem);
                 }
@@ -45,9 +49,6 @@ jQuery( document ).ready(function( $ ) {
             },
             complete: function(jqXHR, textStatus) {
                 indicateStageComplete(stageitem);
-                var nextstage = getNextStage(stagename);
-                updateProgressBar(nextstage);
-                processStage(nextstage)
             }
         });
     }
