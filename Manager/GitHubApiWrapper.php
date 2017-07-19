@@ -2,6 +2,8 @@
 
 namespace Zikula\Module\CoreManagerModule\Manager;
 
+use Github\Api\Issue\Labels;
+use Github\ResultPager;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 use vierbergenlars\SemVer\version;
@@ -196,6 +198,8 @@ class GitHubApiWrapper
         if ($milestone != null) {
             $milestone = $milestone['number'];
         }
+        $this->makeSureLabelsExist($labels);
+
         return $this->githubClient->issues()->create($this->coreOrganization, $this->coreRepository, [
             'title' => $title,
             'body' => $body,
@@ -276,5 +280,21 @@ class GitHubApiWrapper
     public function updateFile($path, $content, $commitMessage, $ref)
     {
         return $this->githubClient->repo()->contents()->update($this->coreOrganization, $this->coreRepository, $path, $content, $commitMessage, $ref);
+    }
+
+    /**
+     * @param $labels
+     */
+    private function makeSureLabelsExist($labels)
+    {
+        $paginator = new ResultPager($this->githubClient);
+        $definedLabels = $paginator->fetchAll(new Labels($this->githubClient), 'all', [$this->coreOrganization, $this->coreRepository]);
+        $definedLabelNames = array_column($definedLabels, 'name');
+
+        foreach ($labels as $label) {
+            if (!in_array($label, $definedLabelNames)) {
+                $this->githubClient->issues()->labels()->create($this->coreOrganization, $this->coreRepository, ['name' => $label, 'color' => 'cdcdcd']);
+            }
+        }
     }
 }
