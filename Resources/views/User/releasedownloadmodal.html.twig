@@ -9,7 +9,7 @@
                 </div>
                 <div class="modal-body">
                     {{ modalRelease.state|elReleaseStateToAlert }}
-                    {{ modalRelease.descriptionI18n }}
+                    {{ modalRelease.descriptionI18n|raw }}
                 </div>
                 <div class="modal-footer">
                     {% for asset in modalRelease.assets %}
