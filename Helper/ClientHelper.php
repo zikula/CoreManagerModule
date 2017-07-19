@@ -17,7 +17,7 @@ use CarlosIO\Jenkins\Exception\SourceNotAvailableException;
 use Github\Client as GitHubClient;
 use Github\HttpClient\Cache\FilesystemCache;
 use Github\HttpClient\CachedHttpClient;
-use Github\HttpClient\Message\ResponseMediator;
+use Github\ResultPager;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use CarlosIO\Jenkins\Dashboard;
 use CarlosIO\Jenkins\Source;
@@ -97,15 +97,13 @@ class ClientHelper
         if (empty($repo)) {
             return false;
         }
-        try {
-            // One can only show collaborators if one has push access.
-            ResponseMediator::getContent($client->getHttpClient()->get('repos/' . $repo . "/collaborators"));
 
-            return true;
-        } catch (\Github\Exception\RuntimeException $e) {
-            return false;
-        }
+        $paginator = new ResultPager($client);
+        $reposWhereMember = $paginator->fetchAll($client->api('me'), 'repositories', ['member']);
 
+        return in_array($repo, array_map(function ($repoWhereMember) {
+            return $repoWhereMember['full_name'];
+        }, $reposWhereMember));
     }
 
     /**
