@@ -17,6 +17,7 @@ use CarlosIO\Jenkins\Exception\SourceNotAvailableException;
 use Github\Client as GitHubClient;
 use Github\HttpClient\Cache\FilesystemCache;
 use Github\HttpClient\CachedHttpClient;
+use Github\HttpClient\Message\ResponseMediator;
 use Github\ResultPager;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use CarlosIO\Jenkins\Dashboard;
@@ -98,6 +99,14 @@ class ClientHelper
             return false;
         }
 
+        try {
+            // One can only show collaborators if one has push access to an organization
+            ResponseMediator::getContent($client->getHttpClient()->get('repos/' . $repo . "/collaborators"));
+
+            return true;
+        } catch (\Github\Exception\RuntimeException $e) { }
+
+        // See if maybe we only are a member of a non-organization repository
         $paginator = new ResultPager($client);
         $reposWhereMember = $paginator->fetchAll($client->api('me'), 'repositories', ['member']);
 
