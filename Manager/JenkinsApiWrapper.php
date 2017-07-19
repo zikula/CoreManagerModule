@@ -72,7 +72,7 @@ class JenkinsApiWrapper
 
     public function setBuildDescription($job, $build, $description)
     {
-        list ($status, ) = $this->doGet("/job/" . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
+        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
