@@ -146,10 +146,8 @@ class GitHubApiWrapper
         });
 
         // Now add all the new possible versions.
-        // First of, allow a new major version, if the highest version isn't a pre release.
-        if (self::versionIsPreRelease($allowedCoreVersions[0]) === false) {
-            $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . ".0.0-rc1");
-        }
+        // First of, allow a new major version
+        $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . ".0.0-rc1");
 
         $majorPrefix = null;
         foreach ($allowedCoreVersions as $allowedCoreVersion) {
