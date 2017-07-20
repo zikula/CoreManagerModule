@@ -37,7 +37,7 @@ class PreReleaseBlock extends AbstractButtonBlock
             return "";
         }
 
-        return $this->renderView('@ZikulaBlocksModule/Blocks/prerelease.html.twig', [
+        return $this->renderView('@ZikulaCoreManagerModuleModule/Blocks/prerelease.html.twig', [
             'content' => $properties['content'],
             'preRelease' => current($preReleases),
             'id' => uniqid()
