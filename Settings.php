@@ -35,8 +35,7 @@ class Settings
     const RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT = <<<EOD
 
 
-Immediate testing is encouraged. You may download the RC from our [links at zikula.org](http://zikula.org/library/releases). 
-Release testing guidelines may be found in [the Core wiki](https://github.com/zikula/core/wiki/Release-Testing-Guidelines). 
+Immediate testing is encouraged. Release testing guidelines may be found in [the Core wiki](https://github.com/zikula/core/wiki/Release-Testing-Guidelines). 
 Installation and upgrade documentation can be found in the /docs directory.
 
 Our Quality Assurance cycle, explained also in [the Core wiki](https://github.com/zikula/core/wiki/Release-Management#release-candidates-rc), 
@@ -59,7 +58,7 @@ EOD;
     /**
      * @var array Labels to add to the quality assurance issue.
      */
-    public static $QA_ISSUE_LABELS = ['Blocker', 'meta', 'Discussion', 'CI Build'];
+    public static $QA_ISSUE_LABELS = ['Blocker', 'Feedback required'];
 
     /**
      * @var string Template to use for the quality assurance issue.
