@@ -39,7 +39,7 @@ class JenkinsBuildBlock extends AbstractButtonBlock
         }
 
         return $this->renderView('@ZikulaCoreManagerModule/Blocks/jenkinsbuilds.html.twig', [
-            'developmentReleases', $developmentReleases,
+            'developmentReleases' => $developmentReleases,
             'id' => uniqid()
         ]);
     }
