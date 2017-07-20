@@ -15,7 +15,7 @@
 namespace Zikula\Module\CoreManagerModule;
 
 use Zikula\BlocksModule\AbstractBlockHandler;
-use Zikula\CoreManagerModule\Block\Form\Type\ButtonBlockType;
+use Zikula\Module\CoreManagerModule\Block\Form\Type\ButtonBlockType;
 
 abstract class AbstractButtonBlock extends AbstractBlockHandler
 {
