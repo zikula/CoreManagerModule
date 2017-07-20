@@ -38,7 +38,6 @@ class LatestReleaseBlock extends AbstractButtonBlock
         }
 
         return $this->renderView('@ZikulaCoreManagerModule/Blocks/latestrelease.html.twig', [
-            'content' => $properties['content'],
             'supportedRelease' => current($supportedReleases),
             'id' => uniqid()
         ]);
