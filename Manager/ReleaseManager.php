@@ -689,6 +689,10 @@ class ReleaseManager
         list ($repoOwner, $repoName) = explode('/', $this->repo);
         $assets = $this->getAssetsFromJenkinsBuild($job, $correspondingBuild);
 
+        // workaround for potentially long-running process (see #25)
+        ini_set('memory_limit', '2G');
+        ini_set('max_execution_time', 300); // 5 minutes
+
         $client = $this->client;
         $releaseManager = $this;
         $this->eventDispatcher->addListener(KernelEvents::TERMINATE, function (PostResponseEvent $event) use ($release, $assets, $repoOwner, $repoName, $client, $releaseManager) {
