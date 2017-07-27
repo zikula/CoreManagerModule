@@ -91,4 +91,13 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
     {
         return [];
     }
+
+    /**
+     * Returns an array of options applied to the Form.
+     * @return array
+     */
+    public function getFormOptions()
+    {
+        return [];
+    }
 }
