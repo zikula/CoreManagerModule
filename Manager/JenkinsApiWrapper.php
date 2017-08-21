@@ -36,10 +36,8 @@ class JenkinsApiWrapper
     public function promoteBuild($job, $build, $level)
     {
         list ($status, ) = $this->doGet("/job/" . urlencode($job) . "/$build/promote/", ['level' => $level]);
-        if (!in_array($status, $this->OK_STATI)) {
-            return false;
-        }
-        return true;
+
+        return in_array($status, $this->OK_STATI);
     }
 
     public function lockBuild($job, $build)
@@ -51,11 +49,9 @@ class JenkinsApiWrapper
         $buildArr = json_decode($response, true);
         if (!$buildArr['keepLog']) {
             list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/toggleLogKeep", []);
-            if (!in_array($status, $this->OK_STATI)) {
-                return false;
-            }
-            return true;
+            return in_array($status, $this->OK_STATI);
         }
+
         return true;
     }
 
@@ -73,19 +69,15 @@ class JenkinsApiWrapper
     public function setBuildDescription($job, $build, $description)
     {
         list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
-        if (!in_array($status, $this->OK_STATI)) {
-            return false;
-        }
-        return true;
+
+        return in_array($status, $this->OK_STATI);
     }
 
     public function copyJob($job, $newName)
     {
         list ($status, ) = $this->doPost("/createItem", ['name' => $newName, 'mode' => 'copy', 'from' => $job]);
-        if (!in_array($status, $this->OK_STATI)) {
-            return false;
-        }
-        return true;
+
+        return in_array($status, $this->OK_STATI);
     }
 
     public function enableJob($job)
@@ -100,10 +92,8 @@ class JenkinsApiWrapper
     public function disableJob($job)
     {
         list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/disable", []);
-        if (!in_array($status, $this->OK_STATI)) {
-            return false;
-        }
-        return true;
+
+        return in_array($status, $this->OK_STATI);
     }
 
     public function getAssets($job, $build)
@@ -114,7 +104,7 @@ class JenkinsApiWrapper
         }
         $artifacts = json_decode($response);
         $artifacts = $artifacts->artifacts;
-        $assets = array();
+        $assets = [];
         foreach ($artifacts as $artifact) {
             $downloadUrl = $this->jenkinsURL . '/job/' . urlencode($job) . '/' . $build . '/artifact/' . $artifact->relativePath;
             $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
@@ -132,11 +122,11 @@ class JenkinsApiWrapper
                 default:
                     $contentType = null;
             }
-            $assets[] = array (
+            $assets[] = [
                 'name' => $artifact->fileName,
                 'download_url' => $downloadUrl,
                 'content_type' => $contentType
-            );
+            ];
         }
 
         return $assets;

@@ -18,15 +18,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Zikula\Module\CoreManagerModule\Exception\ClientException;
 
-class PayloadManager {
+class PayloadManager
+{
     /**
      * @var string
      */
     private $payload;
+
     /**
      * @var Request
      */
     private $request;
+
     /**
      * @var \stdClass|array
      */
@@ -73,7 +76,6 @@ class PayloadManager {
         } catch (\Exception $e) {
             throw new ClientException('Unable to decode json payload.', Response::HTTP_BAD_REQUEST);
         }
-
     }
 
     /**
@@ -82,7 +84,8 @@ class PayloadManager {
      *
      * @return bool
      */
-    private function ipCIDRCheck() {
+    private function ipCIDRCheck()
+    {
         $REMOTE_ADDR = $this->request->server->get("REMOTE_ADDR", null);
         $HTTP_X_FORWARDED_FOR = $this->request->server->get("HTTP_X_FORWARDED_FOR", null);
         $HTTP_CLIENT_IP = $this->request->server->get("HTTP_CLIENT_IP", null);

@@ -1,40 +1,40 @@
 stages:
     coreVersion:
-    # - choose version from available versions (will imply prerelease or not)
+        # - choose version from available versions (will imply prerelease or not)
         class: Zikula\Module\CoreManagerModule\Stage\CoreVersionStage
         order: 1
         default: true
     branchSelection:
-    # - choose branch (will default to the branch of the previous release
+        # - choose branch (defaults to the branch of the previous release)
         class: Zikula\Module\CoreManagerModule\Stage\BranchSelectionStage
         order: 2
     commit:
-    # - select one of the latest X commits of the specified branch
+        # - select one of the latest X commits of the specified branch
         class: Zikula\Module\CoreManagerModule\Stage\CommitStage
         order: 3
     jenkinsBuild:
-    # - choose from the builds of this commit (there might be manual builds)
+        # - choose from the builds of this commit (there might be manual builds)
         class: Zikula\Module\CoreManagerModule\Stage\JenkinsBuildStage
         order: 4
     basicInformation:
-    # - release title
-    # - release announcement
+        # - release title
+        # - release announcement
         class: Zikula\Module\CoreManagerModule\Stage\BasicInformationStage
         order: 5
     execute:
-    # - promote build
-    # - lock build
-    # - add build description
-    # - create QA issue
-    # - create release
-    # - copy assets from Jenkins to GitHub
-    # - If not prerelease do optionally:
-    #   - create a new Jenkins job
-    #   - disable the old Jenkins job
-    #   - If it is a new minor version
-    #     - create new changelog file
-    #     - create new upgrading file
-    # - trigger CoreManager hooks
+        # - promote build
+        # - lock build
+        # - add build description
+        # - create QA issue
+        # - create release
+        # - copy assets from Jenkins to GitHub
+        # - If not prerelease do optionally:
+        #   - create a new Jenkins job
+        #   - disable the old Jenkins job
+        #   - If it is a new minor version
+        #     - create new changelog file
+        #     - create new upgrading file
+        # - trigger CoreManager hooks
         class: Zikula\Module\CoreManagerModule\Stage\ExecuteStage
         order: 6
     complete:

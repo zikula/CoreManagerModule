@@ -57,7 +57,10 @@ class GitHubApiWrapper
     {
         $releases = $this->githubClient->repository()->releases()->all($this->coreOrganization, $this->coreRepository);
         $releases = array_map(function ($release) {
-            return ['version' => new version($release['tag_name']), 'branch' => $release['target_commitish']];
+            return [
+                'version' => new version($release['tag_name']),
+                'branch' => $release['target_commitish']
+            ];
         }, $releases);
         usort($releases, function ($a, $b) {
             return version::rcompare($a['version'], $b['version']);
@@ -190,6 +193,7 @@ class GitHubApiWrapper
         if (count($matches) != 2 || strlen($matches[1]) == 0) {
             throw new \RuntimeException('The pre release suffix of the ' . $version->getVersion() . ' tag does not match the RegExp ' . $pattern);
         }
+
         return $matches[1];
     }
 
@@ -217,6 +221,7 @@ class GitHubApiWrapper
         if ($body !== null) {
             $update['body'] = $body;
         }
+
         return $this->githubClient->issues()->update($this->coreOrganization, $this->coreRepository, $id, $update);
     }
 

@@ -125,7 +125,7 @@ class ReleaseManager
 
         // Create a version map. This makes it possible to check what kind of releases are available for one specific
         // version.
-        $versionMap = array();
+        $versionMap = [];
         foreach ($releases as $release) {
             // As the version could be 1.3.5-rc1, we need to transform them into x.y.z to be able to compare.
             $version = new version($release->getSemver());
@@ -134,7 +134,7 @@ class ReleaseManager
         }
 
         // This array will hold all the ids of versions we want to return.
-        $ids = array();
+        $ids = [];
         foreach ($versionMap as $version => $stateReleaseMap) {
             // Now check if there is a supported version. If so, ignore all the outdated versions, prereleases and
             // development versions. We only want to serve the supported version. If there isn't a supported version
@@ -205,8 +205,8 @@ class ReleaseManager
             }
             $v1 = new version($a->getSemver());
             $v2 = new version($b->getSemver());
-            $v1 = $v1->getMajor() . "." . $v1->getMinor() . "." . $v1->getPatch();
-            $v2 = $v2->getMajor() . "." . $v2->getMinor() . "." . $v2->getPatch();
+            $v1 = $v1->getMajor() . '.' . $v1->getMinor() . '.' . $v1->getPatch();
+            $v2 = $v2->getMajor() . '.' . $v2->getMinor() . '.' . $v2->getPatch();
             if ($v1 !== $v2) {
                 return version_compare($v2, $v1);
             }
@@ -259,12 +259,12 @@ class ReleaseManager
             $state = CoreReleaseEntity::STATE_SUPPORTED;
         }
 
-        if ($dbReleases === null) {
-            $dbRelease = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findOneBy(array('id' => $id));
+        if (null === $dbReleases) {
+            $dbRelease = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findOneBy(['id' => $id]);
             if ($dbRelease) {
                 $dbReleases[$id] = $dbRelease;
             } else {
-                $dbReleases = array();
+                $dbReleases = [];
             }
         }
 
@@ -296,7 +296,7 @@ class ReleaseManager
             $this->moveAssetsFromJenkinsToGitHubRelease($release);
         }
 
-        $assets = array();
+        $assets = [];
         foreach ($release['assets'] as $asset) {
             if ($asset['state'] != 'uploaded') {
                 continue;
@@ -337,14 +337,14 @@ class ReleaseManager
         $releases = $this->client->api('repo')->releases()->all($repo[0], $repo[1]);
         /** @var CoreReleaseEntity[] $dbReleases */
         $_dbReleases = $this->em->getRepository('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
-        $dbReleases = array();
+        $dbReleases = [];
         foreach ($_dbReleases as $_dbRelease) {
             $dbReleases[$_dbRelease->getId()] = $_dbRelease;
         }
         unset($_dbReleases, $_dbRelease);
 
         // Make sure to always have at least the id "0" in the array, as the IN() SQL statement fails otherwise.
-        $ids = array(0);
+        $ids = [0];
         foreach ($releases as $release) {
             $ids[] = $release['id'];
             $this->updateGitHubRelease($release, $createNewsArticles, $dbReleases);
@@ -373,13 +373,33 @@ class ReleaseManager
     {
         /** @var Job $job */
         foreach ($this->jenkinsClient->getJobs() as $job) {
-            if ($job->isDisabled()) {
-                // Ignore disabled = old jobs.
-                continue;
-            }
-            $semVer = $this->getZikulaVersionFromJenkinsJob($job);
-            if (is_object($semVer) && $semVer->getVersion() === $version) {
-                return $job;
+            if ($job->getName() == 'Zikula') {
+                // new pipeline-based jobs
+                // not supported yet by vendor lib, thus we use an own PipelineJob class
+                $jobData = json_encode($job->toArray());
+                $job = new PipelineJob(json_decode($jobData));
+                foreach ($job->getSubJobs() as $subJob) {
+                    if ($subJob->isDisabled()) {
+                        // Ignore disabled = old jobs.
+                        continue;
+                    }
+                    /*$semVer = $this->getZikulaVersionFromJenkinsJob($subJob);
+                    if (is_object($semVer) && $semVer->getVersion() === $version) {*/
+                    $jobBranchName = $subJob->getName();
+                    if (substr($version, 0, strlen($jobBranchName)) == $jobBranchName) {
+                        return $subJob;
+                    }
+                }
+            } else {
+                // old standalone jobs
+                if ($job->isDisabled()) {
+                    // Ignore disabled = old jobs.
+                    continue;
+                }
+                $semVer = $this->getZikulaVersionFromJenkinsJob($job);
+                if (is_object($semVer) && $semVer->getVersion() === $version) {
+                    return $job;
+                }
             }
         }
         throw new \RuntimeException('No matching job for version ' . $version);
@@ -394,16 +414,17 @@ class ReleaseManager
 
         /** @var Build[] $builds */
         $builds = $job->getBuilds();
-        foreach ($builds as $key => $build) {
+        /*foreach ($builds as $key => $build) {
             if ($build->isBuilding() || $build->getResult() != "SUCCESS") {
                 unset($builds[$key]);
             }
-        }
+        }*/
+        /*
         if ($commit !== null) {
             $builds = array_filter($builds, function ($build) use ($commit) {
                 return $this->getShaFromJenkinsBuild($build) === $commit;
             });
-        }
+        }*/
 
         // Sort builds by build number DESC.
         usort($builds, function (Build $a, Build $b) {
@@ -445,7 +466,7 @@ class ReleaseManager
             /** @var Build[] $builds */
             $builds = $job->getBuilds();
             foreach ($builds as $key => $build) {
-                if ($build->isBuilding() || $build->getResult() != "SUCCESS") {
+                if ($build->isBuilding() || $build->getResult() != 'SUCCESS') {
                     unset($builds[$key]);
                 }
             }
@@ -474,7 +495,7 @@ class ReleaseManager
             $jenkinsBuild->setSemver($version);
 
             $description = $job->getDescription();
-            $sourceUrls = array();
+            $sourceUrls = [];
             $changeSet = $build->getChangeSet()->toArray();
             if ($changeSet['kind'] == 'git' && count($changeSet['items']) > 0) {
                 if (!empty($description)) {
@@ -518,7 +539,7 @@ class ReleaseManager
     private function getAssetsFromJenkinsBuild(Job $job, Build $build)
     {
         $server = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server');
-        $assets = array();
+        $assets = [];
         foreach ($build->getArtifacts() as $artifact) {
             $downloadUrl = $server . '/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
             $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
@@ -558,13 +579,13 @@ class ReleaseManager
     private function getShaFromJenkinsBuild(Build $build, $excludeMergeSha = false)
     {
         $buildArr = $build->toArray();
-        if (!$excludeMergeSha) {
+        if (!$excludeMergeSha && isset($buildArr['actions'])) {
             foreach ($buildArr['actions'] as $action) {
                 if (isset($action['lastBuiltRevision']['SHA1'])) {
                     return $action['lastBuiltRevision']['SHA1'];
                 }
             }
-        } else {
+        } elseif (isset($buildArr['changeSet'])) {
             foreach ($buildArr['changeSet']['items'] as $item) {
                 if (isset($item['commitId'])) {
                     return $item['commitId'];
@@ -614,22 +635,22 @@ class ReleaseManager
         try {
             $response = $this->client->getHttpClient()->post(
                 'repos/' . $this->repo . '/deployments',
-                json_encode(array (
+                json_encode([
                     'ref' => $sha,
                     'auto_merge' => false,
-                    'required_contexts' => array(),
-                    'environment' => 'Extension Library',
-                    'description' => 'Updating the Extension Library.'
-                ))
+                    'required_contexts' => [],
+                    'environment' => $this->__('Extension Library'),
+                    'description' => $this->__('Updating the Extension Library.')
+                ])
             );
             $response = ResponseMediator::getContent($response);
             $this->client->getHttpClient()->post(
                 'repos/' . $this->repo . '/deployments/' . $response['id'] . '/statuses',
-                json_encode(array (
+                json_encode([
                     'state' => 'success',
-                    'target_url' => $this->router->generate('zikulacoremanagermodule_user_viewcorereleases', array(), RouterInterface::ABSOLUTE_URL),
-                    'description' => 'Build has been added to the Extension Library.'
-                ))
+                    'target_url' => $this->router->generate('zikulacoremanagermodule_user_viewcorereleases', [], RouterInterface::ABSOLUTE_URL),
+                    'description' => $this->__('Build has been added to the Extension Library.')
+                ])
             );
         } catch (\Exception $e) {
         }
@@ -773,7 +794,7 @@ class ReleaseManager
     {
         // @todo disabled
 
-//        if ($release->getNewsId() === null || !\ModUtil::available('News')) {
+//        if (null === $release->getNewsId() || !\ModUtil::available('News')) {
 //            return;
 //        }
 //
@@ -806,6 +827,7 @@ class ReleaseManager
             return false;
         }
         $version = $matches[1];
+
         return new version($version);
     }
 
@@ -815,6 +837,6 @@ class ReleaseManager
      */
     private function versionToMajorMinorPatch($version)
     {
-        return $version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch();
+        return $version->getMajor() . '.' . $version->getMinor() . '.' . $version->getPatch();
     }
 }
