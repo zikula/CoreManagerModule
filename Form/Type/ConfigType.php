@@ -60,7 +60,7 @@ class ConfigType extends AbstractType
             ])
             ->add('github_webhook_token', TextType::class, [
                 'label' => $this->__('Webhook Security Token'),
-                'help' => $this->__f('Create a secrete webhook token at %s to verify payloads from the Zikula Core repository.', ['%s' => '<a href="https://github.com/zikula/core/settings/hooks">https://github.com/zikula/core/settings/hooks</a>'])
+                'help' => $this->__f('Create a secret webhook token at %s to verify payloads from the Zikula Core repository.', ['%s' => '<a href="https://github.com/zikula/core/settings/hooks">https://github.com/zikula/core/settings/hooks</a>'])
             ])
             ->add('jenkins_server', UrlType::class, [
                 'label' => $this->__('URL of the Jenkins server'),
