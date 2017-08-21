@@ -3,11 +3,12 @@
 namespace Zikula\Module\CoreManagerModule;
 
 use Zikula\Core\AbstractExtensionInstaller;
+use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
 class CoreManagerModuleInstaller extends AbstractExtensionInstaller
 {
     private $entities = array(
-        'Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity'
+        CoreReleaseEntity::class
     );
 
     public function install()

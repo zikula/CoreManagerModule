@@ -13,10 +13,11 @@
 
 namespace Zikula\Module\CoreManagerModule\Block;
 
-use Zikula\Module\CoreManagerModule\AbstractButtonBlock;
+use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\Module\CoreManagerModule\Block\Form\Type\ButtonBlockType;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
-class PreReleaseBlock extends AbstractButtonBlock
+class PreReleaseBlock extends AbstractBlockHandler
 {
     /**
      * {@inheritdoc}
@@ -41,5 +42,10 @@ class PreReleaseBlock extends AbstractButtonBlock
             'preRelease' => current($preReleases),
             'id' => uniqid()
         ]);
+    }
+
+    public function getFormClassName()
+    {
+        return ButtonBlockType::class;
     }
 }

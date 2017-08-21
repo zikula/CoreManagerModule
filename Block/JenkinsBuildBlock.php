@@ -13,10 +13,11 @@
 
 namespace Zikula\Module\CoreManagerModule\Block;
 
-use Zikula\Module\CoreManagerModule\AbstractButtonBlock;
+use Zikula\BlocksModule\AbstractBlockHandler;
+use Zikula\Module\CoreManagerModule\Block\Form\Type\ButtonBlockType;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 
-class JenkinsBuildBlock extends AbstractButtonBlock
+class JenkinsBuildBlock extends AbstractBlockHandler
 {
     /**
      * {@inheritdoc}
@@ -42,5 +43,10 @@ class JenkinsBuildBlock extends AbstractButtonBlock
             'developmentReleases' => $developmentReleases,
             'id' => uniqid()
         ]);
+    }
+
+    public function getFormClassName()
+    {
+        return ButtonBlockType::class;
     }
 }
