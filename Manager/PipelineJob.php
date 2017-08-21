@@ -16,6 +16,11 @@ namespace Zikula\Module\CoreManagerModule\Manager;
 
 use CarlosIO\Jenkins\Job;
 
+/**
+ * This is class is required until the vendor adds support for it.
+ *
+ * @see https://github.com/carlosbuenosvinos/php-jenkins-api/issues/4
+ */
 class PipelineJob extends Job
 {
     public function getSubJobs()
