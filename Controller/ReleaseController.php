@@ -33,7 +33,6 @@ class ReleaseController extends AbstractController
         if (!$this->hasPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
         }
-        //$request->attributes->set('_legacy', true);
 
         $wizard = new Wizard($this->container, realpath(__DIR__ . '/../Resources/config/release-stages.yml'));
         $currentStage = $wizard->getCurrentStage($stage);
