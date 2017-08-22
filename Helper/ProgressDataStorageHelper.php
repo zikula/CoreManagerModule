@@ -33,7 +33,7 @@ class ProgressDataStorageHelper
     public function getData()
     {
         $data = $this->session->get(self::SESSION_VAR);
-        if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
+        if (empty($data) || in_array($data, ['null', 'false', 'Array'])) {
             return [];
         }
         $result = json_decode($data, true);

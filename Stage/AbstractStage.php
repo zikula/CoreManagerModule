@@ -60,6 +60,7 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
         $class = $class[count($class) - 1];
         $class = substr($class, 0, strlen($class) - strlen('Stage'));
         $class = lcfirst($class);
+
         return $class;
     }
 

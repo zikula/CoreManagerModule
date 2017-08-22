@@ -66,7 +66,7 @@ class ClientHelper
             $client->authenticate($token, null, GitHubClient::AUTH_HTTP_TOKEN);
             try {
                 $client->getHttpClient()->get('rate_limit');
-            } catch (\RuntimeException $e) {
+            } catch (\RuntimeException $exception) {
                 // Authentication failed!
                 if ($fallBackToNonAuthenticatedClient) {
                     // Replace client with one not using authentication.
@@ -74,6 +74,7 @@ class ClientHelper
                     $httpClient->setCache(new FilesystemCache($this->cacheDir . 'el/github-api'));
                     $client = new GitHubClient($httpClient);
                 } else {
+                    die('Error: ' . $exception->getMessage());
                     $client = false;
                 }
             }
@@ -123,7 +124,7 @@ class ClientHelper
     public function getJenkinsClient()
     {
         $jenkinsServer = $this->getJenkinsURL();
-        if ($jenkinsServer === false) {
+        if (false === $jenkinsServer) {
             return false;
         }
 
