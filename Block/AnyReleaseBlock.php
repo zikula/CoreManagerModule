@@ -51,7 +51,7 @@ class AnyReleaseBlock extends AbstractBlockHandler
         $choices = [];
         foreach ($releases as $release) {
             if ($release->getState() === CoreReleaseEntity::STATE_SUPPORTED) {
-                $choices[$release->getName() . ' ' . $release->getSemver()] = $release->getId();
+                $choices[$release->getName()] = $release->getId();
             }
         }
 
