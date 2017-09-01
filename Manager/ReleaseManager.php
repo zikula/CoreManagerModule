@@ -455,10 +455,10 @@ class ReleaseManager
 
         /** @var Job $job */
         foreach ($this->jenkinsClient->getJobs() as $job) {
-            if ($job->isDisabled()) {
-                // Ignore disabled = old jobs.
-                continue;
-            }
+//            if ($job->isDisabled()) {
+//                // Ignore disabled = old jobs.
+//                continue;
+//            }
             if (!($version = $this->getZikulaVersionFromJenkinsJob($job))) {
                 continue;
             }
