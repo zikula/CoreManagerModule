@@ -73,29 +73,6 @@ class JenkinsApiWrapper
         return in_array($status, $this->OK_STATI);
     }
 
-    public function copyJob($job, $newName)
-    {
-        list ($status, ) = $this->doPost("/createItem", ['name' => $newName, 'mode' => 'copy', 'from' => $job]);
-
-        return in_array($status, $this->OK_STATI);
-    }
-
-    public function enableJob($job)
-    {
-        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/enable", []);
-        if (!in_array($status, $this->OK_STATI)) {
-            return false;
-        }
-        return true;
-    }
-
-    public function disableJob($job)
-    {
-        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/disable", []);
-
-        return in_array($status, $this->OK_STATI);
-    }
-
     public function getAssets($job, $build)
     {
         list($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
