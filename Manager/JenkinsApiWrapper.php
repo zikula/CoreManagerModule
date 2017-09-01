@@ -134,6 +134,7 @@ class JenkinsApiWrapper
 
     private function doPost($api, $data)
     {
+        $api = '/job/Zikula' . $api;
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $this->jenkinsURL . $api);
@@ -150,6 +151,7 @@ class JenkinsApiWrapper
 
     private function doGet($api, $data)
     {
+        $api = '/job/Zikula' . $api;
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $this->jenkinsURL . $api . "?" . http_build_query($data));
