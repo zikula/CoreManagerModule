@@ -64,7 +64,7 @@ EOD;
      * @var string Template to use for the quality assurance issue.
      */
     public static $QA_ISSUE_TEMPLATE = <<<EOD
-Please test build [#%BUILD%](http://ci.zikula.org/job/%JOB%/%BUILD%/) and decide if it should become the next official release.
+Please test build [#%BUILD%](http://ci.zikula.org/job/Zikula/job/%JOB%/%BUILD%/) and decide if it should become the next official release.
 __Anyone may participate in the testing process.__
 
 Testing guidelines can be found in [Release Testing Guideline](https://github.com/zikula/core/wiki/Release-Testing-Guidelines)

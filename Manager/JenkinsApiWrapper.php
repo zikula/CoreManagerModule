@@ -106,7 +106,7 @@ class JenkinsApiWrapper
         $artifacts = $artifacts->artifacts;
         $assets = [];
         foreach ($artifacts as $artifact) {
-            $downloadUrl = $this->jenkinsURL . '/job/' . urlencode($job) . '/' . $build . '/artifact/' . $artifact->relativePath;
+            $downloadUrl = $this->jenkinsURL . '/job/Zikula/job/' . urlencode($job) . '/' . $build . '/artifact/' . $artifact->relativePath;
             $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
             $contentType = null;
             switch ($fileExtension) {
