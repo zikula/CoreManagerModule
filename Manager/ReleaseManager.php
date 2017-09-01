@@ -541,7 +541,7 @@ class ReleaseManager
         $server = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server');
         $assets = [];
         foreach ($build->getArtifacts() as $artifact) {
-            $downloadUrl = $server . '/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
+            $downloadUrl = $server . '/job/Zikula/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
             $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
             $contentType = null;
             switch ($fileExtension) {
