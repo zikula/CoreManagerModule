@@ -167,15 +167,6 @@ class ReleaseController extends AbstractController
                     }
                 }
                 break;
-            case 'copy-job':
-                $nextPatchVersion = new version($data['version']);
-                $nextPatchVersion->inc('patch');
-                $newName = str_replace($data['version'], $nextPatchVersion->getVersion(), $data['job']);
-                $result = $jenkinsApiWrapper->copyJob($data['job'], $newName);
-                break;
-            case 'disable-job':
-                $result = $jenkinsApiWrapper->disableJob($data['job']);
-                break;
             case 'update-core-version':
                 $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
                 if ($coreFile === false) {

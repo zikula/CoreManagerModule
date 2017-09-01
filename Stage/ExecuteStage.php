@@ -82,29 +82,8 @@ class ExecuteStage extends AbstractStage
             'success' => $this->__('GitHub Release created'),
             'fail' => $this->__('GitHub Release could not be created')
         ];
-        $stages[] = [
-            'name' => $this->__('copy-assets'),
-            'pre' => $this->__('Copy assets from Jenkins to GitHub'),
-            'during' => $this->__('Copying assets from Jenkins to GitHub (takes longer)'),
-            'success' => $this->__('Assets copied'),
-            'fail' => $this->__('Assets could not be copied')
-        ];
 
         if (!$this->getData()['isPreRelease']) {
-            $stages[] = [
-                'name' => $this->__('copy-job'),
-                'pre' => $this->__('Copy old Jenkins Job'),
-                'during' => $this->__('Copying Jenkins Job'),
-                'success' => $this->__('Jenkins Job copied'),
-                'fail' => $this->__('Jenkins Job could not be copied')
-            ];
-            $stages[] = [
-                'name' => $this->__('disable-job'),
-                'pre' => $this->__('Disable old Jenkins Job'),
-                'during' => $this->__('Disabling Jenkins Job'),
-                'success' => $this->__('Jenkins Job disabled'),
-                'fail' => $this->__('Jenkins Job could not be disabled')
-            ];
             $stages[] = [
                 'name' => $this->__('update-core-version'),
                 'pre' => $this->__('Update Core version'),
@@ -122,6 +101,14 @@ class ExecuteStage extends AbstractStage
             // Update Core Version
             // Close milestone
         }
+        $stages[] = [
+            'name' => $this->__('copy-assets'),
+            'pre' => $this->__('Copy assets from Jenkins to GitHub'),
+            'during' => $this->__('Copying assets from Jenkins to GitHub (takes longer)'),
+            'success' => $this->__('Assets copied'),
+            'fail' => $this->__('Assets could not be copied')
+        ];
+
         $stages[] = [
             'name' => $this->__('finish'),
             'pre' => $this->__('Finish'),
