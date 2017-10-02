@@ -140,6 +140,9 @@ class ReleaseController extends AbstractController
                 }
                 break;
             case 'create-release':
+                if (!isset($data['github_qa_ticket_url'])) {
+                    $data['github_qa_ticket_url'] = '';
+                }
                 $description = str_replace('%QATICKETURL%', $data['github_qa_ticket_url'], $data['description']);
                 $return = $gitHubApiWrapper->createRelease($data['title'], $description, $data['isPreRelease'], $data['version'], $data['commit']);
                 if (isset($return['id'])) {
