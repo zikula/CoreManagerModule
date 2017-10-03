@@ -170,7 +170,7 @@ class ReleaseController extends AbstractController
                     }
                 }
                 break;
-            case 'update-core-version':
+            case 'update-core-version': // currently unused
                 $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
                 if ($coreFile === false) {
                     break;

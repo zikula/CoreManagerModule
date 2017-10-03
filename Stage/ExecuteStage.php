@@ -84,13 +84,13 @@ class ExecuteStage extends AbstractStage
         ];
 
         if (!$this->getData()['isPreRelease']) {
-            $stages[] = [
+            /*$stages[] = [
                 'name' => $this->__('update-core-version'),
                 'pre' => $this->__('Update Core version'),
                 'during' => $this->__('Updating Core version'),
                 'success' => $this->__('Core version updated'),
                 'fail' => $this->__('Core version could not be updated')
-            ];
+            ];*/
             $stages[] = [
                 'name' => $this->__('close-milestone'),
                 'pre' => $this->__('Close milestone'),
