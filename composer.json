@@ -21,7 +21,7 @@
     },
     "extra": {
         "zikula": {
-            "core-compatibility": ">=2.0.0",
+            "core-compatibility": ">=1.5.0",
             "class": "Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule",
             "displayname": "Core Manager",
             "url": "core-manager",
