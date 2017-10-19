@@ -23,7 +23,8 @@ class AnyReleaseBlockType extends AbstractType
     {
         $builder
             ->add('release', ChoiceType::class, [
-                'choices' => $options['choices']
+                'choices' => $options['choices'],
+                'choices_as_values' => true
             ])
             ->add('btnBlock', CheckboxType::class, [
                 'required' => false
