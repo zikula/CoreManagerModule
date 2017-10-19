@@ -1,15 +1,23 @@
-{% set admin = hasPermission('ZikulaCoreManagerModule::', '::', 'ACCESS_MODERATE') %}
-<h3>
-    <span class="fa fa-th-list"></span>&nbsp;{{ __("Core releases") }}
-</h3>
+{{ pageSetVar('title', __('Core releases')) }}
+<h3><i class="fa fa-th-list"></i> {{ __('Core releases') }}</h3>
+{% set isAdmin = hasPermission('ZikulaCoreManagerModule::', '::', 'ACCESS_MODERATE') %}
+{% set amountOfColumns = isAdmin ? 5 : 3 %}
+<div class="table-responsive">
 <table class="table table-striped table-hover">
+    <colgroup>
+        {% if isAdmin %}<col id="cId" />{% endif %}
+        <col id="cVersion" />
+        <col id="cName" />
+        <col id="cState" />
+        {% if isAdmin %}<col id="cActions" />{% endif %}
+    </colgroup>
     <thead>
     <tr>
-        {% if admin|default %}<th>{{ __('Id') }}</th>{% endif %}
-        <th>{{ __('Version') }}</th>
-        <th>{{ __('Name') }}</th>
-        <th>{{ __('State') }}</th>
-        {% if admin|default %}<th>{{ __('Actions') }}</th>{% endif %}
+        {% if isAdmin %}<th id="hId" scope="col">{{ __('Id') }}</th>{% endif %}
+        <th id="hVersion" scope="col">{{ __('Version') }}</th>
+        <th id="hName" scope="col">{{ __('Name') }}</th>
+        <th id="hState" scope="col">{{ __('State') }}</th>
+        {% if isAdmin %}<th id="hActions" scope="col">{{ __('Actions') }}</th>{% endif %}
     </tr>
     </thead>
     <tbody>
@@ -21,32 +29,32 @@
     {% for release in releases %}
         {% if stateOld != release.state and release.state == outdated %}
             <tr>
-                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
+                <td colspan="{{ amountOfColumns }}">
                     {{ __('Outdated releases:') }}
                 </td>
             </tr>
         {% endif %}
         {% if stateOld != release.state and release.state == prerelease %}
             <tr>
-                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
+                <td colspan="{{ amountOfColumns }}">
                     {{ __('Pre-releases:') }}
                 </td>
             </tr>
         {% endif %}
         {% if stateOld != release.state and release.state == development %}
             <tr>
-                <td colspan="{% if admin|default %}5{% else %}3{% endif %}">
+                <td colspan="{{ amountOfColumns }}">
                     {{ __('Development builds:') }}
                 </td>
             </tr>
         {% endif %}
         <tr class="{% if release.state == prerelease or release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
-            {% if admin|default %}<td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver }}</td>
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n }}</td>
-            <td style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.state|elReleaseStateToText('singular') }}</td>
-            {% if admin|default %}
-                <td class="text-right">
+            {% if isAdmin %}<td headers="hId" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
+            <td headers="hVersion" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver }}</td>
+            <td headers="hName" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n }}</td>
+            <td headers="hState" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.state|elReleaseStateToText('singular') }}</td>
+            {% if isAdmin %}
+                <td headers="hActions" class="text-right">
                     {% if release.state == outdated or release.state == supported %}
                         <a href="{{ path('zikulacoremanagermodule_admin_togglereleasestate', {id: release.id}) }}" title="{% if release.state == supported %}{{ __('Mark release as outdated') }}{% else %}{{ __('Mark release as supported') }}{% endif %}" data-toggle="">
                             {% if release.state == supported %}
@@ -62,15 +70,18 @@
         {{ include('@ZikulaCoreManagerModule/User/releasedownloadmodal.html.twig', {'modalRelease': release, 'id': 'el-download-release-modal-'~loop.index}) }}
         {% set stateOld = release.state %}
     {% else %}
-        <tr><td colspan="{% if admin|default %}5{% else %}3{% endif %}">{{ __('No releases available') }}</td></tr>
+        <tr>
+            <td colspan="{{ amountOfColumns }}">{{ __('No releases available') }}</td>
+        </tr>
     {% endfor %}
     </tbody>
 </table>
-{% if admin|default %}
+</div>
+{% if isAdmin %}
     <hr />
-    <div class="alert alert-info">
+    <p class="alert alert-info">
         {{ __('The release names and descriptions can be made multilingual, if the correct format is used at GitHub:') }}
-    </div>
+    </p>
     <pre>...English release descripion...
 # LOCALE:LOCALISED RELEASE NAME
 ...LOCALISED RELEASE DESCRIPTION...
