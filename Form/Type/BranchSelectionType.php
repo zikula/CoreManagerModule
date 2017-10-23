@@ -56,6 +56,7 @@ class BranchSelectionType extends AbstractType
             ->add('branch', ChoiceType::class, [
                 'label' => $this->translator->__('Branch'),
                 'choices' => $choices->getChoices(),
+                'choices_as_values' => true
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

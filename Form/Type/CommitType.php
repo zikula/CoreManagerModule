@@ -49,6 +49,7 @@ class CommitType extends AbstractType
             ->add('commit', ChoiceType::class, [
                 'label' => $this->translator->__('Commit'),
                 'choices' => $commits,
+                'choices_as_values' => true
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),
