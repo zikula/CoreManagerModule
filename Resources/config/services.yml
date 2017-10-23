@@ -16,6 +16,7 @@ services:
           - '@router'
           - '@event_dispatcher'
           - '@zikula_core_manager_module.client_helper'
+          - '@zikula_core_manager_module.announcement_helper'
 
     zikula_core_manager_module.github_api_wrapper:
         class: Zikula\Module\CoreManagerModule\Manager\GitHubApiWrapper
@@ -66,3 +67,10 @@ services:
     zikula_core_manager_module.core_release_entity_helper:
         class: Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper
         arguments: ['@translator.default']
+
+    zikula_core_manager_module.announcement_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\AnnouncementHelper
+        arguments:
+          - '@translator.default'
+          - '@kernel'
+          - '@doctrine.orm.entity_manager'

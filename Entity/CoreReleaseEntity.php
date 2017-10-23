@@ -68,7 +68,7 @@ class CoreReleaseEntity extends EntityAccess
      * Array of release names indexed by locale.
      * @var array
      */
-    private $namesI18n = array();
+    private $namesI18n = [];
 
     /**
      * Release description.
@@ -82,7 +82,7 @@ class CoreReleaseEntity extends EntityAccess
      * Array of release descriptions indexed by locale.
      * @var array
      */
-    private $descriptionsI18n = array();
+    private $descriptionsI18n = [];
 
     /**
      * Core state (supported, outdated, prerelease, development)
