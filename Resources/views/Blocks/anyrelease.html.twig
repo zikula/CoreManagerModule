@@ -1,6 +1,6 @@
 <div class="coremanager-button">
     <a class="btn btn-success btn-lg{% if btnBlock|default %} btn-block{% endif %}" role="button" href="#" style="white-space: normal" data-toggle="modal" data-target="#el-block-any-release-modal-{{ id }}">
-        <i class="fa fa-cloud-download fa-3x pull-left"></i> {{ __('Download Zikula') }}<br />{{ release.semver }}
+        <i class="fa fa-cloud-download fa-fw fa-3x pull-left"></i> {{ __('Download Zikula') }}<br />{{ release.semver }}
     </a>
 </div>
 {{ include('@ZikulaCoreManagerModule/User/releasedownloadmodal.html.twig', {'modalRelease': release, 'id': 'el-block-any-release-modal-'~id}) }}
