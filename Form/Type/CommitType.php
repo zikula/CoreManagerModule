@@ -43,7 +43,7 @@ class CommitType extends AbstractType
     {
         $commits = [];
         foreach ($this->commits as $commit) {
-            $commits[substr($commit['sha'], 0, 8) . " - " . $commit['commit']['message']] = $commit['sha'];
+            $commits[substr($commit['sha'], 0, 8) . ' - ' . substr($commit['commit']['message'], 0, 80)] = $commit['sha'];
         }
         $builder
             ->add('commit', ChoiceType::class, [
