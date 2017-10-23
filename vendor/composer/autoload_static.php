@@ -7,61 +7,61 @@ namespace Composer\Autoload;
 class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
 {
     public static $prefixLengthsPsr4 = array (
-        'Z' =>
+        'Z' => 
         array (
             'Zikula\\Module\\CoreManagerModule\\' => 32,
         ),
-        'S' =>
+        'S' => 
         array (
             'Symfony\\Component\\EventDispatcher\\' => 34,
         ),
-        'G' =>
+        'G' => 
         array (
             'Github\\' => 7,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'Zikula\\Module\\CoreManagerModule\\' =>
+        'Zikula\\Module\\CoreManagerModule\\' => 
         array (
             0 => __DIR__ . '/../..' . '/',
         ),
-        'Symfony\\Component\\EventDispatcher\\' =>
+        'Symfony\\Component\\EventDispatcher\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/event-dispatcher',
         ),
-        'Github\\' =>
+        'Github\\' => 
         array (
             0 => __DIR__ . '/..' . '/knplabs/github-api/lib/Github',
         ),
     );
 
     public static $prefixesPsr0 = array (
-        'v' =>
+        'v' => 
         array (
-            'vierbergenlars\\SemVer\\' =>
+            'vierbergenlars\\SemVer\\' => 
             array (
                 0 => __DIR__ . '/..' . '/vierbergenlars/php-semver/src',
             ),
-            'vierbergenlars\\LibJs\\' =>
+            'vierbergenlars\\LibJs\\' => 
             array (
                 0 => __DIR__ . '/..' . '/vierbergenlars/php-semver/src',
             ),
         ),
-        'G' =>
+        'G' => 
         array (
-            'Guzzle\\Tests' =>
+            'Guzzle\\Tests' => 
             array (
                 0 => __DIR__ . '/..' . '/guzzle/guzzle/tests',
             ),
-            'Guzzle' =>
+            'Guzzle' => 
             array (
                 0 => __DIR__ . '/..' . '/guzzle/guzzle/src',
             ),
         ),
-        'C' =>
+        'C' => 
         array (
-            'CarlosIO' =>
+            'CarlosIO' => 
             array (
                 0 => __DIR__ . '/..' . '/carlosio/jenkins/src',
             ),
@@ -575,11 +575,14 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Symfony\\Component\\EventDispatcher\\EventSubscriberInterface' => __DIR__ . '/..' . '/symfony/event-dispatcher/EventSubscriberInterface.php',
         'Symfony\\Component\\EventDispatcher\\GenericEvent' => __DIR__ . '/..' . '/symfony/event-dispatcher/GenericEvent.php',
         'Symfony\\Component\\EventDispatcher\\ImmutableEventDispatcher' => __DIR__ . '/..' . '/symfony/event-dispatcher/ImmutableEventDispatcher.php',
-        'Zikula\\Module\\CoreManagerModule\\AbstractButtonBlock' => __DIR__ . '/../..',
         'Zikula\\Module\\CoreManagerModule\\Api\\ReleasesV1Api' => __DIR__ . '/../..' . '/Api/ReleasesV1Api.php',
+        'Zikula\\Module\\CoreManagerModule\\Block\\AnyReleaseBlock' => __DIR__ . '/../..' . '/Block/AnyReleaseBlock.php',
+        'Zikula\\Module\\CoreManagerModule\\Block\\Form\\Type\\AnyReleaseBlockType' => __DIR__ . '/../..' . '/Block/Form/Type/AnyReleaseBlockType.php',
+        'Zikula\\Module\\CoreManagerModule\\Block\\Form\\Type\\ButtonBlockType' => __DIR__ . '/../..' . '/Block/Form/Type/ButtonBlockType.php',
         'Zikula\\Module\\CoreManagerModule\\Block\\JenkinsBuildBlock' => __DIR__ . '/../..' . '/Block/JenkinsBuildBlock.php',
         'Zikula\\Module\\CoreManagerModule\\Block\\LatestReleaseBlock' => __DIR__ . '/../..' . '/Block/LatestReleaseBlock.php',
         'Zikula\\Module\\CoreManagerModule\\Block\\PreReleaseBlock' => __DIR__ . '/../..' . '/Block/PreReleaseBlock.php',
+        'Zikula\\Module\\CoreManagerModule\\Container\\LinkContainer' => __DIR__ . '/../..' . '/Container/LinkContainer.php',
         'Zikula\\Module\\CoreManagerModule\\Controller\\AdminController' => __DIR__ . '/../..' . '/Controller/AdminController.php',
         'Zikula\\Module\\CoreManagerModule\\Controller\\ReleaseController' => __DIR__ . '/../..' . '/Controller/ReleaseController.php',
         'Zikula\\Module\\CoreManagerModule\\Controller\\UserController' => __DIR__ . '/../..' . '/Controller/UserController.php',
@@ -593,13 +596,19 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\BasicInformationType' => __DIR__ . '/../..' . '/Form/Type/BasicInformationType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\BranchSelectionType' => __DIR__ . '/../..' . '/Form/Type/BranchSelectionType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\CommitType' => __DIR__ . '/../..' . '/Form/Type/CommitType.php',
+        'Zikula\\Module\\CoreManagerModule\\Form\\Type\\ConfigType' => __DIR__ . '/../..' . '/Form/Type/ConfigType.php',
+        'Zikula\\Module\\CoreManagerModule\\Form\\Type\\ConfirmReloadType' => __DIR__ . '/../..' . '/Form/Type/ConfirmReloadType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\CoreVersionType' => __DIR__ . '/../..' . '/Form/Type/CoreVersionType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\ExecuteType' => __DIR__ . '/../..' . '/Form/Type/ExecuteType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\JenkinsBuildType' => __DIR__ . '/../..' . '/Form/Type/JenkinsBuildType.php',
+        'Zikula\\Module\\CoreManagerModule\\Helper\\ClientHelper' => __DIR__ . '/../..' . '/Helper/ClientHelper.php',
+        'Zikula\\Module\\CoreManagerModule\\Helper\\CoreReleaseEntityHelper' => __DIR__ . '/../..' . '/Helper/CoreReleaseEntityHelper.php',
+        'Zikula\\Module\\CoreManagerModule\\Helper\\ProgressDataStorageHelper' => __DIR__ . '/../..' . '/Helper/ProgressDataStorageHelper.php',
         'Zikula\\Module\\CoreManagerModule\\Helper\\SearchHelper' => __DIR__ . '/../..' . '/Helper/SearchHelper.php',
         'Zikula\\Module\\CoreManagerModule\\Manager\\GitHubApiWrapper' => __DIR__ . '/../..' . '/Manager/GitHubApiWrapper.php',
         'Zikula\\Module\\CoreManagerModule\\Manager\\JenkinsApiWrapper' => __DIR__ . '/../..' . '/Manager/JenkinsApiWrapper.php',
         'Zikula\\Module\\CoreManagerModule\\Manager\\PayloadManager' => __DIR__ . '/../..' . '/Manager/PayloadManager.php',
+        'Zikula\\Module\\CoreManagerModule\\Manager\\PipelineJob' => __DIR__ . '/../..' . '/Manager/PipelineJob.php',
         'Zikula\\Module\\CoreManagerModule\\Manager\\ReleaseManager' => __DIR__ . '/../..' . '/Manager/ReleaseManager.php',
         'Zikula\\Module\\CoreManagerModule\\Settings' => __DIR__ . '/../..' . '/Settings.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\AbstractStage' => __DIR__ . '/../..' . '/Stage/AbstractStage.php',
@@ -610,8 +619,8 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Stage\\CoreVersionStage' => __DIR__ . '/../..' . '/Stage/CoreVersionStage.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\ExecuteStage' => __DIR__ . '/../..' . '/Stage/ExecuteStage.php',
         'Zikula\\Module\\CoreManagerModule\\Stage\\JenkinsBuildStage' => __DIR__ . '/../..' . '/Stage/JenkinsBuildStage.php',
-        'Zikula\\Module\\CoreManagerModule\\ClientHelper' => __DIR__ . '/../..',
-        'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => __DIR__ . '/../..' . '/zikula_core_manager_module.php',
+        'Zikula\\Module\\CoreManagerModule\\Twig\\Extension\\CoreManagerExtension' => __DIR__ . '/../..' . '/Twig/Extension/CoreManagerExtension.php',
+        'Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule' => __DIR__ . '/../..' . '/ZikulaCoreManagerModule.php',
         'vierbergenlars\\LibJs\\JObject' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JObject.php',
         'vierbergenlars\\LibJs\\JSArray' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JSArray.php',
         'vierbergenlars\\LibJs\\JString' => __DIR__ . '/..' . '/vierbergenlars/php-semver/src/vierbergenlars/LibJs/JString.php',
