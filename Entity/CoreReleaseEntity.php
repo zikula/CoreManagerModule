@@ -276,7 +276,7 @@ class CoreReleaseEntity extends EntityAccess
             return;
         }
 
-        $tmpArr = preg_split('/<h1>(\s*)(.*?){2,5}:(.*)<\/h1>/', $this->description, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+        $tmpArr = preg_split('/<h1>(\s*)(.*?){2,5}:(.*)<\/h1>/i', $this->description, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
         if (count($tmpArr) == 0) {
             $tmpArr[] = '';
         }
@@ -284,8 +284,9 @@ class CoreReleaseEntity extends EntityAccess
         array_unshift($tmpArr, 'en');
 
         for ($i = 0; $i < count($tmpArr); $i += 3) {
-            $this->descriptionsI18n[$tmpArr[$i]] = $tmpArr[$i + 2];
-            $this->namesI18n[$tmpArr[$i]] = $tmpArr[$i + 1];
+            $localeCode = strtolower($tmpArr[$i]);
+            $this->descriptionsI18n[$localeCode] = $tmpArr[$i + 2];
+            $this->namesI18n[$localeCode] = $tmpArr[$i + 1];
         }
     }
 
