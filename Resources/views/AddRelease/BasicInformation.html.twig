@@ -1,7 +1,18 @@
 {% extends 'ZikulaCoreManagerModule:AddRelease:base.html.twig' %}
 {% block messages %}
-    <div class="alert alert-info">
-        {{ __('You may use the following placeholders in the announcement: %QATICKETURL%')}}
-        {{ __('The release announcement must be written in Markdown.')}}
-    </div>
+    <p class="alert alert-info">
+        {{ __('You may use the following placeholders in the announcement: %QATICKETURL%')}}<br />
+        {{ __('The release announcement must be written in Markdown.')}}<br />
+        {{ __('The release names and descriptions can be made multilingual, if the correct format is used at GitHub:') }}
+    </p>
+    <pre>...English release descripion...
+# LOCALE:LOCALISED RELEASE NAME
+...LOCALISED RELEASE DESCRIPTION...
+# LOCALE:LOCALISED RELEASE NAME
+...LOCALISED RELEASE DESCRIPTION...</pre>
+    {% if app.request.locale != 'en' %}
+        <p class="alert alert-danger">
+            {{ __('You should switch to English language to prevent translation problems!') }}
+        </p>
+    {% endif %}
 {%  endblock %}

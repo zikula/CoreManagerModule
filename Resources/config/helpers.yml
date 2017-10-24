@@ -8,6 +8,7 @@ services:
         calls:
           - [setNewsEntityFactory, ["@?mu_news_module.entity_factory"]]
           - [setNewsWorkflowHelper, ["@?mu_news_module.workflow_helper"]]
+          - [setNewsTranslatableHelper, ["@?mu_news_module.translatable_helper"]]
 
     zikula_core_manager_module.client_helper:
         class: Zikula\Module\CoreManagerModule\Helper\ClientHelper
