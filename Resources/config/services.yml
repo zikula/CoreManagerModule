@@ -1,6 +1,6 @@
 imports:
-  - { resource: 'forms.yml' }
   - { resource: 'helpers.yml' }
+  - { resource: 'forms.yml' }
 
 services:
     zikula_core_manager_module.api.releases.v1:
