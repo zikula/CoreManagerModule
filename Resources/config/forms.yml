@@ -4,7 +4,7 @@ services:
         arguments:
           - '@translator.default'
           - '@zikula_core_manager_module.github_api_wrapper'
-          - '@zikula_core_manager_module.helper.progress_data_storage_helper'
+          - '@zikula_core_manager_module.progress_data_storage_helper'
         tags:
             - { name: 'form.type' }
 
@@ -13,7 +13,7 @@ services:
         arguments:
           - '@translator.default'
           - '@zikula_core_manager_module.github_api_wrapper'
-          - '@zikula_core_manager_module.helper.progress_data_storage_helper'
+          - '@zikula_core_manager_module.progress_data_storage_helper'
         tags:
             - { name: 'form.type' }
 
@@ -22,7 +22,7 @@ services:
         arguments:
           - '@translator.default'
           - '@zikula_core_manager_module.github_api_wrapper'
-          - '@zikula_core_manager_module.helper.progress_data_storage_helper'
+          - '@zikula_core_manager_module.progress_data_storage_helper'
         tags:
             - { name: 'form.type' }
 
@@ -46,7 +46,7 @@ services:
         arguments:
           - '@translator.default'
           - '@zikula_core_manager_module.releasemanager'
-          - '@zikula_core_manager_module.helper.progress_data_storage_helper'
+          - '@zikula_core_manager_module.progress_data_storage_helper'
         tags:
             - { name: 'form.type' }
 
