@@ -605,7 +605,7 @@ class ReleaseManager
     }
 
     /**
-     * "Markdownify" a text using GitHub's flavoured markdown (resulting in @zikula and zikula/core#123 links).
+     * "Markdownify" a text using GitHub's flavoured markdown (resulting in @ zikula and zikula/core#123 links).
      *
      * @param string $text The text to "markdownify"
      *
