@@ -75,12 +75,12 @@ abstract class AbstractStage implements StageInterface, FormHandlerInterface, In
 
     protected function getData()
     {
-        return $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper')->getData();
+        return $this->container->get('zikula_core_manager_module.progress_data_storage_helper')->getData();
     }
 
     protected function addData($data)
     {
-        return $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper')->addData($data);
+        return $this->container->get('zikula_core_manager_module.progress_data_storage_helper')->addData($data);
     }
 
     /**

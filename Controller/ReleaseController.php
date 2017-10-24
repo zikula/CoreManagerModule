@@ -81,7 +81,7 @@ class ReleaseController extends AbstractController
         if ($stage === false) {
             throw new \RuntimeException('No stage parameter received.');
         }
-        $dataHelper = $this->container->get('zikula_core_manager_module.helper.progress_data_storage_helper');
+        $dataHelper = $this->container->get('zikula_core_manager_module.progress_data_storage_helper');
         $data = $dataHelper->getData();
         if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
             throw new \RuntimeException('Could not decode user data.');
