@@ -57,28 +57,4 @@ class CoreReleaseEntityHelper
 
         return $translation[$state];
     }
-
-    /**
-     * Get a news text to use for this core release.
-     *
-     * @param CoreReleaseEntity $coreReleaseEntity
-     * @return string
-     */
-    public function getNewsText(CoreReleaseEntity $coreReleaseEntity)
-    {
-        $downloadLinks = '';
-        if (count($coreReleaseEntity->getAssets()) > 0) {
-            $downloadLinkTpl = '<a href="%link%" class="btn btn-success btn-sm">%text%</a>';
-            foreach ($coreReleaseEntity->getAssets() as $asset) {
-                $downloadLinks .= str_replace('%link%', $asset['download_url'], str_replace('%text%', $asset['name'], $downloadLinkTpl));
-            }
-        } else {
-            $downloadLinks .= '<p class="alert alert-warning">' .
-                $this->__('Direct download links not yet available!') . '</p>';
-        }
-
-        return CoreReleaseEntity::NEWS_DESCRIPTION_START .
-            $coreReleaseEntity->getDescriptionI18n() . $downloadLinks .
-            CoreReleaseEntity::NEWS_DESCRIPTION_END;
-    }
 }

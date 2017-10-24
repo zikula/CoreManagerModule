@@ -12,6 +12,8 @@
 namespace Zikula\Module\CoreManagerModule\Helper;
 
 use Doctrine\ORM\EntityManagerInterface;
+use MU\NewsModule\Entity\Factory\EntityFactory;
+use MU\NewsModule\Helper\WorkflowHelper;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
@@ -24,12 +26,22 @@ class AnnouncementHelper
     /**
      * @var ZikulaHttpKernelInterface
      */
-    protected $kernel;
+    private $kernel;
 
     /**
      * @var EntityManagerInterface
      */
     private $em;
+
+    /**
+     * @var EntityFactory
+     */
+    private $entityFactory = null;
+
+    /**
+     * @var WorkflowHelper
+     */
+    private $workflowHelper = null;
 
     /**
      * @param TranslatorInterface $translator
@@ -52,25 +64,45 @@ class AnnouncementHelper
     }
 
     /**
+     * Sets News entity factory reference.
+     *
+     * @param EntityFactory $entityFactory
+     */
+    public function setNewsEntityFactory(EntityFactory $entityFactory)
+    {
+        $this->entityFactory = $entityFactory;
+    }
+
+    /**
+     * Sets News workflow helper reference.
+     *
+     * @param WorkflowHelper $workflowHelper
+     */
+    public function setNewsWorkflowHelper(WorkflowHelper $workflowHelper)
+    {
+        $this->workflowHelper = $workflowHelper;
+    }
+
+    /**
      * Creates a news article about a new release.
      *
-     * @param CoreReleaseEntity $newRelease
+     * @param CoreReleaseEntity $release
      */
-    public function createNewsArticle(CoreReleaseEntity $newRelease)
+    public function createNewsArticle(CoreReleaseEntity $release)
     {
         if (!$this->kernel->isBundle('MUNewsModule')) {
             return;
         }
 
         $title = $teaser = '';
-        switch ($newRelease->getState()) {
+        switch ($release->getState()) {
             case CoreReleaseEntity::STATE_SUPPORTED:
-                $title = $this->__f('%s released!', ['%s' => $newRelease->getNameI18n()]);
-                $teaser = '<p>' . $this->__f('The core development team is proud to announce the availabilty of %s.', ['%s' => $newRelease->getNameI18n()]) . '</p>';
+                $title = $this->__f('%s released!', ['%s' => $release->getNameI18n()]);
+                $teaser = '<p>' . $this->__f('The core development team is proud to announce the availabilty of %s.', ['%s' => $release->getNameI18n()]) . '</p>';
                 break;
             case CoreReleaseEntity::STATE_PRERELEASE:
-                $title = $this->__f('%s ready for testing!', ['%s' => $newRelease->getNameI18n()]);
-                $teaser = '<p>' . $this->__f('The core development team is proud to announce a pre-release of %s. Please help testing and report bugs!', ['%s' => $newRelease->getNameI18n()]) . '</p>';
+                $title = $this->__f('%s ready for testing!', ['%s' => $release->getNameI18n()]);
+                $teaser = '<p>' . $this->__f('The core development team is proud to announce a pre-release of %s. Please help testing and report bugs!', ['%s' => $release->getNameI18n()]) . '</p>';
                 break;
             case CoreReleaseEntity::STATE_DEVELOPMENT:
             case CoreReleaseEntity::STATE_OUTDATED:
@@ -79,22 +111,23 @@ class AnnouncementHelper
                 return;
         }
 
-        // TODO disabled
-        /**
-        $args = [];
-        $args['title'] = $title;
-        $args['hometext'] = $teaser;
-        $args['bodytext'] = $newRelease->getNewsText(); change to \Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper::getNewsText
-        $args['published_status'] = 1; //\News_Api_User::STATUS_PENDING;
+        $body = $this->getNewsText($release);
 
-        $id = \ModUtil::apiFunc('News', 'user', 'create', $args);
+        $article = $this->entityFactory->createMessage();
+        $article->setTitle($title);
+        $article->setStartText($teaser);
+        $article->setMainText($body);
+        $article->setAuthor('Admin');
+
+        $this->workflowHelper->executeAction($article, 'approve');
+
+        $id = $article->getId();
 
         if (is_numeric($id) && $id > 0) {
-            $newRelease->setNewsId($id);
-            $this->em->merge($newRelease);
+            $release->setNewsId($id);
+            $this->em->merge($release);
             $this->em->flush();
         }
-        */
     }
 
     /**
@@ -108,19 +141,45 @@ class AnnouncementHelper
             return;
         }
 
-        // TODO disabled
-        /**
-        $article = \ModUtil::apiFunc('News', 'user', 'get', array ('sid' => $release->getNewsId()));
+        $article = $this->entityFactory->getRepository('message')->selectById($release->getNewsId());
         if (!$article) {
             return;
         }
 
-        $article['bodytext'] = preg_replace('#' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_START) . '.*?' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_END) . '#',
-            $release->getNewsText(), change to \Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper::getNewsText
-            $article['bodytext']
+        $body = $this->getNewsText($release);
+
+        $body = preg_replace(
+            '#' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_START) . '.*?' . preg_quote(CoreReleaseEntity::NEWS_DESCRIPTION_END) . '#',
+            $body,
+            $article->getMainText()
         );
 
-        \ModUtil::apiFunc('News', 'admin', 'update', $article);
-        */
+        $article->setMainText($body);
+
+        $this->workflowHelper->executeAction($article, 'updateapproved');
+    }
+
+    /**
+     * Get a news text to use for this core release.
+     *
+     * @param CoreReleaseEntity $coreReleaseEntity
+     * @return string
+     */
+    private function getNewsText(CoreReleaseEntity $coreReleaseEntity)
+    {
+        $downloadLinks = '';
+        if (count($coreReleaseEntity->getAssets()) > 0) {
+            $downloadLinkTpl = '<a href="%link%" class="btn btn-success btn-sm">%text%</a>';
+            foreach ($coreReleaseEntity->getAssets() as $asset) {
+                $downloadLinks .= str_replace('%link%', $asset['download_url'], str_replace('%text%', $asset['name'], $downloadLinkTpl));
+            }
+        } else {
+            $downloadLinks .= '<p class="alert alert-warning">' .
+                $this->__('Direct download links not yet available!') . '</p>';
+        }
+
+        return CoreReleaseEntity::NEWS_DESCRIPTION_START .
+            $coreReleaseEntity->getDescriptionI18n() . $downloadLinks .
+            CoreReleaseEntity::NEWS_DESCRIPTION_END;
     }
 }

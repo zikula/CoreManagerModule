@@ -1,0 +1,34 @@
+services:
+    zikula_core_manager_module.announcement_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\AnnouncementHelper
+        arguments:
+          - '@translator.default'
+          - '@kernel'
+          - '@doctrine.orm.entity_manager'
+        calls:
+          - [setNewsEntityFactory, ["@?mu_news_module.entity_factory"]]
+          - [setNewsWorkflowHelper, ["@?mu_news_module.workflow_helper"]]
+
+    zikula_core_manager_module.client_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\ClientHelper
+        arguments:
+          - '@zikula_extensions_module.api.variable'
+          - '%kernel.cache_dir%'
+
+    zikula_core_manager_module.progress_data_storage_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\ProgressDataStorageHelper
+        arguments:
+          - '@session'
+
+    zikula_core_manager_module.core_release_entity_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\CoreReleaseEntityHelper
+        arguments:
+          - '@translator.default'
+
+    zikula_core_manager_module.search_helper:
+        class: Zikula\Module\CoreManagerModule\Helper\SearchHelper
+        arguments:
+          - '@doctrine.orm.entity_manager'
+          - '@session'
+        tags:
+            - { name: zikula.searchable_module, bundleName: ZikulaCoreManagerModule }
