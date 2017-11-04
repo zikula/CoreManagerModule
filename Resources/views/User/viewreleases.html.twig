@@ -51,7 +51,7 @@
         <tr class="{% if release.state == prerelease or release.state == development %}danger{% elseif release.state == supported %}success{% else %}warning{% endif %}">
             {% if isAdmin %}<td headers="hId" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.id }}</td>{% endif %}
             <td headers="hVersion" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.semver }}</td>
-            <td headers="hName" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.nameI18n }}</td>
+            <td headers="hName" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.getNameI18n(app.request.locale) }}</td>
             <td headers="hState" style="cursor: pointer" data-toggle="modal" data-target="#el-download-release-modal-{{ loop.index }}">{{ release.state|elReleaseStateToText('singular') }}</td>
             {% if isAdmin %}
                 <td headers="hActions" class="text-right">
