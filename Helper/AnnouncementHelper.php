@@ -284,7 +284,7 @@ class AnnouncementHelper
         $article->setMainText($body);
 
         if ($locale != '') {
-            $article->setLocale('de');
+            $article->setLocale($locale);
         }
     }
 }
