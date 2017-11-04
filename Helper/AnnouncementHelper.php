@@ -14,9 +14,11 @@ namespace Zikula\Module\CoreManagerModule\Helper;
 use Doctrine\ORM\EntityManagerInterface;
 use MU\NewsModule\Entity\Factory\EntityFactory;
 use MU\NewsModule\Entity\MessageEntity;
+use MU\NewsModule\Entity\MessageCategoryEntity;
 use MU\NewsModule\Helper\TranslatableHelper;
 use MU\NewsModule\Helper\WorkflowHelper;
 use Zikula\Bundle\CoreBundle\HttpKernel\ZikulaHttpKernelInterface;
+use Zikula\CategoriesModule\Entity\RepositoryInterface\CategoryRepositoryInterface;
 use Zikula\Common\Translator\TranslatorInterface;
 use Zikula\Common\Translator\TranslatorTrait;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
@@ -38,6 +40,11 @@ class AnnouncementHelper
      * @var EntityManagerInterface
      */
     private $em;
+
+    /**
+     * @var CategoryRepositoryInterface
+     */
+    private $categoryRepository;
 
     /**
      * @var EntityFactory
@@ -68,15 +75,18 @@ class AnnouncementHelper
      * @param TranslatorInterface $translator
      * @param ZikulaHttpKernelInterface $kernel
      * @param EntityManagerInterface $em
+     * @param CategoryRepositoryInterface $categoryRepository
      */
     public function __construct(
         TranslatorInterface $translator,
         ZikulaHttpKernelInterface $kernel,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        CategoryRepositoryInterface $categoryRepository
     ) {
         $this->setTranslator($translator);
         $this->kernel = $kernel;
         $this->em = $em;
+        $this->categoryRepository = $categoryRepository;
         $this->translationLocales = ['de'];
     }
 
@@ -151,6 +161,12 @@ class AnnouncementHelper
         $article->setStartText($teaser);
         $this->updateNewsText($article);
         $article->setAuthor('Admin');
+
+        $registryId = 3;
+        $category = $this->categoryRepository->find(10001); // Release
+        $categoryAssignment = new MessageCategoryEntity($registryId, $category, $article);
+        $article->getCategories()->add($categoryAssignment);
+        $this->em->persist($categoryAssignment);
 
         // for testing:
         //$this->workflowHelper->executeAction($article, 'submit');

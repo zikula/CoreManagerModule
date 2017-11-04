@@ -5,6 +5,7 @@ services:
           - '@translator.default'
           - '@kernel'
           - '@doctrine.orm.entity_manager'
+          - '@zikula_categories_module.category_repository'
         calls:
           - [setNewsEntityFactory, ["@?mu_news_module.entity_factory"]]
           - [setNewsWorkflowHelper, ["@?mu_news_module.workflow_helper"]]
