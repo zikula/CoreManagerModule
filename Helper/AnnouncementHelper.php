@@ -152,6 +152,9 @@ class AnnouncementHelper
         $this->updateNewsText($article);
         $article->setAuthor('Admin');
 
+        // for testing:
+        //$this->workflowHelper->executeAction($article, 'submit');
+        // for production:
         $this->workflowHelper->executeAction($article, 'approve');
 
         $id = $article->getId();
@@ -200,6 +203,9 @@ class AnnouncementHelper
 
         $this->updateNewsText($article);
 
+        // for testing:
+        //$this->workflowHelper->executeAction($article, 'updatewaiting');
+        // for production:
         $this->workflowHelper->executeAction($article, 'updateapproved');
 
         $translations = $this->translatableHelper->prepareEntityForEditing($article);
@@ -237,9 +243,9 @@ class AnnouncementHelper
                 $this->__('Direct download links not yet available!') . '</p>';
         }
 
-        return CoreReleaseEntity::NEWS_DESCRIPTION_START .
+        return self::NEWS_DESCRIPTION_START .
             $this->release->getDescriptionI18n($locale) . $downloadLinks .
-            CoreReleaseEntity::NEWS_DESCRIPTION_END;
+            self::NEWS_DESCRIPTION_END;
     }
 
     /**
