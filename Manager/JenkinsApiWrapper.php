@@ -13,10 +13,10 @@ class JenkinsApiWrapper
     private $variableApi;
 
     protected $jenkinsClient;
+    protected $jenkinsURL;
     protected $core;
     protected $coreRepository;
     protected $coreOrganization;
-    protected $jenkinsURL;
 
     private $OK_STATI = [200, 302];
 
@@ -35,20 +35,20 @@ class JenkinsApiWrapper
 
     public function promoteBuild($job, $build, $level)
     {
-        list ($status, ) = $this->doGet("/job/" . urlencode($job) . "/$build/promote/", ['level' => $level]);
+        list ($status, $response) = $this->doGet('/job/' . urlencode($job) . "/$build/promote/", ['level' => $level]);
 
         return in_array($status, $this->OK_STATI);
     }
 
     public function lockBuild($job, $build)
     {
-        list ($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
+        list ($status, $response) = $this->doGet('/job/' . urlencode($job) . "/$build/api/json", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
         $buildArr = json_decode($response, true);
         if (!$buildArr['keepLog']) {
-            list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/toggleLogKeep", []);
+            list ($status, ) = $this->doPost('/job/' . urlencode($job) . "/$build/toggleLogKeep", []);
             return in_array($status, $this->OK_STATI);
         }
 
@@ -57,7 +57,7 @@ class JenkinsApiWrapper
 
     public function getBuildDescription($job, $build)
     {
-        list ($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
+        list ($status, $response) = $this->doGet('/job/' . urlencode($job) . "/$build/api/json", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -68,7 +68,7 @@ class JenkinsApiWrapper
 
     public function setBuildDescription($job, $build, $description)
     {
-        list ($status, ) = $this->doPost("/job/" . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
+        list ($status, ) = $this->doPost('/job/' . urlencode($job) . "/$build/submitDescription", ['description' => $description]);
 
         // TODO reenable (find out why the line above returns a 403 forbidden error - maybe something changed on the Jenkins side)
         return true;
@@ -77,7 +77,7 @@ class JenkinsApiWrapper
 
     public function getAssets($job, $build)
     {
-        list($status, $response) = $this->doGet("/job/" . urlencode($job) . "/$build/api/json", []);
+        list($status, $response) = $this->doGet('/job/' . urlencode($job) . "/$build/api/json", []);
         if (!in_array($status, $this->OK_STATI)) {
             return false;
         }
@@ -113,27 +113,26 @@ class JenkinsApiWrapper
 
     private function doPost($api, $data)
     {
-        $api = '/job/Zikula' . $api;
-        $ch = curl_init();
-
-        curl_setopt($ch, CURLOPT_URL, $this->jenkinsURL . $api);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-        $response = curl_exec($ch);
-        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        return [$status, $response];
+        return $this->doRequest($api, $data, 'POST');
     }
 
     private function doGet($api, $data)
     {
-        $api = '/job/Zikula' . $api;
+        return $this->doRequest($api, $data, 'GET');
+    }
+
+    private function doRequest($api, $data, $method)
+    {
+        $url = $this->jenkinsURL . '/job/Zikula' . $api;
         $ch = curl_init();
 
-        curl_setopt($ch, CURLOPT_URL, $this->jenkinsURL . $api . "?" . http_build_query($data));
+        if ($method == 'GET') {
+            curl_setopt($ch, CURLOPT_URL, $url . '?' . http_build_query($data));
+        } else if ($method == 'POST') {
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_POST, 1);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
         $response = curl_exec($ch);

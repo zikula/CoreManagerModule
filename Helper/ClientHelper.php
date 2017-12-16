@@ -123,7 +123,7 @@ class ClientHelper
      */
     public function getJenkinsClient()
     {
-        $jenkinsServer = $this->getJenkinsURL(false);
+        $jenkinsServer = $this->getJenkinsURL();
         if (false === $jenkinsServer) {
             return false;
         }
@@ -141,21 +141,19 @@ class ClientHelper
     }
 
     /**
-     * @param boolean $needsAuthentication
      * @return bool|mixed|string
      */
-    public function getJenkinsURL($needsAuthentication = true)
+    public function getJenkinsURL()
     {
         $jenkinsServer = trim($this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
         if (empty($jenkinsServer)) {
             return false;
         }
-        if (true === $needsAuthentication) {
-            $jenkinsUser = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_user', '');
-            $jenkinsPassword = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_password', '');
-            if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
-                $jenkinsServer = str_replace('://', '://' . urlencode($jenkinsUser) . ':' . urlencode($jenkinsPassword) . '@', $jenkinsServer);
-            }
+
+        $jenkinsUser = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_user', '');
+        $jenkinsPassword = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_password', '');
+        if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
+            $jenkinsServer = str_replace('://', '://' . urlencode($jenkinsUser) . ':' . urlencode($jenkinsPassword) . '@', $jenkinsServer);
         }
 
         return $jenkinsServer;
