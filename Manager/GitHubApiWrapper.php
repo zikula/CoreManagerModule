@@ -142,7 +142,7 @@ class GitHubApiWrapper
                 $newVersion = $version->getMajor() . '.' . $version->getMinor() . '.' . $newPatchVersion;
                 if ($newVersion != $lastVersion) {
                     // give choice of releasing RC or full patch without RC
-                    $allowedCoreVersions[] = new version($newVersion . '-rc1');
+                    //$allowedCoreVersions[] = new version($newVersion . '-rc1');
                     $allowedCoreVersions[] = new version($newVersion);
                 }
             }
