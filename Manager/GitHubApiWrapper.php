@@ -127,7 +127,7 @@ class GitHubApiWrapper
                 $lastVersion = $currentVersion;
                 $currentVersion = self::versionToMajorMinorPatch($version);
             }
-            if ($currentPreRelease == self::versionIsPreRelease($version)) {
+            if (false !== ($currentPreRelease = self::versionIsPreRelease($version))) {
                 // Seems like the newest released version is a pre release.
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
