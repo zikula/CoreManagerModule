@@ -127,23 +127,22 @@ class GitHubApiWrapper
                 $lastVersion = $currentVersion;
                 $currentVersion = self::versionToMajorMinorPatch($version);
             }
-            if ($currentPreRelease = self::versionIsPreRelease($version)) {
+            if ($currentPreRelease == self::versionIsPreRelease($version)) {
                 // Seems like the newest released version is a pre release.
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
-                $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . "-rc" . ++$currentPreRelease);
-
+                $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . '-rc' . ++$currentPreRelease);
             } else {
                 // This is a full version. Allow to release a higher version if the previous version isn't equal to
                 // the higher one.
                 if (!is_int($version->getPatch())) {
-                    throw new \RuntimeException("The patch number of the " . $version->getVersion() . " version must be an integer.");
+                    throw new \RuntimeException('The patch number of the ' . $version->getVersion() . ' version must be an integer.');
                 }
                 $newPatchVersion = ((int)$version->getPatch()) + 1;
-                $newVersion = $version->getMajor() . "." . $version->getMinor() . "." . $newPatchVersion;
+                $newVersion = $version->getMajor() . '.' . $version->getMinor() . '.' . $newPatchVersion;
                 if ($newVersion != $lastVersion) {
                     // give choice of releasing RC or full patch without RC
-                    $allowedCoreVersions[] = new version($newVersion . "-rc1");
+                    $allowedCoreVersions[] = new version($newVersion . '-rc1');
                     $allowedCoreVersions[] = new version($newVersion);
                 }
             }
@@ -154,14 +153,14 @@ class GitHubApiWrapper
 
         // Now add all the new possible versions.
         // First of, allow a new major version
-        $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . ".0.0-rc1");
+        $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . '.0.0-rc1');
 
         $majorPrefix = null;
         foreach ($allowedCoreVersions as $allowedCoreVersion) {
             if ($allowedCoreVersion->getMajor() !== $majorPrefix) {
                 $majorPrefix = $allowedCoreVersion->getMajor();
-                if (self::versionIsPreRelease($allowedCoreVersion) !== false) {
-                    $extraVersions[] = new version($allowedCoreVersion->getMajor() . "." . ($allowedCoreVersion->getMinor() + 1) . ".0-rc1");
+                if (false !== self::versionIsPreRelease($allowedCoreVersion)) {
+                    $extraVersions[] = new version($allowedCoreVersion->getMajor() . '.' . ($allowedCoreVersion->getMinor() + 1) . '.0-rc1');
                 }
             }
         }
@@ -179,7 +178,7 @@ class GitHubApiWrapper
 
     public function versionToMajorMinorPatch(version $version)
     {
-        return $version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch();
+        return $version->getMajor() . '.' . $version->getMinor() . '.' . $version->getPatch();
     }
 
     public function versionIsPreRelease(version $version)
@@ -242,7 +241,7 @@ class GitHubApiWrapper
     public function getMilestoneByCoreVersion(version $version)
     {
         // Remove pre release from version.
-        $version = new version($version->getMajor() . "." . $version->getMinor() . "." . $version->getPatch());
+        $version = new version($version->getMajor() . '.' . $version->getMinor() . '.' . $version->getPatch());
 
         // Look through open milestones.
         $milestones = $this->githubClient->issues()->milestones()->all($this->coreOrganization, $this->coreRepository, ['state' => 'open']);
