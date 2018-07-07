@@ -13,11 +13,10 @@
 
 namespace Zikula\Module\CoreManagerModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Core\Response\PlainResponse;
 use Zikula\Module\CoreManagerModule\Exception\ClientException;
@@ -31,8 +30,7 @@ use Zikula\Module\CoreManagerModule\Manager\PayloadManager;
 class WebHookController extends AbstractController
 {
     /**
-     * @Route("/webhook-core", options={"i18n"=false})
-     * @Method("POST")
+     * @Route("/webhook-core", methods = {"POST"}, options={"i18n"=false})
      */
     public function coreAction(Request $request)
     {
@@ -89,8 +87,7 @@ class WebHookController extends AbstractController
     }
 
     /**
-     * @Route("/webhook-jenkins/{code}", options={"i18n"=false})
-     * @Method("POST")
+     * @Route("/webhook-jenkins/{code}", methods = {"POST"}, options={"i18n"=false})
      */
     public function jenkinsAction($code)
     {

@@ -13,7 +13,7 @@
 
 namespace Zikula\Module\CoreManagerModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Zikula\Core\Controller\AbstractController;
 
 /**

@@ -14,12 +14,12 @@
 namespace Zikula\Module\CoreManagerModule\Controller;
 
 use Github\HttpClient\Message\ResponseMediator;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Zikula\Core\Controller\AbstractController;
 use Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity;
 use Zikula\Module\CoreManagerModule\Form\Type\ConfigType;

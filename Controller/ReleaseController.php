@@ -2,11 +2,10 @@
 
 namespace Zikula\Module\CoreManagerModule\Controller;
 
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use vierbergenlars\SemVer\version;
 use Zikula\Component\Wizard\FormHandlerInterface;
@@ -63,8 +62,7 @@ class ReleaseController extends AbstractController
     }
 
     /**
-     * @Route("/add-release-ajax", options={"i18n"=false,"expose"=true})
-     * @Method("POST")
+     * @Route("/add-release-ajax", methods = {"POST"}, options={"i18n"=false,"expose"=true})
      *
      * @param Request $request
      * @return JsonResponse
