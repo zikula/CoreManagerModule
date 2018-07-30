@@ -48,7 +48,7 @@ class ConfigType extends AbstractType
             ->add('is_main_instance', CheckboxType::class, [
                 'required' => false,
                 'label' => $this->__('Main instance'),
-                'help' => $this->__('Only tick this box at one place, i.e. the zikula.org site. It must not be ticked at other community sites.')
+                'help' => $this->__('Only tick this box at one place, i.e. the ziku.la site. It must not be ticked at other community sites.')
             ])
             ->add('github_core_repo', TextType::class, [
                 'label' => $this->__('Core repository'),
