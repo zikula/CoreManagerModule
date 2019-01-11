@@ -7,7 +7,7 @@
     "authors": [
         {
             "name": "Zikula Contributors",
-            "homepage": "http://github.com/zikula/CoreManagerMoule"
+            "homepage": "https://github.com/zikula/CoreManagerModule"
         }
     ],
     "autoload": {
