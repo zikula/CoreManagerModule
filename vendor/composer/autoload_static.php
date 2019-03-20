@@ -601,6 +601,7 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\CoreVersionType' => __DIR__ . '/../..' . '/Form/Type/CoreVersionType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\ExecuteType' => __DIR__ . '/../..' . '/Form/Type/ExecuteType.php',
         'Zikula\\Module\\CoreManagerModule\\Form\\Type\\JenkinsBuildType' => __DIR__ . '/../..' . '/Form/Type/JenkinsBuildType.php',
+        'Zikula\\Module\\CoreManagerModule\\Helper\\AnnouncementHelper' => __DIR__ . '/../..' . '/Helper/AnnouncementHelper.php',
         'Zikula\\Module\\CoreManagerModule\\Helper\\ClientHelper' => __DIR__ . '/../..' . '/Helper/ClientHelper.php',
         'Zikula\\Module\\CoreManagerModule\\Helper\\CoreReleaseEntityHelper' => __DIR__ . '/../..' . '/Helper/CoreReleaseEntityHelper.php',
         'Zikula\\Module\\CoreManagerModule\\Helper\\ProgressDataStorageHelper' => __DIR__ . '/../..' . '/Helper/ProgressDataStorageHelper.php',

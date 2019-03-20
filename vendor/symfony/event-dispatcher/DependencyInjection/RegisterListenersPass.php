@@ -11,27 +11,16 @@
 
 namespace Symfony\Component\EventDispatcher\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 
 /**
  * Compiler pass to register tagged services for an event dispatcher.
  */
 class RegisterListenersPass implements CompilerPassInterface
 {
-    /**
-     * @var string
-     */
     protected $dispatcherService;
-
-    /**
-     * @var string
-     */
     protected $listenerTag;
-
-    /**
-     * @var string
-     */
     protected $subscriberTag;
 
     /**
