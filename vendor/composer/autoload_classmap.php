@@ -538,6 +538,7 @@ return array(
     'Zikula\\Module\\CoreManagerModule\\Form\\Type\\CoreVersionType' => $baseDir . '/Form/Type/CoreVersionType.php',
     'Zikula\\Module\\CoreManagerModule\\Form\\Type\\ExecuteType' => $baseDir . '/Form/Type/ExecuteType.php',
     'Zikula\\Module\\CoreManagerModule\\Form\\Type\\JenkinsBuildType' => $baseDir . '/Form/Type/JenkinsBuildType.php',
+    'Zikula\\Module\\CoreManagerModule\\Helper\\AnnouncementHelper' => $baseDir . '/Helper/AnnouncementHelper.php',
     'Zikula\\Module\\CoreManagerModule\\Helper\\ClientHelper' => $baseDir . '/Helper/ClientHelper.php',
     'Zikula\\Module\\CoreManagerModule\\Helper\\CoreReleaseEntityHelper' => $baseDir . '/Helper/CoreReleaseEntityHelper.php',
     'Zikula\\Module\\CoreManagerModule\\Helper\\ProgressDataStorageHelper' => $baseDir . '/Helper/ProgressDataStorageHelper.php',
