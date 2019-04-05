@@ -1,9 +1,9 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 
-class Revision extends Object
+class Revision extends BaseObject
 {
     public function getModule()
     {

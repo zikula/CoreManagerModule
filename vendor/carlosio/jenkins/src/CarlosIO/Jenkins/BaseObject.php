@@ -1,7 +1,7 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-class Object
+class BaseObject
 {
     protected $_json;
 

@@ -1,11 +1,11 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 use CarlosIO\Jenkins\Change;
 use CarlosIO\Jenkins\Revision;
 
-class ChangeSet extends Object
+class ChangeSet extends BaseObject
 {
     public function getRevisions()
     {

@@ -1,9 +1,9 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 
-class Author extends Object
+class Author extends BaseObject
 {
     protected static $domain = null;
 

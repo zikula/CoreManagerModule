@@ -1,10 +1,10 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 use CarlosIO\Jenkins\Build;
 
-class Job extends Object
+class Job extends BaseObject
 {
     public function getName()
     {

@@ -1,10 +1,10 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 use CarlosIO\Jenkins\Author;
 
-class Change extends Object
+class Change extends BaseObject
 {
     public function getAffectedPaths()
     {

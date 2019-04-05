@@ -1,10 +1,10 @@
 <?php
 namespace CarlosIO\Jenkins;
 
-use CarlosIO\Jenkins\Object;
+use CarlosIO\Jenkins\BaseObject;
 use CarlosIO\Jenkins\ChangeSet;
 
-class Build extends Object
+class Build extends BaseObject
 {
     public function getNumber()
     {
