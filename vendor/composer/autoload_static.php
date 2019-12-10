@@ -70,6 +70,7 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
 
     public static $classMap = array (
         'CarlosIO\\Jenkins\\Author' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Author.php',
+        'CarlosIO\\Jenkins\\BaseObject' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/BaseObject.php',
         'CarlosIO\\Jenkins\\Build' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Build.php',
         'CarlosIO\\Jenkins\\Change' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Change.php',
         'CarlosIO\\Jenkins\\ChangeSet' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/ChangeSet.php',
@@ -77,7 +78,6 @@ class ComposerStaticInitf2194f3328d858158ac906a7ce51335a
         'CarlosIO\\Jenkins\\Exception' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Exception.php',
         'CarlosIO\\Jenkins\\Exception\\SourceNotAvailableException' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Exception/SourceNotAvailableException.php',
         'CarlosIO\\Jenkins\\Job' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Job.php',
-        'CarlosIO\\Jenkins\\Object' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Object.php',
         'CarlosIO\\Jenkins\\Property' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Property.php',
         'CarlosIO\\Jenkins\\Revision' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Revision.php',
         'CarlosIO\\Jenkins\\Source' => __DIR__ . '/..' . '/carlosio/jenkins/src/CarlosIO/Jenkins/Source.php',

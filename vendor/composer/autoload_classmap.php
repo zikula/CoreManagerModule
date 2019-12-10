@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'CarlosIO\\Jenkins\\Author' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Author.php',
+    'CarlosIO\\Jenkins\\BaseObject' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/BaseObject.php',
     'CarlosIO\\Jenkins\\Build' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Build.php',
     'CarlosIO\\Jenkins\\Change' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Change.php',
     'CarlosIO\\Jenkins\\ChangeSet' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/ChangeSet.php',
@@ -14,7 +15,6 @@ return array(
     'CarlosIO\\Jenkins\\Exception' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Exception.php',
     'CarlosIO\\Jenkins\\Exception\\SourceNotAvailableException' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Exception/SourceNotAvailableException.php',
     'CarlosIO\\Jenkins\\Job' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Job.php',
-    'CarlosIO\\Jenkins\\Object' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Object.php',
     'CarlosIO\\Jenkins\\Property' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Property.php',
     'CarlosIO\\Jenkins\\Revision' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Revision.php',
     'CarlosIO\\Jenkins\\Source' => $vendorDir . '/carlosio/jenkins/src/CarlosIO/Jenkins/Source.php',
