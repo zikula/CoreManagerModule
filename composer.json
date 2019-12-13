@@ -14,14 +14,13 @@
         "psr-4": { "Zikula\\Module\\CoreManagerModule\\": "" }
     },
     "require": {
-        "php": ">5.3.3",
+        "php": ">=5.5.9",
         "knplabs/github-api": "~1.2",
-        "vierbergenlars/php-semver": "~3.0",
-        "carlosio/jenkins": "dev-master"
+        "vierbergenlars/php-semver": "~3.0"
     },
     "extra": {
         "zikula": {
-            "core-compatibility": ">=1.5.0",
+            "core-compatibility": ">=2.0.15",
             "class": "Zikula\\Module\\CoreManagerModule\\ZikulaCoreManagerModule",
             "displayname": "Core Manager",
             "url": "core-manager",

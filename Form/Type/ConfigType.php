@@ -43,7 +43,6 @@ class ConfigType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $route = $this->router->generate('zikulacoremanagermodule_webhook_jenkins', ['code' => 'SECURITYTOKEN'], RouterInterface::ABSOLUTE_URL);
         $builder
             ->add('is_main_instance', CheckboxType::class, [
                 'required' => false,
@@ -61,22 +60,6 @@ class ConfigType extends AbstractType
             ->add('github_webhook_token', TextType::class, [
                 'label' => $this->__('Webhook Security Token'),
                 'help' => $this->__f('Create a secret webhook token at %s to verify payloads from the Zikula Core repository.', ['%s' => '<a href="https://github.com/zikula/core/settings/hooks">https://github.com/zikula/core/settings/hooks</a>'])
-            ])
-            ->add('jenkins_server', UrlType::class, [
-                'label' => $this->__('URL of the Jenkins server'),
-                'help' => $this->__('Make sure to include "http://". Do not include "www". Example: "http://ci.zikula.org"')
-            ])
-            ->add('jenkins_token', TextType::class, [
-                'label' => $this->__('Jenkins Security token'),
-                'help' => $this->__f('A security token to verify requests from Jenkins. Please setup Jenkins to make a POST request to the following url everytime a build has finished: %s. You can use the "Post Completed Build Result Plugin" to do the job: https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed+Build+Result+Plugin.', ['%s' => '<a href="' . $route . '">' . $route . '</a>'])
-            ])
-            ->add('jenkins_user', TextType::class, [
-                'label' => $this->__('Jenkins Username'),
-                'help' => $this->__('Must be set to the User ID found under the API Token section at your user account\'s settings.')
-            ])
-            ->add('jenkins_password', TextType::class, [
-                'label' => $this->__('Jenkins Password'),
-                'help' => $this->__('Must be set to the API Token found under the API Token section at your user account\'s settings .')
             ])
             ->add('save', SubmitType::class, [
                 'label' => $this->__('Save'),

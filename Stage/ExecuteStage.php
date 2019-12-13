@@ -32,6 +32,9 @@ class ExecuteStage extends AbstractStage
         if (empty($data['title'])) {
             throw new \LogicException('Title not yet set!');
         }
+        if (empty($data['artifactsUrl'])) {
+            throw new \LogicException('Artifacts download URL not yet set!');
+        }
 
         return true;
     }
@@ -45,27 +48,6 @@ class ExecuteStage extends AbstractStage
     {
         $this->setTranslator($this->container->get('translator.default'));
         // Assert core version correct
-        $stages[] = [
-            'name' => $this->__('promote-build'),
-            'pre' => $this->__('Promote Jenkins Build'),
-            'during' => $this->__('Promoting Jenkins Build'),
-            'success' => $this->__('Jenkins Build promoted'),
-            'fail' => $this->__('Jenkins Build could not be promoted')
-        ];
-        $stages[] = [
-            'name' => $this->__('lock-build'),
-            'pre' => $this->__('Lock Jenkins Build'),
-            'during' => $this->__('Locking Jenkins Build'),
-            'success' => $this->__('Jenkins Build locked'),
-            'fail' => $this->__('Jenkins Build could not be locked.')
-        ];
-        $stages[] = [
-            'name' => $this->__('add-build-description'),
-            'pre' => $this->__('Add Jenkins Build description'),
-            'during' => $this->__('Adding Jenkins Build description'),
-            'success' => $this->__('Jenkins Build description added'),
-            'fail' => $this->__('Jenkins Build description could not be added')
-        ];
         if ($this->getData()['isPreRelease']) {
             $stages[] = [
                 'name' => $this->__('create-qa-ticket'),
@@ -103,8 +85,8 @@ class ExecuteStage extends AbstractStage
         }
         $stages[] = [
             'name' => $this->__('copy-assets'),
-            'pre' => $this->__('Copy assets from Jenkins to GitHub'),
-            'during' => $this->__('Copying assets from Jenkins to GitHub (takes longer)'),
+            'pre' => $this->__('Copy assets to GitHub'),
+            'during' => $this->__('Copying assets to GitHub (takes longer)'),
             'success' => $this->__('Assets copied'),
             'fail' => $this->__('Assets could not be copied')
         ];

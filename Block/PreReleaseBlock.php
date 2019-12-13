@@ -24,7 +24,7 @@ class PreReleaseBlock extends AbstractBlockHandler
      */
     public function display(array $properties)
     {
-        if (!$this->hasPermission('ZikulaCoreManagerModule:jenkinsBuild:', "$properties[title]::", ACCESS_OVERVIEW)) {
+        if (!$this->hasPermission('ZikulaCoreManagerModule:PreReleaseBlock:', "$properties[title]::", ACCESS_OVERVIEW)) {
             return "";
         }
 

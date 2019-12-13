@@ -36,12 +36,6 @@ services:
           - '@zikula_extensions_module.api.variable'
           - '@zikula_core_manager_module.client_helper'
 
-    zikula_core_manager_module.jenkins_api_wrapper:
-        class: Zikula\Module\CoreManagerModule\Manager\JenkinsApiWrapper
-        arguments:
-          - '@zikula_extensions_module.api.variable'
-          - '@zikula_core_manager_module.client_helper'
-
     zikula_core_manager_module.twig.extension.core_manager_extension:
         class: Zikula\Module\CoreManagerModule\Twig\Extension\CoreManagerExtension
         arguments:

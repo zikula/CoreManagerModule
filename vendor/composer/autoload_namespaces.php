@@ -10,5 +10,4 @@ return array(
     'vierbergenlars\\LibJs\\' => array($vendorDir . '/vierbergenlars/php-semver/src'),
     'Guzzle\\Tests' => array($vendorDir . '/guzzle/guzzle/tests'),
     'Guzzle' => array($vendorDir . '/guzzle/guzzle/src'),
-    'CarlosIO' => array($vendorDir . '/carlosio/jenkins/src'),
 );

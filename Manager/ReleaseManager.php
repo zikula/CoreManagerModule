@@ -14,8 +14,6 @@
 
 namespace Zikula\Module\CoreManagerModule\Manager;
 
-use CarlosIO\Jenkins\Build;
-use CarlosIO\Jenkins\Job;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Github\HttpClient\Message\ResponseMediator;
@@ -54,8 +52,6 @@ class ReleaseManager
     private $repo;
 
     private $client;
-
-    private $jenkinsClient;
 
     /**
      * @var RouterInterface
@@ -102,7 +98,6 @@ class ReleaseManager
     ) {
         $this->variableApi = $variableApi;
         $this->client = $clientHelper->getGitHubClient();
-        $this->jenkinsClient = $clientHelper->getJenkinsClient();
         $this->em = $em;
         $this->repo = $variableApi->get('ZikulaCoreManagerModule', 'github_core_repo', 'zikula/core');
         $this->router = $router;
@@ -230,17 +225,9 @@ class ReleaseManager
         return $releases;
     }
 
-    public function reloadReleases($source = 'all', $createNewsArticles = true)
+    public function reloadReleases($createNewsArticles = true)
     {
-        // GitHub releases
-        if ($source == 'all' || $source == 'github') {
-            $this->reloadReleasesFromGitHub($createNewsArticles);
-        }
-
-        // Jenkins builds
-        if ($this->jenkinsClient && ($source == 'all' || $source == 'jenkins')) {
-            $this->reloadReleasesFromJenkins();
-        }
+        $this->reloadReleasesFromGitHub($createNewsArticles);
 
         return true;
     }
@@ -299,11 +286,6 @@ class ReleaseManager
             'tar' => $release['tarball_url']
         ));
         $dbRelease->setState($state);
-
-        if ($mode == 'new' && count($release['assets']) == 0 && $this->jenkinsClient && $this->clientHelper->hasGitHubClientPushAccess($this->client) && $this->isMainInstance) {
-            // Jenkins Build files are not yet uploaded to GitHub. Try to upload them manually.
-            $this->moveAssetsFromJenkinsToGitHubRelease($release);
-        }
 
         $assets = [];
         foreach ($release['assets'] as $asset) {
@@ -373,238 +355,6 @@ class ReleaseManager
     }
 
     /**
-     * @param string $version
-     *
-     * @return Job
-     */
-    public function getJobMatchingZikulaVersion($version)
-    {
-        /** @var Job $job */
-        foreach ($this->jenkinsClient->getJobs() as $job) {
-            if ($job->getName() == 'Zikula') {
-                // new pipeline-based jobs
-                // not supported yet by vendor lib, thus we use an own PipelineJob class
-                $jobData = json_encode($job->toArray());
-                $job = new PipelineJob(json_decode($jobData));
-                foreach ($job->getSubJobs() as $subJob) {
-                    if ($subJob->isDisabled()) {
-                        // Ignore disabled = old jobs.
-                        continue;
-                    }
-                    /*$semVer = $this->getZikulaVersionFromJenkinsJob($subJob);
-                    if (is_object($semVer) && $semVer->getVersion() === $version) {*/
-                    $jobBranchName = $subJob->getName();
-                    if (substr($version, 0, strlen($jobBranchName)) == $jobBranchName) {
-                        return $subJob;
-                    }
-                }
-            } else {
-                // old standalone jobs
-                if ($job->isDisabled()) {
-                    // Ignore disabled = old jobs.
-                    continue;
-                }
-                $semVer = $this->getZikulaVersionFromJenkinsJob($job);
-                if (is_object($semVer) && $semVer->getVersion() === $version) {
-                    return $job;
-                }
-            }
-        }
-        throw new \RuntimeException('No matching job for version ' . $version);
-    }
-
-    /**
-     * Get all Jenkins builds matching the given Zikula version and commit.
-     */
-    public function getMatchingJenkinsBuilds($version, $commit = null)
-    {
-        $job = $this->getJobMatchingZikulaVersion($version);
-
-        /** @var Build[] $builds */
-        $builds = $job->getBuilds();
-        /*foreach ($builds as $key => $build) {
-            if ($build->isBuilding() || $build->getResult() != 'SUCCESS') {
-                unset($builds[$key]);
-            }
-        }*/
-        /*
-        if (null !== $commit) {
-            $builds = array_filter($builds, function ($build) use ($commit) {
-                return $this->getShaFromJenkinsBuild($build) === $commit;
-            });
-        }*/
-
-        // Sort builds by build number DESC.
-        usort($builds, function (Build $a, Build $b) {
-            $a = $a->getNumber();
-            $b = $b->getNumber();
-            if ($a === $b) {
-                return 0;
-            }
-
-            return ($a > $b) ? -1 : 1;
-        });
-
-        return $builds;
-    }
-
-    /**
-     * First, delete all Jenkins builds and then reload the newest ones.
-     */
-    private function reloadReleasesFromJenkins()
-    {
-        $oldJenkinsBuilds = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findBy(['state' => CoreReleaseEntity::STATE_DEVELOPMENT]);
-        $oldJenkinsBuildIds = [];
-        foreach ($oldJenkinsBuilds as $oldJenkinsBuild) {
-            $oldJenkinsBuildIds[] = $oldJenkinsBuild->getId();
-            $this->em->remove($oldJenkinsBuild);
-        }
-        $this->em->flush();
-
-        /** @var Job $job */
-        foreach ($this->jenkinsClient->getJobs() as $job) {
-//            if ($job->isDisabled()) {
-//                // Ignore disabled = old jobs.
-//                continue;
-//            }
-            if (!($version = $this->getZikulaVersionFromJenkinsJob($job))) {
-                continue;
-            }
-
-            /** @var Build[] $builds */
-            $builds = $job->getBuilds();
-            foreach ($builds as $key => $build) {
-                if ($build->isBuilding() || $build->getResult() != 'SUCCESS') {
-                    unset($builds[$key]);
-                }
-            }
-
-            if (count($builds) == 0) {
-                continue;
-            }
-
-            // Sort builds by build number DESC.
-            usort($builds, function (Build $a, Build $b) {
-                $a = $a->getNumber();
-                $b = $b->getNumber();
-                if ($a === $b) {
-                    return 0;
-                }
-
-                return ($a > $b) ? -1 : 1;
-            });
-
-            // Get latest build.
-            $build = $builds[0];
-
-            $jenkinsBuild = new CoreReleaseEntity($job->getName() . '#' . $build->getNumber());
-            $jenkinsBuild->setName($job->getDisplayName() . ' #' . $build->getNumber());
-            $jenkinsBuild->setState(CoreReleaseEntity::STATE_DEVELOPMENT);
-            $jenkinsBuild->setSemver($version);
-
-            $description = $job->getDescription();
-            $sourceUrls = [];
-            $changeSet = $build->getChangeSet()->toArray();
-            if ($changeSet['kind'] == 'git' && count($changeSet['items']) > 0) {
-                if (!empty($description)) {
-                    $description .= "<br /><br />";
-                }
-                $description .= '<h4>' . $this->__('Latest changes:') . '</h4><ul>';
-
-                foreach ($changeSet['items'] as $item) {
-                    $description .= '<li><p>' . $this->markdown($item['msg']) . ' <a href="https://github.com/' . $this->repo . '/commit/' . urlencode($item['commitId']) . '">view at GitHub <i class="fa fa-github"></i></a></p></li>';
-                }
-                $description .= '</ul>';
-                $sha = $this->getShaFromJenkinsBuild($build);
-                if ($sha) {
-                    $sourceUrls['zip'] = 'https://github.com/' . $this->repo . "/archive/{$sha}.zip";
-                    $sourceUrls['tar'] = 'https://github.com/' . $this->repo . "/archive/{$sha}.tar";
-                }
-            }
-            $jenkinsBuild->setSourceUrls($sourceUrls);
-            $jenkinsBuild->setDescription($description);
-            $jenkinsBuild->setAssets($this->getAssetsFromJenkinsBuild($job, $build));
-
-            $this->em->persist($jenkinsBuild);
-
-            if (!in_array($jenkinsBuild->getId(), $oldJenkinsBuildIds) && $this->isMainInstance) {
-                $this->notifyBuildAdded($build);
-            }
-        }
-
-        $this->em->flush();
-    }
-
-    /**
-     * Get all assets ready to be saved to the database from a specific Jenkins build.
-     * The content type is guessed based on the filename.
-     *
-     * @param Job   $job
-     * @param Build $build
-     *
-     * @return array
-     */
-    private function getAssetsFromJenkinsBuild(Job $job, Build $build)
-    {
-        $server = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server');
-        $assets = [];
-        foreach ($build->getArtifacts() as $artifact) {
-            $downloadUrl = $server . '/job/Zikula/job/' . urlencode($job->getName()) . '/' . $build->getNumber() . '/artifact/' . $artifact->relativePath;
-            $fileExtension = pathinfo($artifact->fileName, PATHINFO_EXTENSION);
-            $contentType = null;
-            switch ($fileExtension) {
-                case 'zip':
-                    $contentType = 'application/zip';
-                    break;
-                case 'gz':
-                    $contentType = 'application/gzip';
-                    break;
-                case 'txt':
-                    $contentType = 'text/plain';
-                    break;
-                default:
-                    $contentType = null;
-
-            }
-            $assets[] = array (
-                'name' => $artifact->fileName,
-                'download_url' => $downloadUrl,
-                'size' => null,
-                'content_type' => $contentType
-            );
-        }
-
-        return $assets;
-    }
-
-    /**
-     * Get the corresponding git SHA of a Jenkins build.
-     *
-     * @param Build $build
-     *
-     * @return bool|string False if SHA could not be determined; string otherwise.
-     */
-    private function getShaFromJenkinsBuild(Build $build, $excludeMergeSha = false)
-    {
-        $buildArr = $build->toArray();
-        if (!$excludeMergeSha && isset($buildArr['actions'])) {
-            foreach ($buildArr['actions'] as $action) {
-                if (isset($action['lastBuiltRevision']['SHA1'])) {
-                    return $action['lastBuiltRevision']['SHA1'];
-                }
-            }
-        } elseif (isset($buildArr['changeSet'])) {
-            foreach ($buildArr['changeSet']['items'] as $item) {
-                if (isset($item['commitId'])) {
-                    return $item['commitId'];
-                }
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * "Markdownify" a text using GitHub's flavoured markdown (resulting in @ zikula and zikula/core#123 links).
      *
      * @param string $text The text to "markdownify"
@@ -622,141 +372,6 @@ class ReleaseManager
         $response = $this->client->getHttpClient()->post('markdown', json_encode($settings));
 
         return ResponseMediator::getContent($response);
-    }
-
-    /**
-     * This adds a little message to GitHub (if the build is based on a PR) showing
-     * that it has been added to the CoreManager.
-     *
-     * @param Build $build
-     */
-    private function notifyBuildAdded($build)
-    {
-        if (!$this->clientHelper->hasGitHubClientPushAccess($this->client) || !$this->isMainInstance) {
-            return;
-        }
-        $sha = $this->getShaFromJenkinsBuild($build, true);
-        if (!$sha) {
-            return;
-        }
-        // Catch everything as the api is still in preview mode and can change without further notice.
-        try {
-            $response = $this->client->getHttpClient()->post(
-                'repos/' . $this->repo . '/deployments',
-                json_encode([
-                    'ref' => $sha,
-                    'auto_merge' => false,
-                    'required_contexts' => [],
-                    'environment' => $this->__('Extension Library'),
-                    'description' => $this->__('Updating the Extension Library.')
-                ])
-            );
-            $response = ResponseMediator::getContent($response);
-            $this->client->getHttpClient()->post(
-                'repos/' . $this->repo . '/deployments/' . $response['id'] . '/statuses',
-                json_encode([
-                    'state' => 'success',
-                    'target_url' => $this->router->generate('zikulacoremanagermodule_user_viewcorereleases', [], RouterInterface::ABSOLUTE_URL),
-                    'description' => $this->__('Build has been added to the Extension Library.')
-                ])
-            );
-        } catch (\Exception $e) {
-        }
-    }
-
-    /**
-     * Try to upload the Jenkins assets to a GitHub release.
-     *
-     * @param $release
-     *
-     * @return void
-     */
-    private function moveAssetsFromJenkinsToGitHubRelease($release)
-    {
-        if (!$this->isMainInstance) {
-            return;
-        }
-
-        // First, get the sha of the release's tag.
-        $tagName = $release['tag_name'];
-        $tags = $this->client->getHttpClient()->get('repos/' . $this->repo . '/git/refs/tags');
-        $tags = ResponseMediator::getContent($tags);
-        $sha = false;
-        foreach ($tags as $tag) {
-            if ($tag['ref'] == "refs/tags/$tagName") {
-                $sha = $tag['object']['sha'];
-                break;
-            }
-        }
-        if (!$sha) {
-            return;
-        }
-        // We got the release's sha. Now check the latest builds on jenkins for that sha.
-        $correspondingBuild = false;
-        $buildNr = 0;
-        /** @var Job $job */
-        foreach ($this->jenkinsClient->getJobs() as $job) {
-            $version = $this->getZikulaVersionFromJenkinsJob($job);
-            if (!$version || $this->versionToMajorMinorPatch($version) != $this->versionToMajorMinorPatch(new version($tagName))) {
-                continue;
-            }
-            /** @var Build $build */
-            foreach ($job->getBuilds() as $build) {
-                if ($sha == $this->getShaFromJenkinsBuild($build) && $build->getNumber() > $buildNr) {
-                    $correspondingBuild = $build;
-                    $buildNr = $build->getNumber();
-                }
-            }
-            break;
-        }
-        if (!$correspondingBuild) {
-            // We did not find the corresponding build for that sha.
-            return;
-        }
-        // Gotcha! The current Jenkins build has the same sha as the GitHub release.
-        // Now extract the assets from the Jenkins build.
-        list ($repoOwner, $repoName) = explode('/', $this->repo);
-        $assets = $this->getAssetsFromJenkinsBuild($job, $correspondingBuild);
-
-        // workaround for potentially long-running process (see #25)
-        ini_set('memory_limit', '2G');
-        ini_set('max_execution_time', 300); // 5 minutes
-
-        $client = $this->client;
-        $releaseManager = $this;
-        $this->eventDispatcher->addListener(KernelEvents::TERMINATE, function (PostResponseEvent $event) use ($release, $assets, $repoOwner, $repoName, $client, $releaseManager) {
-            foreach ($assets as $asset) {
-                if (!$asset['content_type']) {
-                    // GitHub won't allow us to upload files without specifying the content type.
-                    // Skip those files (but there shouldn't be any).
-                    continue;
-                }
-                try {
-                    $client->api('repo')->releases()->assets()->create($repoOwner, $repoName, $release['id'], $asset['name'], $asset['content_type'], file_get_contents($asset['download_url']));
-                } catch (\Exception $e) {
-                }
-            }
-
-            $release = $client->api('repo')->releases()->show($repoOwner, $repoName, $release['id']);
-            $releaseManager->updateGitHubRelease($release);
-        });
-    }
-
-    /**
-     * Extract the core version from the Jenkins job name.
-     *
-     * @param Job $job
-     * @return false|version false if the name doesn't match the standard pattern, the core version otherwise.
-     */
-    private function getZikulaVersionFromJenkinsJob(Job $job)
-    {
-        if (!preg_match('#^Zikula(?:_Core|)-([0-9]+\.[0-9]+\.[0-9]+)$#', $job->getName(), $matches)) {
-            // Ignore jobs not matching the standard pattern.
-            return false;
-        }
-        $version = $matches[1];
-
-        return new version($version);
     }
 
     /**

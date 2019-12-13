@@ -4,6 +4,7 @@ namespace Zikula\Module\CoreManagerModule\Manager;
 
 use Github\Api\Issue\Labels;
 use Github\ResultPager;
+use GuzzleHttp\Client as GuzzleClient;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 use vierbergenlars\SemVer\version;
@@ -255,7 +256,70 @@ class GitHubApiWrapper
         return null;
     }
 
-    public function createReleaseAsset($releaseId, $asset)
+    public function createReleaseAssets($releaseId, $artifactsDownloadUrl)
+    {
+        // download file
+        $zipFile = tempnam(sys_get_temp_dir(), 'guzzle-download');
+        $client = new GuzzleClient([
+            'base_uri' => '',
+            'verify' => false,
+            'sink' => $zipFile,
+            'curl.options' => [
+                'CURLOPT_RETURNTRANSFER' => true,
+                'CURLOPT_FILE' => $zipFile
+            ]
+        ]);
+        $response = $client->get($artifactsDownloadUrl);
+
+        // open zip file
+        $zip = new ZipArchive;
+        if (true !== $zip->open($zipFile)) {
+            return false;
+        }
+
+        for ($i = 0; $i < $zip->numFiles; $i++) {
+            $fileName = $zip->getNameIndex($i);
+            $fileInfo = pathinfo($fileName);
+            $fileExtension = $fileInfo['extension'];
+            $contentType = null;
+            switch ($fileExtension) {
+                case 'zip':
+                    $contentType = 'application/zip';
+                    break;
+                case 'gz':
+                    $contentType = 'application/gzip';
+                    break;
+                case 'txt':
+                    $contentType = 'text/plain';
+                    break;
+                default:
+                    $contentType = null;
+            }
+            if (!$asset['content_type']) {
+                // GitHub won't allow us to upload files without specifying the content type.
+                // Skip those files (but there shouldn't be any).
+                continue;
+            }
+            $asset = [
+                'name' => $fileName,
+                'download_url' => $downloadUrl,
+                'file_content' => file_get_contents('zip://' . $zipFile . '#' . $fileName)
+            ];
+
+            $return = $this->createReleaseAsset($releaseId, $asset);
+            if (!isset($return['id'])) {
+                $zip->close();                  
+
+                return false;
+            }
+            $result = true;
+        }
+        $zip->close();                  
+
+        return true;
+    }
+
+    private function createReleaseAsset($releaseId, $asset)
     {
         return $this->githubClient->repo()->releases()->assets()->create(
             $this->coreOrganization,
@@ -263,7 +327,7 @@ class GitHubApiWrapper
             $releaseId,
             $asset['name'],
             $asset['content_type'],
-            file_get_contents($asset['download_url'])
+            $asset['file_content']
         );
     }
 
@@ -289,7 +353,7 @@ class GitHubApiWrapper
     }
 
     /**
-     * @param $labels
+     * @param array $labels
      */
     private function makeSureLabelsExist($labels)
     {

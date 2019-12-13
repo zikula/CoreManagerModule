@@ -25,7 +25,7 @@ use Zikula\Module\CoreManagerModule\Manager\ReleaseManager;
 use Zikula\Module\CoreManagerModule\Manager\PayloadManager;
 
 /**
- * Jenkins and GitHub Webhook access points.
+ * GitHub webhook access point.
  */
 class WebHookController extends AbstractController
 {
@@ -70,7 +70,7 @@ class WebHookController extends AbstractController
 
         $jsonPayload = $payloadManager->getJsonPayload();
         // See https://developer.github.com/v3/activity/events/types/#releaseevent
-        if ($jsonPayload['action'] != 'published') {
+        if ('published' !== $jsonPayload['action']) {
             return new PlainResponse('Release event ignored (action != "published")!', Response::HTTP_OK);
         }
 
@@ -84,21 +84,6 @@ class WebHookController extends AbstractController
         $releaseManager->updateGitHubRelease($jsonPayload['release']);
 
         return new PlainResponse('Release list reloaded!', Response::HTTP_OK);
-    }
-
-    /**
-     * @Route("/webhook-jenkins/{code}", methods = {"POST"}, options={"i18n"=false})
-     */
-    public function jenkinsAction($code)
-    {
-        if (!$this->secure_equals($code, $this->getVar('jenkins_token', ''))) {
-            throw new AccessDeniedHttpException();
-        }
-
-        $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
-        $releaseManager->reloadReleases('jenkins');
-
-        return new PlainResponse('Jenkins builds reloaded.', Response::HTTP_OK);
     }
 
     /**

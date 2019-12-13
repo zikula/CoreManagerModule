@@ -1,49 +1,5 @@
 [
     {
-        "name": "carlosio/jenkins",
-        "version": "dev-master",
-        "version_normalized": "9999999-dev",
-        "source": {
-            "type": "git",
-            "url": "https://github.com/carlosbuenosvinos/php-jenkins-api.git",
-            "reference": "a96fd6cafe61a9a944912d6a824c73878a37a8ed"
-        },
-        "dist": {
-            "type": "zip",
-            "url": "https://api.github.com/repos/carlosbuenosvinos/php-jenkins-api/zipball/a96fd6cafe61a9a944912d6a824c73878a37a8ed",
-            "reference": "a96fd6cafe61a9a944912d6a824c73878a37a8ed",
-            "shasum": ""
-        },
-        "require": {
-            "php": ">=5.3.3"
-        },
-        "time": "2014-07-31T18:06:21+00:00",
-        "type": "library",
-        "installation-source": "dist",
-        "autoload": {
-            "psr-0": {
-                "CarlosIO": "src"
-            }
-        },
-        "notification-url": "https://packagist.org/downloads/",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Carlos Buenosvinos",
-                "email": "hi@carlos.io",
-                "homepage": "http://carlosbuenosvinos.com"
-            }
-        ],
-        "description": "Jenkins API",
-        "homepage": "https://github.com/carlosbuenosvinos/php-jenkins-api",
-        "keywords": [
-            "api",
-            "jenkins"
-        ]
-    },
-    {
         "name": "guzzle/guzzle",
         "version": "v3.9.3",
         "version_normalized": "3.9.3.0",

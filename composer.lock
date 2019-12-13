@@ -4,50 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "988360cb29e06564778beaa35d90029a",
+    "content-hash": "7bb2df711fb6d708c597effe416ca256",
     "packages": [
-        {
-            "name": "carlosio/jenkins",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/carlosbuenosvinos/php-jenkins-api.git",
-                "reference": "a96fd6cafe61a9a944912d6a824c73878a37a8ed"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/carlosbuenosvinos/php-jenkins-api/zipball/a96fd6cafe61a9a944912d6a824c73878a37a8ed",
-                "reference": "a96fd6cafe61a9a944912d6a824c73878a37a8ed",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "CarlosIO": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Carlos Buenosvinos",
-                    "email": "hi@carlos.io",
-                    "homepage": "http://carlosbuenosvinos.com"
-                }
-            ],
-            "description": "Jenkins API",
-            "homepage": "https://github.com/carlosbuenosvinos/php-jenkins-api",
-            "keywords": [
-                "api",
-                "jenkins"
-            ],
-            "time": "2014-07-31T18:06:21+00:00"
-        },
         {
             "name": "guzzle/guzzle",
             "version": "v3.9.3",
@@ -322,13 +280,11 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "carlosio/jenkins": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">5.3.3"
+        "php": ">=5.5.9"
     },
     "platform-dev": []
 }

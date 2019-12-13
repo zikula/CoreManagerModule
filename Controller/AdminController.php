@@ -116,7 +116,7 @@ class AdminController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var ReleaseManager $releaseManager */
             $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
-            $releaseManager->reloadReleases('all', $form->get('createnews')->getData());
+            $releaseManager->reloadReleases($form->get('createnews')->getData());
             $this->addFlash('info', $this->__('Reloaded all core releases from GitHub.'));
 
             return $this->redirectToRoute('zikulacoremanagermodule_user_viewcorereleases');

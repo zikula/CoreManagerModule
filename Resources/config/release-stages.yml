@@ -12,31 +12,23 @@ stages:
         # - select one of the latest X commits of the specified branch
         class: Zikula\Module\CoreManagerModule\Stage\CommitStage
         order: 3
-    jenkinsBuild:
-        # - choose from the builds of this commit (there might be manual builds)
-        class: Zikula\Module\CoreManagerModule\Stage\JenkinsBuildStage
-        order: 4
     basicInformation:
         # - release title
         # - release announcement
+        # - artifacts download URL
         class: Zikula\Module\CoreManagerModule\Stage\BasicInformationStage
-        order: 5
+        order: 4
     execute:
-        # - promote build
-        # - lock build
-        # - add build description
         # - create QA issue
         # - create release
-        # - copy assets from Jenkins to GitHub
+        # - copy assets to GitHub
         # - If not prerelease do optionally:
-        #   - create a new Jenkins job
-        #   - disable the old Jenkins job
         #   - If it is a new minor version
         #     - create new changelog file
         #     - create new upgrading file
         # - trigger CoreManager hooks
         class: Zikula\Module\CoreManagerModule\Stage\ExecuteStage
-        order: 6
+        order: 5
     complete:
         class: Zikula\Module\CoreManagerModule\Stage\CompleteStage
-        order: 7
+        order: 6

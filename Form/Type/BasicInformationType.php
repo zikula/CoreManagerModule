@@ -6,6 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\UrlType;
 use Symfony\Component\Form\FormBuilderInterface;
 use vierbergenlars\SemVer\version;
 use Zikula\Common\Translator\TranslatorInterface;
@@ -24,8 +25,9 @@ class BasicInformationType extends AbstractType
      * @var string
      */
     private $defaultTitle;
+
     /**
-     * @var
+     * @var string
      */
     private $defaultAnnouncement;
 
@@ -63,6 +65,10 @@ class BasicInformationType extends AbstractType
                 'attr' => ['rows' => 20],
                 'label' => $this->translator->__('Release announcement'),
                 'data' => $this->defaultAnnouncement,
+            ])
+            ->add('artifactsUrl', UrlType::class, [
+                'label' => $this->translator->__('Artifacts download URL'),
+                'help' => $this->translator->__f('Lookup "release-archives" URL of latest build at %url', ['%url' => 'https://github.com/zikula/core/actions'])
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

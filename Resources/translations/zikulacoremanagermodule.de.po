@@ -10,7 +10,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.4\n"
+"X-Generator: Poedit 2.2.4\n"
 "X-Poedit-SourceCharset: UTF-8\n"
 
 msgid "%s ready for testing!"
@@ -19,27 +19,11 @@ msgstr "%s bereit zum Testen!"
 msgid "%s released!"
 msgstr "%s veröffentlicht!"
 
-msgid ""
-"A security token to verify requests from Jenkins. Please setup Jenkins to "
-"make a POST request to the following url everytime a build has finished: %s. "
-"You can use the \"Post Completed Build Result Plugin\" to do the job: "
-"https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed+Build+Result"
-"+Plugin."
-msgstr ""
-"Ein Sicherheitstoken um Anfragen von Jenkins zu verifzieren. Bitte Jenkins "
-"so einstellen, dass nach jedem Abschluss eines Builds die folgende URL "
-"aufgerufen wird: %s. Man kann das Plugin \"Post Completed Build Result\" "
-"dazu verwenden: https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed"
-"+Build+Result+Plugin."
-
 msgid "Access Token"
 msgstr "Zugriffstoken"
 
 msgid "Actions"
 msgstr "Aktionen"
-
-msgid "Add Jenkins Build description"
-msgstr "Jenkins Build Beschreibung hinzufügen"
 
 msgid "Add new release"
 msgstr "Neues Release hinzufügen"
@@ -47,8 +31,8 @@ msgstr "Neues Release hinzufügen"
 msgid "Add release"
 msgstr "Release hinzufügen"
 
-msgid "Adding Jenkins Build description"
-msgstr "Füge Jenkins Build Beschreibung hinzu"
+msgid "Artifacts download URL"
+msgstr "Download-URL für Artefakte"
 
 msgid "Assets copied"
 msgstr "Assets kopiert"
@@ -58,9 +42,6 @@ msgstr "Assets konnten nicht kopiert werden"
 
 msgid "Branch"
 msgstr "Zweig"
-
-msgid "Build has been added to the Extension Library."
-msgstr "Build wurde zur Extension Library hinzugefügt."
 
 msgid "Cancel"
 msgstr "Abbruch"
@@ -77,11 +58,11 @@ msgstr "Schließe Meilenstein"
 msgid "Commit"
 msgstr "Commit"
 
-msgid "Copy assets from Jenkins to GitHub"
-msgstr "Assets von Jenkins zu GitHub kopieren"
+msgid "Copy assets to GitHub"
+msgstr "Assets zu GitHub kopieren"
 
-msgid "Copying assets from Jenkins to GitHub (takes longer)"
-msgstr "Kopiere Assets von Jenkins zu GitHub (dauert länger)"
+msgid "Copying assets to GitHub (takes longer)"
+msgstr "Kopiere Assets zu GitHub (dauert länger)"
 
 msgid "Core releases"
 msgstr "Core Releases"
@@ -141,9 +122,6 @@ msgstr "Direkte Download-Links sind noch nicht verfügbar!"
 msgid "Download Zikula"
 msgstr "Zikula herunterladen"
 
-msgid "Download development builds"
-msgstr "Entwicklungsversionen herunterladen"
-
 msgid "Download the Zikula Core"
 msgstr "Den Zikula Core herunterladen"
 
@@ -152,9 +130,6 @@ msgstr "Einstellungen ändern"
 
 msgid "Error while finishing"
 msgstr "Fehler beim Abschluß"
-
-msgid "Extension Library"
-msgstr "Extension Library"
 
 msgid ""
 "Fill in the name of the core repository. This should always be \"zikula/core"
@@ -193,56 +168,11 @@ msgstr "Helfe beim Testen"
 msgid "Id"
 msgstr "ID"
 
-msgid "Jenkins Build could not be locked."
-msgstr "Jenkins Build konnte nicht gelockt werden."
-
-msgid "Jenkins Build could not be promoted"
-msgstr "Jenkins Build konnte nicht promotet werden"
-
-msgid "Jenkins Build description added"
-msgstr "Jenkins Build Beschreibung hinzugefügt"
-
-msgid "Jenkins Build description could not be added"
-msgstr "Jenkins Build Beschreibung konnte nicht hinzugefügt werden"
-
-msgid "Jenkins Build locked"
-msgstr "Jenkins Build gelockt"
-
-msgid "Jenkins Build promoted"
-msgstr "Jenkins Build promotet"
-
-msgid "Jenkins Password"
-msgstr "Jenkins Kennwort"
-
-msgid "Jenkins Security token"
-msgstr "Jenkins Sicherheitstoken"
-
-msgid "Jenkins Server"
-msgstr "Jenkins Server"
-
-msgid "Jenkins Username"
-msgstr "Jenkins Benutzername"
-
-msgid "Jenkins build"
-msgstr "Jenkins Build"
-
-msgid "Latest changes:"
-msgstr "Letzte Änderungen:"
-
-msgid "Lock Jenkins Build"
-msgstr "Jenkins Build locken"
-
-msgid "Locking Jenkins Build"
-msgstr "Locke Jenkins Build"
+msgid "Lookup \"release-archives\" URL of latest build at %url"
+msgstr "Schaue die \"release-archives\" URL des neuesten B uilds auf %url nach"
 
 msgid "Main instance"
 msgstr "Hauptinstanz"
-
-msgid ""
-"Make sure to include \"http://\". Do not include \"www\". Example: \"http://"
-"ci.zikula.org\""
-msgstr ""
-"Das Protokoll \"http://\" mit einbeziehen. Beispiel: \"http://ci.zikula.org\""
 
 msgid "Mark release as outdated"
 msgstr "Release als veraltet markieren"
@@ -256,20 +186,6 @@ msgstr "Meilenstein geschlossen"
 msgid "Milestone could not be closed"
 msgstr "Meilenstein konnte nicht geschlossen werden"
 
-msgid ""
-"Must be set to the API Token found under the API Token section at your user "
-"account's settings ."
-msgstr ""
-"Muß auf das API Token gesetzt werden, dass im Bereich \"API Token\" der "
-"Einstellungen Deines Benutzerkonto steht."
-
-msgid ""
-"Must be set to the User ID found under the API Token section at your user "
-"account's settings."
-msgstr ""
-"Muß auf die User ID gesetzt werden, die im Bereich API Token der "
-"Einstellungen Deines Benutzerkontos steht."
-
 msgid "Name"
 msgstr "Name"
 
@@ -280,10 +196,10 @@ msgid "No releases available"
 msgstr "Keine Releases verfügbar"
 
 msgid ""
-"Only tick this box at one place, i.e. the zikula.org site. It must not be "
+"Only tick this box at one place, i.e. the ziku.la site. It must not be "
 "ticked at other community sites."
 msgstr ""
-"Hake diese Box nur an einem Ort an, z.B. die zikula.de-Seite. Sie darf nicht "
+"Hake diese Box nur an einem Ort an, z.B. die ziku.la-Seite. Sie darf nicht "
 "auf anderen Seiten aktiviert werden."
 
 msgid "Outdated releases:"
@@ -306,12 +222,6 @@ msgstr "Vorabversionen"
 
 msgid "Progress bar"
 msgstr "Fortschrittsbalken"
-
-msgid "Promote Jenkins Build"
-msgstr "Jenkins Build promoten"
-
-msgid "Promoting Jenkins Build"
-msgstr "Promote Jenkins Build"
 
 msgid "QA ticket could not be created"
 msgstr "QA-Ticket konnte nicht erstellt werden"
@@ -361,10 +271,10 @@ msgstr "Unterstützte Versionen"
 
 msgid ""
 "The GitHub client does not have push access to the core repository. Auto-"
-"loading Jenkins Build Assets into GitHub Core releases has been disabled."
+"loading build assets into GitHub Core releases has been disabled."
 msgstr ""
 "Der GitHub Client hat keinen Push-Zugriff auf das Core Repository. Das "
-"automatische Laden von Jenkins Build Assets in GitHub Core Releases wurde "
+"automatische Laden von Build Assets in GitHub Core Releases wurde "
 "deaktiviert."
 
 msgid ""
@@ -395,12 +305,6 @@ msgstr ""
 "produktiven Seiten. Falls Du helfen möchtest, freuen wir uns, wenn Du diese "
 "Version testest und etwaige Fehler meldest."
 
-msgid "URL of the Jenkins server"
-msgstr "URL des Jenkins Servers"
-
-msgid "Updating the Extension Library."
-msgstr "Aktualisiere die Extension Library."
-
 msgid "Version"
 msgstr "Version"
 
@@ -421,11 +325,11 @@ msgstr ""
 "Versionen."
 
 msgid ""
-"You are about to reload all core releases from GitHub as well as all "
-"development builds from jenkins. Are you sure you want to proceed?"
+"You are about to reload all core releases from GitHub. Are you sure you want "
+"to proceed?"
 msgstr ""
-"Du bist dabei, alle Core Releases von GitHub und alle Entwicklungsbuilds von "
-"Jenkins zu laden. Bist Du sicher, dass Du fortfahren möchtest?"
+"Du bist dabei, alle Core Releases von GitHub zu laden. Bist Du sicher, dass "
+"Du fortfahren möchtest?"
 
 msgid ""
 "You may use the following placeholders in the announcement: %QATICKETURL%"
@@ -437,9 +341,6 @@ msgid "You should switch to English language to prevent translation problems!"
 msgstr ""
 "Du solltest zur englischen Sprache wechseln, um Übersetzungsprobleme zu "
 "verhindern!"
-
-msgid "add-build-description"
-msgstr "add-build-description"
 
 msgid "close-milestone"
 msgstr "close-milestone"
@@ -456,8 +357,114 @@ msgstr "create-release"
 msgid "finish"
 msgstr "finish"
 
-msgid "lock-build"
-msgstr "lock-build"
+#~ msgid ""
+#~ "A security token to verify requests from Jenkins. Please setup Jenkins to "
+#~ "make a POST request to the following url everytime a build has finished: "
+#~ "%s. You can use the \"Post Completed Build Result Plugin\" to do the job: "
+#~ "https://wiki.jenkins-ci.org/display/JENKINS/Post+Completed+Build+Result"
+#~ "+Plugin."
+#~ msgstr ""
+#~ "Ein Sicherheitstoken um Anfragen von Jenkins zu verifzieren. Bitte "
+#~ "Jenkins so einstellen, dass nach jedem Abschluss eines Builds die "
+#~ "folgende URL aufgerufen wird: %s. Man kann das Plugin \"Post Completed "
+#~ "Build Result\" dazu verwenden: https://wiki.jenkins-ci.org/display/"
+#~ "JENKINS/Post+Completed+Build+Result+Plugin."
 
-msgid "promote-build"
-msgstr "promote-build"
+#~ msgid "Add Jenkins Build description"
+#~ msgstr "Jenkins Build Beschreibung hinzufügen"
+
+#~ msgid "Adding Jenkins Build description"
+#~ msgstr "Füge Jenkins Build Beschreibung hinzu"
+
+#~ msgid "Build has been added to the Extension Library."
+#~ msgstr "Build wurde zur Extension Library hinzugefügt."
+
+#~ msgid "Download development builds"
+#~ msgstr "Entwicklungsversionen herunterladen"
+
+#~ msgid "Extension Library"
+#~ msgstr "Extension Library"
+
+#~ msgid "Jenkins Build could not be locked."
+#~ msgstr "Jenkins Build konnte nicht gelockt werden."
+
+#~ msgid "Jenkins Build could not be promoted"
+#~ msgstr "Jenkins Build konnte nicht promotet werden"
+
+#~ msgid "Jenkins Build description added"
+#~ msgstr "Jenkins Build Beschreibung hinzugefügt"
+
+#~ msgid "Jenkins Build description could not be added"
+#~ msgstr "Jenkins Build Beschreibung konnte nicht hinzugefügt werden"
+
+#~ msgid "Jenkins Build locked"
+#~ msgstr "Jenkins Build gelockt"
+
+#~ msgid "Jenkins Build promoted"
+#~ msgstr "Jenkins Build promotet"
+
+#~ msgid "Jenkins Password"
+#~ msgstr "Jenkins Kennwort"
+
+#~ msgid "Jenkins Security token"
+#~ msgstr "Jenkins Sicherheitstoken"
+
+#~ msgid "Jenkins Server"
+#~ msgstr "Jenkins Server"
+
+#~ msgid "Jenkins Username"
+#~ msgstr "Jenkins Benutzername"
+
+#~ msgid "Jenkins build"
+#~ msgstr "Jenkins Build"
+
+#~ msgid "Latest changes:"
+#~ msgstr "Letzte Änderungen:"
+
+#~ msgid "Lock Jenkins Build"
+#~ msgstr "Jenkins Build locken"
+
+#~ msgid "Locking Jenkins Build"
+#~ msgstr "Locke Jenkins Build"
+
+#~ msgid ""
+#~ "Make sure to include \"http://\". Do not include \"www\". Example: "
+#~ "\"http://ci.zikula.org\""
+#~ msgstr ""
+#~ "Das Protokoll \"http://\" mit einbeziehen. Beispiel: \"http://ci.zikula."
+#~ "org\""
+
+#~ msgid ""
+#~ "Must be set to the API Token found under the API Token section at your "
+#~ "user account's settings ."
+#~ msgstr ""
+#~ "Muß auf das API Token gesetzt werden, dass im Bereich \"API Token\" der "
+#~ "Einstellungen Deines Benutzerkonto steht."
+
+#~ msgid ""
+#~ "Must be set to the User ID found under the API Token section at your user "
+#~ "account's settings."
+#~ msgstr ""
+#~ "Muß auf die User ID gesetzt werden, die im Bereich API Token der "
+#~ "Einstellungen Deines Benutzerkontos steht."
+
+#~ msgid "Promote Jenkins Build"
+#~ msgstr "Jenkins Build promoten"
+
+#~ msgid "Promoting Jenkins Build"
+#~ msgstr "Promote Jenkins Build"
+
+#~ msgid "URL of the Jenkins server"
+#~ msgstr "URL des Jenkins Servers"
+
+#~ msgid "Updating the Extension Library."
+#~ msgstr "Aktualisiere die Extension Library."
+
+#~ msgid "add-build-description"
+#~ msgstr "add-build-description"
+
+#~ msgid "lock-build"
+#~ msgstr "lock-build"
+
+#~ msgid "promote-build"
+#~ msgstr "promote-build"

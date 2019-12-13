@@ -84,28 +84,9 @@ class ReleaseController extends AbstractController
         if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
             throw new \RuntimeException('Could not decode user data.');
         }
-        $jenkinsApiWrapper = $this->get('zikula_core_manager_module.jenkins_api_wrapper');
         $gitHubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
         $result = false;
         switch ($stage) {
-            case 'promote-build':
-                $result = $jenkinsApiWrapper->promoteBuild($data['job'], $data['build'], $data['isPreRelease'] ? Settings::RELEASE_CANDIDATE_PROMOTION_ID : Settings::RELEASE_PROMOTION_ID);
-                break;
-            case 'lock-build':
-                $result = $jenkinsApiWrapper->lockBuild($data['job'], $data['build']);
-                break;
-            case 'add-build-description':
-                $description = $jenkinsApiWrapper->getBuildDescription($data['job'], $data['build']);
-                if (!empty($description)) {
-                    $description = " & " . $description;
-                }
-                if ($data['isPreRelease']) {
-                    $description = 'Release Candidate ' . $data['preRelease'] . $description;
-                } else {
-                    $description = 'Release ' . $data['version'] . $description;
-                }
-                $result = $jenkinsApiWrapper->setBuildDescription($data['job'], $data['build'], $description);
-                break;
             case 'create-qa-ticket':
                 // Guess the milestone to use.
                 $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
@@ -150,34 +131,18 @@ class ReleaseController extends AbstractController
                 }
                 break;
             case 'copy-assets':
-                $assets = $jenkinsApiWrapper->getAssets($data['job'], $data['build']);
-                if ($assets === false) {
-                    return new JsonResponse(['status' => false]);
-                }
-                $result = true;
-                foreach ($assets as $asset) {
-                    if (!$asset['content_type']) {
-                        // GitHub won't allow us to upload files without specifying the content type.
-                        // Skip those files (but there shouldn't be any).
-                        continue;
-                    }
-                    $return = $gitHubApiWrapper->createReleaseAsset($data['github_release_id'], $asset);
-                    if (!isset($return['id'])) {
-                        $result = false;
-                        break;
-                    }
-                }
+                $result = $gitHubApiWrapper->createReleaseAssets($data['github_release_id'], $data['artifactsUrl']);
                 break;
             case 'update-core-version': // currently unused
                 $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
-                if ($coreFile === false) {
+                if (false === $coreFile) {
                     break;
                 }
                 $version = new version($data['version']);
                 $version->inc('patch');
                 $coreFile = preg_replace(Settings::CORE_PHP_FILE_VERSION_REGEXP, $version->getVersion(), $coreFile);
 
-                $return = $gitHubApiWrapper->updateFile(Settings::CORE_PHP_FILE, $coreFile, "Update Core version.", $data['commit']);
+                $return = $gitHubApiWrapper->updateFile(Settings::CORE_PHP_FILE, $coreFile, 'Update Core version.', $data['commit']);
                 if (isset($return['commit'])) {
                     $result = true;
                 }

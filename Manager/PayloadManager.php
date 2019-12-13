@@ -114,7 +114,7 @@ class PayloadManager
         $ip_ip = ip2long($requestIP);
         $ip_ip_net = $ip_ip & $ip_mask;
 
-        return ($ip_ip_net == $ip_net);
+        return $ip_ip_net == $ip_net;
     }
 
     /**

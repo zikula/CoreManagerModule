@@ -24,8 +24,8 @@ class BasicInformationStage extends AbstractStage
     public function isNecessary()
     {
         $data = $this->getData();
-        if (empty($data['build'])) {
-            throw new \LogicException('Build not yet set!');
+        if (empty($data['commit'])) {
+            throw new \LogicException('Commit not yet set!');
         }
 
         return true;

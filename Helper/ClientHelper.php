@@ -13,15 +13,12 @@
 
 namespace Zikula\Module\CoreManagerModule\Helper;
 
-use CarlosIO\Jenkins\Exception\SourceNotAvailableException;
 use Github\Client as GitHubClient;
 use Github\HttpClient\Cache\FilesystemCache;
 use Github\HttpClient\CachedHttpClient;
 use Github\HttpClient\Message\ResponseMediator;
 use Github\ResultPager;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
-use CarlosIO\Jenkins\Dashboard;
-use CarlosIO\Jenkins\Source;
 
 class ClientHelper
 {
@@ -114,48 +111,5 @@ class ClientHelper
         return in_array($repo, array_map(function ($repoWhereMember) {
             return $repoWhereMember['full_name'];
         }, $reposWhereMember));
-    }
-
-    /**
-     * Returns a Jenkins API client or false if the jenkins server is not available.
-     *
-     * @return bool|Dashboard
-     */
-    public function getJenkinsClient()
-    {
-        $jenkinsServer = $this->getJenkinsURL();
-        if (false === $jenkinsServer) {
-            return false;
-        }
-
-        $dashboard = new Dashboard();
-        $dashboard->addSource(new Source($jenkinsServer . '/view/All/api/json/?depth=2'));
-        try {
-            // Dummy call to getJobs to test if Jenkins is available.
-            $dashboard->getJobs();
-        } catch (SourceNotAvailableException $e) {
-            return false;
-        }
-
-        return $dashboard;
-    }
-
-    /**
-     * @return bool|mixed|string
-     */
-    public function getJenkinsURL()
-    {
-        $jenkinsServer = trim($this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_server', ''), '/');
-        if (empty($jenkinsServer)) {
-            return false;
-        }
-
-        $jenkinsUser = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_user', '');
-        $jenkinsPassword = $this->variableApi->get('ZikulaCoreManagerModule', 'jenkins_password', '');
-        if (!empty($jenkinsUser) && !empty($jenkinsPassword)) {
-            $jenkinsServer = str_replace('://', '://' . urlencode($jenkinsUser) . ':' . urlencode($jenkinsPassword) . '@', $jenkinsServer);
-        }
-
-        return $jenkinsServer;
     }
 }
