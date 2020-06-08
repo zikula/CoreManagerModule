@@ -13,11 +13,12 @@
 
 namespace Zikula\Module\CoreManagerModule\Helper;
 
+use Cache\Adapter\Filesystem\FilesystemCachePool;
 use Github\Client as GitHubClient;
-use Github\HttpClient\Cache\FilesystemCache;
-use Github\HttpClient\CachedHttpClient;
 use Github\HttpClient\Message\ResponseMediator;
 use Github\ResultPager;
+use League\Flysystem\Adapter\Local;
+use League\Flysystem\Filesystem;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 
 class ClientHelper
@@ -54,9 +55,13 @@ class ClientHelper
      */
     public function getGitHubClient($fallBackToNonAuthenticatedClient = true)
     {
-        $httpClient = new CachedHttpClient();
-        $httpClient->setCache(new FilesystemCache($this->cacheDir . 'el/github-api'));
-        $client = new GitHubClient($httpClient);
+        $filesystemAdapter = new Local($this->cacheDir . 'el/github-api');
+        $filesystem = new Filesystem($filesystemAdapter);
+
+        $pool = new FilesystemCachePool($filesystem);
+
+        $client = new GitHubClient();
+        $client->addCache($pool);
 
         $token = $this->variableApi->get('ZikulaCoreManagerModule', 'github_token', null);
         if (!empty($token)) {
@@ -67,9 +72,8 @@ class ClientHelper
                 // Authentication failed!
                 if ($fallBackToNonAuthenticatedClient) {
                     // Replace client with one not using authentication.
-                    $httpClient = new CachedHttpClient();
-                    $httpClient->setCache(new FilesystemCache($this->cacheDir . 'el/github-api'));
-                    $client = new GitHubClient($httpClient);
+                    $client = new GitHubClient();
+                    $client->addCache($pool);
                 } else {
                     die('Error: ' . $exception->getMessage());
                     $client = false;
