@@ -81,26 +81,26 @@ class ReleaseController extends AbstractController
         }
         $dataHelper = $this->container->get('zikula_core_manager_module.progress_data_storage_helper');
         $data = $dataHelper->getData();
-        if (empty($data) || $data === "null" || $data === "false" || $data === "Array") {
+        if (empty($data) || $data === 'null' || $data === 'false' || $data === 'Array') {
             throw new \RuntimeException('Could not decode user data.');
         }
         $gitHubApiWrapper = $this->get('zikula_core_manager_module.github_api_wrapper');
         $result = false;
         switch ($stage) {
             case 'create-qa-ticket':
-                // Guess the milestone to use.
+                // guess the milestone to use
                 $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
-                // Create title.
+                // create title
                 $title = 'QA testing for release of ' . $data['version'] . ' build #' . $data['build'];
 
-                // Create issue without body.
+                // create issue without body
                 $return = $gitHubApiWrapper->createIssue($title, "Further information follows in just a second my dear email reader. Checkout the issue already!.", $milestone, Settings::$QA_ISSUE_LABELS);
                 if (!isset($return['number'])) {
                     break;
                 }
                 $issueNumber = $return['number'];
 
-                // Prepare replacement array.
+                // prepare replacement array
                 $keys = array_map(function ($val) {
                     return '%' . strtoupper($val) . '%';
                 }, array_keys($data));
@@ -108,8 +108,9 @@ class ReleaseController extends AbstractController
                 $replacement = array_combine($keys, $values);
                 $replacement['%QAISSUE%'] = $issueNumber;
 
-                // Replace placeholders in issue body and edit issue.
+                // replace placeholders in issue body
                 $body = strtr(Settings::$QA_ISSUE_TEMPLATE, $replacement);
+                // update the issue
                 $return = $gitHubApiWrapper->updateIssue($issueNumber, null, $body);
 
                 if (isset($return['number'])) {
@@ -118,20 +119,45 @@ class ReleaseController extends AbstractController
                     $result = true;
                 }
                 break;
-            case 'create-release':
+            case 'create-distribution-tag':
+                $lastCommit = array_shift($this->gitHubApiWrapper->getLastNCommitsOfBranch('dist', 'master', 1));
+                $gitHubApiWrapper->createDistributionTag($data['tag'], $data['tag'], $lastCommit['sha']);
+                $result = true;
+                break;
+            case 'download-artifacts':
+                $data['artifactsArchivePath'] = $gitHubApiWrapper->downloadReleaseAssets($data['artifactsUrl']);
+                $dataHelper->setData($data);
+                $result = true;
+                break;
+            case 'create-core-release':
                 if (!isset($data['github_qa_ticket_url'])) {
                     $data['github_qa_ticket_url'] = '';
                 }
                 $description = str_replace('%QATICKETURL%', $data['github_qa_ticket_url'], $data['description']);
-                $return = $gitHubApiWrapper->createRelease($data['title'], $description, $data['isPreRelease'], $data['version'], $data['commit']);
+                $return = $gitHubApiWrapper->createRelease('core', $data['title'], $description, $data['isPreRelease'], $data['tag'], $data['commit']);
                 if (isset($return['id'])) {
-                    $data['github_release_id'] = $return['id'];
+                    $data['github_core_release_id'] = $return['id'];
                     $dataHelper->setData($data);
                     $result = true;
                 }
                 break;
-            case 'copy-assets':
-                $result = $gitHubApiWrapper->createReleaseAssets($data['github_release_id'], $data['artifactsUrl']);
+            case 'create-distribution-release':
+                if (!isset($data['github_qa_ticket_url'])) {
+                    $data['github_qa_ticket_url'] = '';
+                }
+                $description = str_replace('%QATICKETURL%', $data['github_qa_ticket_url'], $data['description']);
+                $return = $gitHubApiWrapper->createRelease('dist', $data['title'], $description, $data['isPreRelease'], $data['tag'], $data['commit']);
+                if (isset($return['id'])) {
+                    $data['github_distribution_release_id'] = $return['id'];
+                    $dataHelper->setData($data);
+                    $result = true;
+                }
+                break;
+            case 'copy-assets-to-core':
+                $result = $gitHubApiWrapper->createReleaseAssets('core', $data['github_core_release_id'], $data['artifactsArchivePath']);
+                break;
+            case 'copy-assets-to-distribution':
+                $result = $gitHubApiWrapper->createReleaseAssets('dist', $data['github_distribution_release_id'], $data['artifactsArchivePath']);
                 break;
             case 'update-core-version': // currently unused
                 $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
@@ -147,10 +173,10 @@ class ReleaseController extends AbstractController
                     $result = true;
                 }
                 break;
-            case 'close-milestone':
-                // Guess the milestone to close.
+            case 'close-core-milestone':
+                // guess the milestone to close.
                 $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
-                if ($milestone !== null) {
+                if (null !== $milestone) {
                     $return = $gitHubApiWrapper->closeMilestone($milestone);
                     $result = isset($return['number']);
                 } else {

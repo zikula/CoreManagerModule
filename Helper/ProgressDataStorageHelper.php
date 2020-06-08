@@ -38,7 +38,7 @@ class ProgressDataStorageHelper
         }
         $result = json_decode($data, true);
 
-        return (json_last_error() == JSON_ERROR_NONE) ? $result : [];
+        return JSON_ERROR_NONE == json_last_error() ? $result : [];
     }
 
     public function addData($data)

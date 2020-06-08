@@ -33,7 +33,7 @@ class CommitType extends AbstractType
     ) {
         $this->translator = $translator;
         $branch = $storageHelper->getData()['branch'];
-        $this->commits = $api->getLastNCommitsOfBranch($branch, 10);
+        $this->commits = $api->getLastNCommitsOfBranch('core', $branch, 10);
     }
 
     /**

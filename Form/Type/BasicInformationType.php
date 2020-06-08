@@ -68,7 +68,7 @@ class BasicInformationType extends AbstractType
             ])
             ->add('artifactsUrl', UrlType::class, [
                 'label' => $this->translator->__('Artifacts download URL'),
-                'help' => $this->translator->__f('Lookup "release-archives" URL of latest build at %url', ['%url' => 'https://github.com/zikula/core/actions'])
+                'help' => $this->translator->__f('Lookup "release-archives" URL of latest build at %url', ['%url' => 'https://github.com/zikula/distribution/actions'])
             ])
             ->add('next', SubmitType::class, [
                 'label' => $this->translator->__('Next'),

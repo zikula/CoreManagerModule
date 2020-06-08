@@ -47,7 +47,7 @@ class ExecuteStage extends AbstractStage
     public function getTemplateParams()
     {
         $this->setTranslator($this->container->get('translator.default'));
-        // Assert core version correct
+
         if ($this->getData()['isPreRelease']) {
             $stages[] = [
                 'name' => $this->__('create-qa-ticket'),
@@ -57,12 +57,52 @@ class ExecuteStage extends AbstractStage
                 'fail' => $this->__('QA ticket could not be created')
             ];
         }
+
         $stages[] = [
-            'name' => $this->__('create-release'),
-            'pre' => $this->__('Create GitHub Release'),
-            'during' => $this->__('Creating GitHub Release'),
-            'success' => $this->__('GitHub Release created'),
-            'fail' => $this->__('GitHub Release could not be created')
+            'name' => $this->__('create-distribution-tag'),
+            'pre' => $this->__('Create distribution tag'),
+            'during' => $this->__('Creating distribution tag'),
+            'success' => $this->__('Distribution tag created'),
+            'fail' => $this->__('Distribution tag could not be created')
+        ];
+
+        $stages[] = [
+            'name' => $this->__('download-artifacts'),
+            'pre' => $this->__('Download artifacts from last distribution build'),
+            'during' => $this->__('Downloading distribution artifacts'),
+            'success' => $this->__('Distribution artifacts downloaded'),
+            'fail' => $this->__('Distribution artifacts could not be downloaded')
+        ];
+
+        $stages[] = [
+            'name' => $this->__('create-core-release'),
+            'pre' => $this->__('Create GitHub core release'),
+            'during' => $this->__('Creating GitHub core release'),
+            'success' => $this->__('GitHub core release created'),
+            'fail' => $this->__('GitHub core release could not be created')
+        ];
+
+        $stages[] = [
+            'name' => $this->__('create-distribution-release'),
+            'pre' => $this->__('Create GitHub distribution release'),
+            'during' => $this->__('Creating GitHub distribution release'),
+            'success' => $this->__('GitHub distribution release created'),
+            'fail' => $this->__('GitHub distribution release could not be created')
+        ];
+
+        $stages[] = [
+            'name' => $this->__('copy-assets-to-core'),
+            'pre' => $this->__('Copy assets to core release'),
+            'during' => $this->__('Copying assets to core release (takes longer)'),
+            'success' => $this->__('Assets copied to core'),
+            'fail' => $this->__('Assets could not be copied to core')
+        ];
+        $stages[] = [
+            'name' => $this->__('copy-assets-to-distribution'),
+            'pre' => $this->__('Copy assets to distribution release'),
+            'during' => $this->__('Copying assets to distribution release (takes longer)'),
+            'success' => $this->__('Assets copied to distribution'),
+            'fail' => $this->__('Assets could not be copied to distribution')
         ];
 
         if (!$this->getData()['isPreRelease']) {
@@ -74,22 +114,13 @@ class ExecuteStage extends AbstractStage
                 'fail' => $this->__('Core version could not be updated')
             ];*/
             $stages[] = [
-                'name' => $this->__('close-milestone'),
-                'pre' => $this->__('Close milestone'),
-                'during' => $this->__('Closing milestone'),
-                'success' => $this->__('Milestone closed'),
-                'fail' => $this->__('Milestone could not be closed')
+                'name' => $this->__('close-core-milestone'),
+                'pre' => $this->__('Close core milestone'),
+                'during' => $this->__('Closing core milestone'),
+                'success' => $this->__('Core milestone closed'),
+                'fail' => $this->__('Core milestone could not be closed')
             ];
-            // Update Core Version
-            // Close milestone
         }
-        $stages[] = [
-            'name' => $this->__('copy-assets'),
-            'pre' => $this->__('Copy assets to GitHub'),
-            'during' => $this->__('Copying assets to GitHub (takes longer)'),
-            'success' => $this->__('Assets copied'),
-            'fail' => $this->__('Assets could not be copied')
-        ];
 
         $stages[] = [
             'name' => $this->__('finish'),

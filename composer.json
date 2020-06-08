@@ -14,7 +14,7 @@
         "psr-4": { "Zikula\\Module\\CoreManagerModule\\": "" }
     },
     "require": {
-        "php": ">=5.5.9",
+        "php": ">=7.2.5",
         "php-http/guzzle6-adapter": "^1.1",
         "cache/filesystem-adapter": "1.*",
         "knplabs/github-api": "2.*",

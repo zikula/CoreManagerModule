@@ -125,7 +125,7 @@ class ReleaseManager
     public function getSignificantReleases($onlyNewestVersion = true)
     {
         // Get all the releases.
-        $releases = $this->em->getRepository('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
+        $releases = $this->em->getRepository(CoreReleaseEntity::class)->findAll();
 
         // Create a version map. This makes it possible to check what kind of releases are available for one specific
         // version.
@@ -326,7 +326,7 @@ class ReleaseManager
         $repo = explode('/', $this->repo);
         $releases = $this->client->api('repo')->releases()->all($repo[0], $repo[1]);
         /** @var CoreReleaseEntity[] $dbReleases */
-        $_dbReleases = $this->em->getRepository('Zikula\Module\CoreManagerModule\Entity\CoreReleaseEntity')->findAll();
+        $_dbReleases = $this->em->getRepository(CoreReleaseEntity::class)->findAll();
         $dbReleases = [];
         foreach ($_dbReleases as $_dbRelease) {
             $dbReleases[$_dbRelease->getId()] = $_dbRelease;

@@ -17,7 +17,7 @@ class Settings
     /**
      * The text to add to the default title if it is a pre release.
      */
-    const RELEASE_CANDIDATE_TITLE_AMENDMENT = " Release Candidate %s";
+    const RELEASE_CANDIDATE_TITLE_AMENDMENT = ' Release Candidate %s';
 
     /**
      * The text to add to the default release announcement if it is a pre release.
@@ -25,10 +25,10 @@ class Settings
     const RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT = <<<EOD
 
 
-Immediate testing is encouraged. Release testing guidelines may be found in [the Core wiki](https://github.com/zikula/core/wiki/Release-Testing-Guidelines). 
-Installation and upgrade documentation can be found in the /docs directory.
+Immediate testing is encouraged. Release testing guidelines may be found in [the docs](https://docs.ziku.la/General/Releases/releasetestingguidelines.html). 
+At the same site [installation](https://docs.ziku.la/Setup/installation.html) and [upgrade](https://docs.ziku.la/Setup/upgrade.html) documentation can be found, too.
 
-Our Quality Assurance cycle, explained also in [the Core wiki](https://github.com/zikula/core/wiki/Release-Management#release-candidates-rc), 
+Our Quality Assurance cycle, explained also in [the release management docs](https://docs.ziku.la/General/Releases/releasemanagement.html#release-candidates-rc), 
 will be followed in order to achieve our General Release. Please register your vote on the promotion of this build in the [promotion ticket](%QATICKETURL%).
 
 Please report all bugs and concerns to our [issue tracker on Github](https://github.com/zikula/core/issues). Please 
@@ -38,7 +38,7 @@ EOD;
     /**
      * The core file containing the static version number.
      */
-    const CORE_PHP_FILE = 'src/lib/Zikula/Bundle/CoreBundle/HttpKernel/ZikulaKernel.php';
+    const CORE_PHP_FILE = 'src/Zikula/CoreBundle/HttpKernel/ZikulaKernel.php';
 
     /**
      * Regexp to match the version string in the above file.
@@ -55,12 +55,12 @@ EOD;
      */
     public static $QA_ISSUE_TEMPLATE = <<<EOD
 Please test this pre-release and decide if it should become the next official release.
-__Anyone may participate in the testing process.__
+_Anyone may participate in the testing process._
 
-Testing guidelines can be found in [Release Testing Guideline](https://github.com/zikula/core/wiki/Release-Testing-Guidelines)
+Testing guidelines can be found in [Release Testing Guideline](https://docs.ziku.la/General/Releases/releasetestingguidelines.html)
 
-Two "-1" votes (with reason) will cause us to fail the build. If this build fails, __votes cannot be transferred__ to
-the new release candidate, __testing must resume from the beginning__.
+Two "-1" votes (with reason) will cause us to fail the build. If this build fails, _votes cannot be transferred_ to
+the new release candidate, _testing must resume from the beginning_.
 If the negative threshold is not reached before the posted deadline, then the build passes automatically.
 
 Please **do not** report bugs in this ticket, only register your approval or disapproval. You must give a reason and
@@ -68,9 +68,8 @@ reference if appropriate (e.g. link to a ticket) for negative votes.
 
 **Please report issues in a separate ticket.**
 
-Notes, References, and/or Special Instructions
----------------------------------------------------------
+### Notes, References, and/or Special Instructions
 
-Do not vote negatively if you find non-release blocking bugs.  Minor and major bugs may be scheduled in a future version.
+Do not vote negatively if you find non-release blocking bugs. Minor and major bugs may be scheduled in a future version.
 EOD;
 }

@@ -29,6 +29,7 @@
                         <div class="alert alert-warning">{{ __('The GitHub client does not have push access to the core repository. Auto-loading build assets into GitHub Core releases has been disabled.') }}</div>
                     {% endif %}
                     {{ form_row(form.github_core_repo) }}
+                    {{ form_row(form.github_dist_repo) }}
                     {{ form_row(form.github_token) }}
                     {{ form_row(form.github_webhook_token) }}
                 </div>

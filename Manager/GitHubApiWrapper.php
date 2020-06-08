@@ -17,9 +17,10 @@ class GitHubApiWrapper
     private $variableApi;
 
     protected $githubClient;
-    protected $core;
     protected $coreRepository;
     protected $coreOrganization;
+    protected $distRepository;
+    protected $distOrganization;
 
     public function __construct(
         VariableApiInterface $variableApi,
@@ -27,15 +28,23 @@ class GitHubApiWrapper
     ) {
         $this->variableApi = $variableApi;
         $this->githubClient = $clientHelper->getGitHubClient(false);
-        $this->core = $core = $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo');
-        $core = explode('/', $core);
+        $core = explode('/', $this->variableApi->get('ZikulaCoreManagerModule', 'github_core_repo'));
         $this->coreOrganization = $core[0];
         $this->coreRepository = $core[1];
+        $dist = explode('/', $this->variableApi->get('ZikulaCoreManagerModule', 'github_dist_repo'));
+        $this->distOrganization = $dist[0];
+        $this->distRepository = $dist[1];
     }
 
-    public function getLastNCommitsOfBranch($branch, $n)
+    public function getLastNCommitsOfBranch($repoType, $branch, $n)
     {
-        $commits = $this->githubClient->repository()->commits()->all($this->coreOrganization, $this->coreRepository, array('sha' => $branch));
+        $commits = $this->githubClient->repository()->commits()->all(
+            'dist' === $repoType ? $this->distOrganization : $this->coreOrganization,
+            'dist' === $repoType ? $this->distRepository : $this->coreRepository,
+            [
+                'sha' => $branch
+            ]
+        );
 
         return array_slice($commits, 0, $n);
     }
@@ -199,6 +208,37 @@ class GitHubApiWrapper
         return $matches[1];
     }
 
+    /**
+     * @return array
+     */
+    public function getAvailableTags()
+    {
+        $tagInfo = $this->githubClient->repository()->tags($this->coreOrganization, $this->coreRepository);
+        $tags = [];
+        foreach ($tagInfo as $tag) {
+            $tags[] = $tag['name'];
+        }
+
+        return $tags;
+    }
+
+    public function createDistributionTag($tag, $message, $shaObject)
+    {
+        $tagData = [
+            'tag' => $tag,
+            'message' => $message,
+            'object' => $shaObject,
+            'type' => 'commit',
+            'tagger' => [
+                'name' => 'zikula-bot',
+                'email' => 'info@ziku.la',
+                'date' => date('c')
+            ]
+        ];
+
+        $tag = $client->api('gitData')->tags()->create($this->distOrganization, $this->distRepository, $tagData);
+    }
+
     public function createIssue($title, $body, $milestone, $labels)
     {
         if ($milestone != null) {
@@ -227,16 +267,20 @@ class GitHubApiWrapper
         return $this->githubClient->issues()->update($this->coreOrganization, $this->coreRepository, $id, $update);
     }
 
-    public function createRelease($title, $body, $preRelease, $tag, $target)
+    public function createRelease($repoType, $title, $body, $preRelease, $tag, $target)
     {
-        return $this->githubClient->repo()->releases()->create($this->coreOrganization, $this->coreRepository, [
-            'tag_name' => $tag,
-            'target_commitish' => $target,
-            'name' => $title,
-            'body' => $body,
-            'draft' => false,
-            'prerelease' => $preRelease
-        ]);
+        return $this->githubClient->repo()->releases()->create(
+            'dist' === $repoType ? $this->distOrganization : $this->coreOrganization,
+            'dist' === $repoType ? $this->distRepository : $this->coreRepository,
+            [
+                'tag_name' => $tag,
+                'target_commitish' => $target,
+                'name' => $title,
+                'body' => $body,
+                'draft' => false,
+                'prerelease' => $preRelease
+            ]
+        );
     }
 
     public function getMilestoneByCoreVersion(version $version)
@@ -256,24 +300,29 @@ class GitHubApiWrapper
         return null;
     }
 
-    public function createReleaseAssets($releaseId, $artifactsDownloadUrl)
+    public function downloadReleaseAssets($artifactsDownloadUrl)
     {
         // download file
-        $zipFile = tempnam(sys_get_temp_dir(), 'guzzle-download');
+        $zipPath = tempnam(sys_get_temp_dir(), 'guzzle-download');
         $client = new GuzzleClient([
             'base_uri' => '',
             'verify' => false,
-            'sink' => $zipFile,
+            'sink' => $zipPath,
             'curl.options' => [
                 'CURLOPT_RETURNTRANSFER' => true,
-                'CURLOPT_FILE' => $zipFile
+                'CURLOPT_FILE' => $zipPath
             ]
         ]);
         $response = $client->get($artifactsDownloadUrl);
 
+        return $zipPath;
+    }
+
+    public function createReleaseAssets($repoType, $releaseId, $zipPath)
+    {
         // open zip file
         $zip = new ZipArchive;
-        if (true !== $zip->open($zipFile)) {
+        if (true !== $zip->open($zipPath)) {
             return false;
         }
 
@@ -303,10 +352,10 @@ class GitHubApiWrapper
             $asset = [
                 'name' => $fileName,
                 'download_url' => $downloadUrl,
-                'file_content' => file_get_contents('zip://' . $zipFile . '#' . $fileName)
+                'file_content' => file_get_contents('zip://' . $zipPath . '#' . $fileName)
             ];
 
-            $return = $this->createReleaseAsset($releaseId, $asset);
+            $return = $this->createReleaseAsset($repoType, $releaseId, $asset);
             if (!isset($return['id'])) {
                 $zip->close();                  
 
@@ -319,11 +368,11 @@ class GitHubApiWrapper
         return true;
     }
 
-    private function createReleaseAsset($releaseId, $asset)
+    private function createReleaseAsset($repoType, $releaseId, $asset)
     {
         return $this->githubClient->repo()->releases()->assets()->create(
-            $this->coreOrganization,
-            $this->coreRepository,
+            'dist' === $repoType ? $this->distOrganization : $this->coreOrganization,
+            'dist' === $repoType ? $this->distRepository : $this->coreRepository,
             $releaseId,
             $asset['name'],
             $asset['content_type'],

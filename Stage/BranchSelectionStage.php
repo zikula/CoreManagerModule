@@ -22,7 +22,10 @@ class BranchSelectionStage extends AbstractStage
     {
         $data = $this->getData();
         if (empty($data['version'])) {
-            throw new \LogicException('Version not yet set!');
+            throw new \LogicException('Version not set yet!');
+        }
+        if (empty($data['tag'])) {
+            throw new \LogicException('Tag not set yet!');
         }
 
         return true;

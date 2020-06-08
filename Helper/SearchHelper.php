@@ -64,7 +64,7 @@ class SearchHelper implements SearchableInterface
     public function getResults(array $words, $searchType = 'AND', $modVars = null)
     {
         // this is an 'eager' search - it doesn't compensate for search type indicated in search UI
-        $results = $this->entityManager->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->getByFragment($words);
+        $results = $this->entityManager->getRepository(CoreReleaseEntity::class)->getByFragment($words);
 
         $records = array();
         foreach ($results as $result) {

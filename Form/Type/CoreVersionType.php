@@ -23,6 +23,11 @@ class CoreVersionType extends AbstractType
     private $versions;
 
     /**
+     * @var array
+     */
+    private $tags;
+
+    /**
      * {@inheritdoc}
      */
     public function __construct(
@@ -31,6 +36,7 @@ class CoreVersionType extends AbstractType
     ) {
         $this->translator = $translator;
         $this->versions = $api->getAllowedCoreVersions();
+        $this->tags = $api->getAvailableTags();
     }
 
     /**
@@ -38,11 +44,17 @@ class CoreVersionType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = new ArrayChoiceList($this->versions);
+        $versionChoices = new ArrayChoiceList($this->versions);
+        $tagChoices = new ArrayChoiceList($this->tags);
         $builder
             ->add('version', ChoiceType::class, [
                 'label' => $this->translator->__('Core version'),
-                'choices' => $choices->getChoices(),
+                'choices' => $versionChoices->getChoices(),
+                'choices_as_values' => true
+            ])
+            ->add('tag', ChoiceType::class, [
+                'label' => $this->translator->__('Tag'),
+                'choices' => $tagChoices->getChoices(),
                 'choices_as_values' => true
             ])
             ->add('next', SubmitType::class, [

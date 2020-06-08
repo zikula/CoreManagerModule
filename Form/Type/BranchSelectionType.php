@@ -34,7 +34,7 @@ class BranchSelectionType extends AbstractType
         $this->translator = $translator;
         $branches = $api->getBranches();
         $previousRelease = $api->getBranchOfPreviousRelease($storageHelper->getData()['version']);
-        if ($previousRelease !== null) {
+        if (null !== $previousRelease) {
             usort($branches, function ($a, $b) use ($previousRelease) {
                 if ($a != $previousRelease && $b != $previousRelease) {
                     return 0;

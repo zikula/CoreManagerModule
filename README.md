@@ -1,3 +1,1 @@
-ZikulaCoreManagerModule
-============
-
+## ZikulaCoreManagerModule

@@ -53,6 +53,10 @@ class ConfigType extends AbstractType
                 'label' => $this->__('Core repository'),
                 'help' => $this->__('Fill in the name of the core repository. This should always be "zikula/core"')
             ])
+            ->add('github_dist_repo', TextType::class, [
+                'label' => $this->__('Distribution repository'),
+                'help' => $this->__('Fill in the name of the distribution repository. This should always be "zikula/distribution"')
+            ])
             ->add('github_token', TextType::class, [
                 'label' => $this->__('Access Token'),
                 'help' => $this->__f('Create a personal access token at %s to raise your api limits.', ['%s' => '<a href="https://github.com/settings/tokens">https://github.com/settings/tokens</a>'])
