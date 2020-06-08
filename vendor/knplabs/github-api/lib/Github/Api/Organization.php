@@ -10,6 +10,7 @@ use Github\Api\Organization\Teams;
  * Getting organization information and managing authenticated organization account information.
  *
  * @link   http://developer.github.com/v3/orgs/
+ *
  * @author Antoine Berranger <antoine at ihqs dot net>
  * @author Joseph Bielawski <stloyd@gmail.com>
  */
@@ -22,7 +23,7 @@ class Organization extends AbstractApi
      */
     public function all($since = '')
     {
-        return $this->get('organizations?since='.rawurlencode($since));
+        return $this->get('/organizations?since='.rawurlencode($since));
     }
 
     /**
@@ -36,12 +37,12 @@ class Organization extends AbstractApi
      */
     public function show($organization)
     {
-        return $this->get('orgs/'.rawurlencode($organization));
+        return $this->get('/orgs/'.rawurlencode($organization));
     }
 
     public function update($organization, array $params)
     {
-        return $this->patch('orgs/'.rawurlencode($organization), $params);
+        return $this->patch('/orgs/'.rawurlencode($organization), $params);
     }
 
     /**
@@ -51,14 +52,28 @@ class Organization extends AbstractApi
      *
      * @param string $organization the user name
      * @param string $type         the type of repositories
+     * @param int    $page         the page
+     * @param string $sort         sort by
+     * @param string $direction    direction of sort, asc or desc
      *
      * @return array the repositories
      */
-    public function repositories($organization, $type = 'all')
+    public function repositories($organization, $type = 'all', $page = 1, $sort = null, $direction = null)
     {
-        return $this->get('orgs/'.rawurlencode($organization).'/repos', array(
-            'type' => $type
-        ));
+        $parameters = [
+            'type' => $type,
+            'page' => $page,
+        ];
+
+        if ($sort !== null) {
+            $parameters['sort'] = $sort;
+        }
+
+        if ($direction !== null) {
+            $parameters['direction'] = $direction;
+        }
+
+        return $this->get('/orgs/'.rawurlencode($organization).'/repos', $parameters);
     }
 
     /**
@@ -88,14 +103,14 @@ class Organization extends AbstractApi
     /**
      * @link http://developer.github.com/v3/issues/#list-issues
      *
-     * @param $organization
-     * @param array $params
-     * @param int $page
+     * @param string $organization
+     * @param array  $params
+     * @param int    $page
      *
      * @return array
      */
-    public function issues($organization, array $params = array(), $page = 1)
+    public function issues($organization, array $params = [], $page = 1)
     {
-        return $this->get('orgs/'.rawurlencode($organization).'/issues', array_merge(array('page' => $page), $params));
+        return $this->get('/orgs/'.rawurlencode($organization).'/issues', array_merge(['page' => $page], $params));
     }
 }

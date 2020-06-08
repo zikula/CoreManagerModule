@@ -7,6 +7,7 @@ use Github\Exception\MissingArgumentException;
 
 /**
  * @link   http://developer.github.com/v3/repos/releases/
+ *
  * @author Matthew Simo <matthew.a.simo@gmail.com>
  * @author Evgeniy Guseletov <d46k16@gmail.com>
  */
@@ -15,28 +16,28 @@ class Releases extends AbstractApi
     /**
      * Get the latest release.
      *
-     * @param $username
-     * @param $repository
+     * @param string $username
+     * @param string $repository
      *
      * @return array
      */
     public function latest($username, $repository)
     {
-        return $this->get('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/latest');
+        return $this->get('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/latest');
     }
 
     /**
      * List releases for a tag.
      *
-     * @param $username
-     * @param $repository
-     * @param $tag
+     * @param string $username
+     * @param string $repository
+     * @param string $tag
      *
      * @return array
      */
     public function tag($username, $repository, $tag)
     {
-        return $this->get('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/tags/'.rawurlencode($tag));
+        return $this->get('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/tags/'.rawurlencode($tag));
     }
 
     /**
@@ -44,12 +45,13 @@ class Releases extends AbstractApi
      *
      * @param string $username   the user who owns the repo
      * @param string $repository the name of the repo
+     * @param array  $params     the additional parameters like milestone, assignees, labels, sort, direction
      *
      * @return array
      */
-    public function all($username, $repository)
+    public function all($username, $repository, array $params = [])
     {
-        return $this->get('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases');
+        return $this->get('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases', $params);
     }
 
     /**
@@ -63,7 +65,7 @@ class Releases extends AbstractApi
      */
     public function show($username, $repository, $id)
     {
-        return $this->get('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id));
+        return $this->get('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id));
     }
 
     /**
@@ -83,7 +85,7 @@ class Releases extends AbstractApi
             throw new MissingArgumentException('tag_name');
         }
 
-        return $this->post('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases', $params);
+        return $this->post('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases', $params);
     }
 
     /**
@@ -98,7 +100,7 @@ class Releases extends AbstractApi
      */
     public function edit($username, $repository, $id, array $params)
     {
-        return $this->patch('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id), $params);
+        return $this->patch('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id), $params);
     }
 
     /**
@@ -112,7 +114,7 @@ class Releases extends AbstractApi
      */
     public function remove($username, $repository, $id)
     {
-        return $this->delete('repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id));
+        return $this->delete('/repos/'.rawurlencode($username).'/'.rawurlencode($repository).'/releases/'.rawurlencode($id));
     }
 
     /**

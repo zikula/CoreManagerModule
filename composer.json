@@ -15,8 +15,9 @@
     },
     "require": {
         "php": ">=5.5.9",
-        "knplabs/github-api": "~1.2",
-        "vierbergenlars/php-semver": "~3.0"
+        "php-http/guzzle6-adapter": "^1.1",
+        "knplabs/github-api": "2.*",
+        "vierbergenlars/php-semver": "3.*"
     },
     "extra": {
         "zikula": {
