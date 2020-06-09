@@ -48,7 +48,8 @@ class ExecuteStage extends AbstractStage
     {
         $this->setTranslator($this->container->get('translator.default'));
 
-        if ($this->getData()['isPreRelease']) {
+        $isPreRelease = $this->getData()['isPreRelease'];
+        if ($isPreRelease) {
             $stages[] = [
                 'name' => $this->__('create-qa-ticket'),
                 'pre' => $this->__('Create QA ticket'),
@@ -56,23 +57,29 @@ class ExecuteStage extends AbstractStage
                 'success' => $this->__('QA ticket created'),
                 'fail' => $this->__('QA ticket could not be created')
             ];
+            $stages[] = [
+                'name' => $this->__('download-artifacts'),
+                'pre' => $this->__('Download artifacts from last core build'),
+                'during' => $this->__('Downloading core artifacts'),
+                'success' => $this->__('Core artifacts downloaded'),
+                'fail' => $this->__('Core artifacts could not be downloaded')
+            ];
+        } else {
+            $stages[] = [
+                'name' => $this->__('create-distribution-tag'),
+                'pre' => $this->__('Create distribution tag'),
+                'during' => $this->__('Creating distribution tag'),
+                'success' => $this->__('Distribution tag created'),
+                'fail' => $this->__('Distribution tag could not be created')
+            ];
+            $stages[] = [
+                'name' => $this->__('download-artifacts'),
+                'pre' => $this->__('Download artifacts from last distribution build'),
+                'during' => $this->__('Downloading distribution artifacts'),
+                'success' => $this->__('Distribution artifacts downloaded'),
+                'fail' => $this->__('Distribution artifacts could not be downloaded')
+            ];
         }
-
-        $stages[] = [
-            'name' => $this->__('create-distribution-tag'),
-            'pre' => $this->__('Create distribution tag'),
-            'during' => $this->__('Creating distribution tag'),
-            'success' => $this->__('Distribution tag created'),
-            'fail' => $this->__('Distribution tag could not be created')
-        ];
-
-        $stages[] = [
-            'name' => $this->__('download-artifacts'),
-            'pre' => $this->__('Download artifacts from last distribution build'),
-            'during' => $this->__('Downloading distribution artifacts'),
-            'success' => $this->__('Distribution artifacts downloaded'),
-            'fail' => $this->__('Distribution artifacts could not be downloaded')
-        ];
 
         $stages[] = [
             'name' => $this->__('create-core-release'),
@@ -81,14 +88,15 @@ class ExecuteStage extends AbstractStage
             'success' => $this->__('GitHub core release created'),
             'fail' => $this->__('GitHub core release could not be created')
         ];
-
-        $stages[] = [
-            'name' => $this->__('create-distribution-release'),
-            'pre' => $this->__('Create GitHub distribution release'),
-            'during' => $this->__('Creating GitHub distribution release'),
-            'success' => $this->__('GitHub distribution release created'),
-            'fail' => $this->__('GitHub distribution release could not be created')
-        ];
+        if (!$isPreRelease) {
+            $stages[] = [
+                'name' => $this->__('create-distribution-release'),
+                'pre' => $this->__('Create GitHub distribution release'),
+                'during' => $this->__('Creating GitHub distribution release'),
+                'success' => $this->__('GitHub distribution release created'),
+                'fail' => $this->__('GitHub distribution release could not be created')
+            ];
+        }
 
         $stages[] = [
             'name' => $this->__('copy-assets-to-core'),
@@ -97,15 +105,15 @@ class ExecuteStage extends AbstractStage
             'success' => $this->__('Assets copied to core'),
             'fail' => $this->__('Assets could not be copied to core')
         ];
-        $stages[] = [
-            'name' => $this->__('copy-assets-to-distribution'),
-            'pre' => $this->__('Copy assets to distribution release'),
-            'during' => $this->__('Copying assets to distribution release (takes longer)'),
-            'success' => $this->__('Assets copied to distribution'),
-            'fail' => $this->__('Assets could not be copied to distribution')
-        ];
+        if (!$isPreRelease) {
+            $stages[] = [
+                'name' => $this->__('copy-assets-to-distribution'),
+                'pre' => $this->__('Copy assets to distribution release'),
+                'during' => $this->__('Copying assets to distribution release (takes longer)'),
+                'success' => $this->__('Assets copied to distribution'),
+                'fail' => $this->__('Assets could not be copied to distribution')
+            ];
 
-        if (!$this->getData()['isPreRelease']) {
             /*$stages[] = [
                 'name' => $this->__('update-core-version'),
                 'pre' => $this->__('Update Core version'),
