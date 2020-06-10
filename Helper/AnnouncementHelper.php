@@ -144,7 +144,7 @@ class AnnouncementHelper
                 break;
             case CoreReleaseEntity::STATE_PRERELEASE:
                 $title = $this->__f('%s ready for testing!', ['%s' => $releaseName]);
-                $teaser = '<p>' . $this->__f('The core development team is proud to announce a pre-release of %s. Please help testing and report bugs!', ['%s' => $releaseName]) . '</p>';
+                $teaser = '<p>' . $this->__f('The core development team is proud to announce the pre-release %s. Please help testing and report bugs!', ['%s' => $releaseName]) . '</p>';
                 break;
             case CoreReleaseEntity::STATE_DEVELOPMENT:
             case CoreReleaseEntity::STATE_OUTDATED:
@@ -180,7 +180,7 @@ class AnnouncementHelper
                     $teaser = '<p>Das Core-Team freut sich mitzuteilen, dass ' . $releaseName . ' nun verfügbar ist.</p>';
                 } elseif (CoreReleaseEntity::STATE_PRERELEASE == $release->getState()) {
                     $title = $releaseName . ' steht zum Testen bereit!';
-                    $teaser = '<p>Das Core-Team freut sich mitzuteilen, dass eine Vorabversion von ' . $releaseName . ' nun verfügbar ist. Bitte helft beim Testen und meldet etwaige Fehler!</p>';
+                    $teaser = '<p>Das Core-Team freut sich mitzuteilen, dass die Vorabversion ' . $releaseName . ' nun verfügbar ist. Bitte helft beim Testen und meldet etwaige Fehler!</p>';
                 }
             }
 
