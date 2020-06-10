@@ -82,7 +82,7 @@ class GitHubApiWrapper
             return version::rcompare($a['version'], $b['version']);
         });
 
-        foreach($releases as $release) {
+        foreach ($releases as $release) {
             if (version::lt($release['version'], $tag)) {
                 return $release;
             }
