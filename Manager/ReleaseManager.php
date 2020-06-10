@@ -256,7 +256,7 @@ class ReleaseManager
         }
 
         if (null === $dbReleases) {
-            $dbRelease = $this->em->getRepository('ZikulaCoreManagerModule:CoreReleaseEntity')->findOneBy(['id' => $id]);
+            $dbRelease = $this->em->getRepository(CoreReleaseEntity::class)->findOneBy(['id' => $id]);
             if ($dbRelease) {
                 $dbReleases[$id] = $dbRelease;
             } else {
@@ -343,7 +343,7 @@ class ReleaseManager
         /** @var QueryBuilder $qb */
         $qb = $this->em->createQueryBuilder();
         $removedReleases = $qb->select('r')
-            ->from('ZikulaCoreManagerModule:CoreReleaseEntity', 'r')
+            ->from(CoreReleaseEntity::class, 'r')
             ->where($qb->expr()->not($qb->expr()->in('r.id', implode(', ', $ids))))
             ->getQuery()->execute();
 
