@@ -43,7 +43,7 @@ understand that bugs will not necessarily halt the release of this build. Bugs m
 Der Zikula Core ist in der Version %2\$s ab heute, %3\$s, verfügbar.
 
 
-Sofortige Tests werden empfohlen. Richtlinien für das Testen von Releases finden sich in [der Dokumentation] (https://docs.ziku.la/General/Releases/releasetestingguidelines.html). 
+Sofortige Tests werden empfohlen. Richtlinien für das Testen von Releases finden sich in [der Dokumentation](https://docs.ziku.la/General/Releases/releasetestingguidelines.html). 
 Auf derselben Seite werden auch [Installation](https://docs.ziku.la/Setup/installation.html) und [Upgrade](https://docs.ziku.la/Setup/upgrade.html) erklärt.
 
 Unser Qualitätssicherungszyklus, der auch in [den Docs zum Release-Management](https://docs.ziku.la/General/Releases/releasemanagement.html#release-candidates-rc) erläutert wird, 
