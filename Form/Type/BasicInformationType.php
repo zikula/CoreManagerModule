@@ -52,10 +52,11 @@ class BasicInformationType extends AbstractType
 
         $rc = $api->versionIsPreRelease($version);
         if (false !== $rc) {
-            $defaultTitle .= sprintf(Settings::RELEASE_CANDIDATE_TITLE_AMENDMENT, $rc);
+            $rcSuffix = sprintf(Settings::RELEASE_CANDIDATE_TITLE_AMENDMENT, $rc);
+            $defaultTitle .= $rcSuffix;
             $rcAddition = Settings::RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT;
             $rcAddition = str_replace('%QATICKETURL%', '§QATICKETURL§', $rcAddition);
-            $rcAddition = sprintf($rcAddition, $versionNumberShort, $versionNumberLong, (new \DateTime())->format('d. F Y'));
+            $rcAddition = sprintf($rcAddition, $versionNumberShort . $rcSuffix, $versionNumberLong, (new \DateTime())->format('d.m.Y'));
             $rcAddition = str_replace('§QATICKETURL§', '%QATICKETURL%', $rcAddition);
             $defaultAnnouncement .= $rcAddition;
         }

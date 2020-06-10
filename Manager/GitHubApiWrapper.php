@@ -333,7 +333,7 @@ class GitHubApiWrapper
     public function createReleaseAssets($repoType, $releaseId, $zipPath)
     {
         // open zip file
-        $zip = new ZipArchive;
+        $zip = new \ZipArchive;
         if (true !== $zip->open($zipPath)) {
             return false;
         }
