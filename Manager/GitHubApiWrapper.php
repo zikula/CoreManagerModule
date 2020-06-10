@@ -109,9 +109,9 @@ class GitHubApiWrapper
         $releases = $this->githubClient->repository()->releases()->all($this->coreOrganization, $this->coreRepository);
         if (count($releases) == 0) {
             return [
-                '0.0.1-rc1',
-                '0.1.0-rc1',
-                '1.0.0-rc1'
+                '0.0.1-RC1',
+                '0.1.0-RC1',
+                '1.0.0-RC1'
             ];
         }
 
@@ -147,7 +147,7 @@ class GitHubApiWrapper
                 // Seems like the newest released version is a pre release.
                 // Allow to either release the final version or another pre release.
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
-                $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . '-rc' . ++$currentPreRelease);
+                $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . '-RC' . ++$currentPreRelease);
             } else {
                 // This is a full version. Allow to release a higher version if the previous version isn't equal to
                 // the higher one.
@@ -158,7 +158,7 @@ class GitHubApiWrapper
                 $newVersion = $version->getMajor() . '.' . $version->getMinor() . '.' . $newPatchVersion;
                 if ($newVersion != $lastVersion) {
                     // give choice of releasing RC or full patch without RC
-                    //$allowedCoreVersions[] = new version($newVersion . '-rc1');
+                    //$allowedCoreVersions[] = new version($newVersion . '-RC1');
                     $allowedCoreVersions[] = new version($newVersion);
                 }
             }
@@ -169,14 +169,14 @@ class GitHubApiWrapper
 
         // Now add all the new possible versions.
         // First of, allow a new major version
-        $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . '.0.0-rc1');
+        $extraVersions[] = new version(($allowedCoreVersions[0]->getMajor() + 1) . '.0.0-RC1');
 
         $majorPrefix = null;
         foreach ($allowedCoreVersions as $allowedCoreVersion) {
             if ($allowedCoreVersion->getMajor() !== $majorPrefix) {
                 $majorPrefix = $allowedCoreVersion->getMajor();
                 if (false !== self::versionIsPreRelease($allowedCoreVersion)) {
-                    $extraVersions[] = new version($allowedCoreVersion->getMajor() . '.' . ($allowedCoreVersion->getMinor() + 1) . '.0-rc1');
+                    $extraVersions[] = new version($allowedCoreVersion->getMajor() . '.' . ($allowedCoreVersion->getMinor() + 1) . '.0-RC1');
                 }
             }
         }
@@ -205,7 +205,7 @@ class GitHubApiWrapper
         if (count($version->getPrerelease()) == 0) {
             return false;
         }
-        $pattern = '/^rc(\d+)$/';
+        $pattern = '/^rc(\d+)$/i';
         preg_match($pattern, $version->getPrerelease()[0], $matches);
         if (count($matches) != 2 || strlen($matches[1]) == 0) {
             throw new \RuntimeException('The pre release suffix of the ' . $version->getVersion() . ' tag does not match the RegExp ' . $pattern);
