@@ -363,9 +363,8 @@ class GitHubApiWrapper
             }
             $asset = [
                 'name' => $fileName,
-                'download_url' => $downloadUrl,
-                'file_content' => file_get_contents('zip://' . $zipPath . '#' . $fileName),
-                'content_type' => $contentType
+                'content_type' => $contentType,
+                'file_content' => file_get_contents('zip://' . $zipPath . '#' . $fileName)
             ];
 
             $return = $this->createReleaseAsset($repoType, $releaseId, $asset);
