@@ -356,7 +356,7 @@ class GitHubApiWrapper
                 default:
                     $contentType = null;
             }
-            if (!$asset['content_type']) {
+            if (!$contentType) {
                 // GitHub won't allow us to upload files without specifying the content type.
                 // Skip those files (but there shouldn't be any).
                 continue;
@@ -364,7 +364,8 @@ class GitHubApiWrapper
             $asset = [
                 'name' => $fileName,
                 'download_url' => $downloadUrl,
-                'file_content' => file_get_contents('zip://' . $zipPath . '#' . $fileName)
+                'file_content' => file_get_contents('zip://' . $zipPath . '#' . $fileName),
+                'content_type' => $contentType
             ];
 
             $return = $this->createReleaseAsset($repoType, $releaseId, $asset);
