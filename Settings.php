@@ -40,7 +40,7 @@ will be followed in order to achieve our General Release. Please register your v
 Please report all bugs and concerns to our [issue tracker on Github](https://github.com/zikula/core/issues). Please 
 understand that bugs will not necessarily halt the release of this build. Bugs may be fixed or postponed to another release.
 # de:Zikula Core %1\$s
-Der Zikula Core ist in der Version %2\$s ab heute, %3\$s, verfügbar.
+Der Zikula Core ist in der Version **%2\$s** ab heute, %3\$s, verfügbar.
 
 
 Sofortige Tests werden empfohlen. Richtlinien für das Testen von Releases finden sich in [der Dokumentation](https://docs.ziku.la/General/Releases/releasetestingguidelines.html). 
