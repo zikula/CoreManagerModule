@@ -45,12 +45,19 @@ class BasicInformationType extends AbstractType
         $this->translator = $translator;
         /** @var version $version */
         $version = new version($storageHelper->getData()['version']);
-        $defaultTitle = sprintf(Settings::RELEASE_TITLE, $api->versionToMajorMinorPatch($version));
-        $defaultAnnouncement = sprintf(Settings::RELEASE_ANNOUNCEMENT, $version->getVersion(), (new \DateTime())->format('d F, Y'));
+        $versionNumberShort = $api->versionToMajorMinorPatch($version);
+        $versionNumberLong = $version->getVersion();
+        $defaultTitle = sprintf(Settings::RELEASE_TITLE, $versionNumberShort);
+        $defaultAnnouncement = sprintf(Settings::RELEASE_ANNOUNCEMENT, $versionNumberLong, (new \DateTime())->format('d F, Y'));
 
-        if (($rc = $api->versionIsPreRelease($version)) !== false) {
+        $rc = $api->versionIsPreRelease($version);
+        if (false !== $rc) {
             $defaultTitle .= sprintf(Settings::RELEASE_CANDIDATE_TITLE_AMENDMENT, $rc);
-            $defaultAnnouncement .= Settings::RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT;
+            $rcAddition = Settings::RELEASE_CANDIDATE_ANNOUNCEMENT_AMENDMENT;
+            $rcAddition = str_replace('%QATICKETURL%', '§QATICKETURL§', $rcAddition);
+            $rcAddition = sprintf($rcAddition, $versionNumberShort, $versionNumberLong, (new \DateTime())->format('d. F Y'));
+            $rcAddition = str_replace('§QATICKETURL§', '%QATICKETURL%', $rcAddition);
+            $defaultAnnouncement .= $rcAddition;
         }
 
         $this->defaultTitle = $defaultTitle;
