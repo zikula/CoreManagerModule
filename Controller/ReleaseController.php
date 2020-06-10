@@ -97,10 +97,15 @@ class ReleaseController extends AbstractController
                 // guess the milestone to use
                 $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));
                 // create title
-                $title = 'QA testing for release of ' . $data['version'] . ' build #' . $data['build'];
+                $title = 'QA testing for release of ' . $data['version'];
 
                 // create issue without body
-                $return = $gitHubApiWrapper->createIssue($title, "Further information follows in just a second my dear email reader. Checkout the issue already!.", $milestone, Settings::$QA_ISSUE_LABELS);
+                $return = $gitHubApiWrapper->createIssue(
+                    $title,
+                    'Further information follows in just a second my dear email reader. Checkout the issue already!.',
+                    $milestone,
+                    Settings::$QA_ISSUE_LABELS
+                );
                 if (!isset($return['number'])) {
                     break;
                 }

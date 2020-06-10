@@ -13,6 +13,7 @@ use Github\ResultPager;
 use GuzzleHttp\Client as GuzzleClient;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
+use vierbergenlars\SemVer\SemVerException;
 use vierbergenlars\SemVer\version;
 
 class GitHubApiWrapper
@@ -298,8 +299,12 @@ class GitHubApiWrapper
         $milestones = $this->githubClient->issues()->milestones()->all($this->coreOrganization, $this->coreRepository, ['state' => 'open']);
         foreach ($milestones as $milestone) {
             $milestoneTitle = $milestone['title'];
-            if (version::eq($version, new version($milestoneTitle))) {
-                return $milestone;
+            try {
+                if (version::eq($version, new version($milestoneTitle))) {
+                    return $milestone;
+                }
+            } catch (SemVerException $exception) {
+                // skip milestone
             }
         }
 
