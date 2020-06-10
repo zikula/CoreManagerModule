@@ -1,14 +1,9 @@
 <?php
 /**
- * Copyright Zikula Foundation 2014 - Zikula Application Framework
+ * Copyright Zikula - https://ziku.la/
  *
- * This work is contributed to the Zikula Foundation under one or more
- * Contributor Agreements and licensed to You under the following license:
- *
- * @license MIT
- *
- * Please see the NOTICE file distributed with this source code for further
- * information regarding copyright and licensing.
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
  */
 
 require_once __DIR__ . '/vendor/autoload.php';

@@ -1,4 +1,10 @@
 <?php
+/**
+ * Copyright Zikula - https://ziku.la/
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
 namespace Zikula\Module\CoreManagerModule;
 
@@ -55,16 +61,18 @@ EOD;
      */
     public static $QA_ISSUE_TEMPLATE = <<<EOD
 Please test this pre-release and decide if it should become the next official release.
-_Anyone may participate in the testing process._
+**Anyone may participate in the testing process.**
 
 Testing guidelines can be found in [Release Testing Guideline](https://docs.ziku.la/General/Releases/releasetestingguidelines.html)
 
-Two "-1" votes (with reason) will cause us to fail the build. If this build fails, _votes cannot be transferred_ to
-the new release candidate, _testing must resume from the beginning_.
-If the negative threshold is not reached before the posted deadline, then the build passes automatically.
+Major and Minor Feature Releases require three +1 votes to promote the build and a minimum testing period
+of three days testing before the build can pass. Two "-1" votes (with reason) will cause us to fail the build.
+If this build fails, **votes cannot be transferred** to the new release candidate, **testing must resume
+from the beginning**. If the negative threshold is not reached before the posted deadline, then the build
+passes automatically.
 
-Please **do not** report bugs in this ticket, only register your approval or disapproval. You must give a reason and
-reference if appropriate (e.g. link to a ticket) for negative votes.
+Please **do not** report bugs in this ticket, only register your approval or disapproval. You must give
+a reason and reference if appropriate (e.g. link to a ticket) for negative votes.
 
 **Please report issues in a separate ticket.**
 
