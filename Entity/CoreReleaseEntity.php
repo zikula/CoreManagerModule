@@ -266,7 +266,7 @@ class CoreReleaseEntity extends EntityAccess
     private function extractI18n()
     {
         if (count($this->namesI18n) > 0) {
-            // Already extracted.
+            // already extracted.
             return;
         }
 
@@ -279,8 +279,8 @@ class CoreReleaseEntity extends EntityAccess
 
         for ($i = 0; $i < count($tmpArr); $i += 3) {
             $localeCode = strtolower($tmpArr[$i]);
-            $this->descriptionsI18n[$localeCode] = $tmpArr[$i + 2];
             $this->namesI18n[$localeCode] = $tmpArr[$i + 1];
+            $this->descriptionsI18n[$localeCode] = $tmpArr[$i + 2];
         }
     }
 
