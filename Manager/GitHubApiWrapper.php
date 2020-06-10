@@ -9,8 +9,8 @@
 namespace Zikula\Module\CoreManagerModule\Manager;
 
 use Github\Api\Issue\Labels;
+use Github\HttpClient\Message\ResponseMediator;
 use Github\ResultPager;
-use GuzzleHttp\Client as GuzzleClient;
 use Zikula\ExtensionsModule\Api\ApiInterface\VariableApiInterface;
 use Zikula\Module\CoreManagerModule\Helper\ClientHelper;
 use vierbergenlars\SemVer\SemVerException;
@@ -313,18 +313,19 @@ class GitHubApiWrapper
 
     public function downloadReleaseAssets($artifactsDownloadUrl)
     {
+        // convert public URL to API route
+        $urlParts = parse_url($artifactsDownloadUrl);
+        $urlParts = $urlParts['path'];
+        $urlParts = explode('/', $urlParts);
+        $artifactId = array_pop($urlParts);
+        $artifactRoute = 'repos/' . $urlParts[1] . '/' . $urlParts[2] . '/actions/artifacts/' . $artifactId . '/zip';
+
         // download file
-        $zipPath = tempnam(sys_get_temp_dir(), 'guzzle-download');
-        $client = new GuzzleClient([
-            'base_uri' => '',
-            'verify' => false,
-            'sink' => $zipPath,
-            'curl.options' => [
-                'CURLOPT_RETURNTRANSFER' => true,
-                'CURLOPT_FILE' => $zipPath
-            ]
-        ]);
-        $response = $client->get($artifactsDownloadUrl);
+        $zipPath = tempnam(sys_get_temp_dir(), 'asset-download');
+        $client = $this->githubClient->getHttpClient();
+        $response = $client->get($artifactRoute);
+        $content = ResponseMediator::getContent($response);
+        file_put_contents($zipPath, $content);
 
         return $zipPath;
     }
