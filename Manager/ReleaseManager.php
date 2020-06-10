@@ -58,11 +58,6 @@ class ReleaseManager
     private $eventDispatcher;
 
     /**
-     * @var ClientHelper
-     */
-    private $clientHelper;
-
-    /**
      * @var AnnouncementHelper
      */
     private $announcementHelper;
@@ -98,7 +93,6 @@ class ReleaseManager
         $this->eventDispatcher = $eventDispatcher;
         $this->isMainInstance = $variableApi->get('ZikulaCoreManagerModule', 'is_main_instance', false);
         $this->setTranslator($translator);
-        $this->clientHelper = $clientHelper;
         $this->announcementHelper = $announcementHelper;
     }
 
@@ -275,23 +269,23 @@ class ReleaseManager
         // Make sure to cast null to string if description is empty!
         $dbRelease->setDescription((string)$this->markdown($release['body']));
         $dbRelease->setSemver($release['tag_name']);
-        $dbRelease->setSourceUrls(array (
+        $dbRelease->setSourceUrls([
             'zip' => $release['zipball_url'],
             'tar' => $release['tarball_url']
-        ));
+        ]);
         $dbRelease->setState($state);
 
         $assets = [];
         foreach ($release['assets'] as $asset) {
-            if ($asset['state'] != 'uploaded') {
+            if ('uploaded' !== $asset['state']) {
                 continue;
             }
-            $assets[] = array (
+            $assets[] = [
                 'name' => $asset['name'],
                 'download_url' => $asset['browser_download_url'],
                 'size' => $asset['size'],
                 'content_type' => $asset['content_type']
-            );
+            ];
         }
         $dbRelease->setAssets($assets);
 
@@ -357,13 +351,13 @@ class ReleaseManager
      */
     private function markdown($text)
     {
-        $settings = [
+        $data = [
             'text' => $text,
             'mode' => 'gfm',
             'context' => $this->repo
         ];
 
-        $response = $this->client->getHttpClient()->post('markdown', json_encode($settings));
+        $response = $this->client->getHttpClient()->post('markdown', ['User-Agent' => 'Zikula Core Manager'], json_encode($data));
 
         return ResponseMediator::getContent($response);
     }
