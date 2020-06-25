@@ -30,7 +30,7 @@ class CoreVersionStage extends AbstractStage
     {
         $data = $form->getData();
         $rc = $this->container->get('zikula_core_manager_module.github_api_wrapper')->versionIsPreRelease(new version($data['version']));
-        $data['isPreRelease'] = null !== $rc;
+        $data['isPreRelease'] = null !== $rc && false !== $rc;
         $data['preRelease'] = $rc;
         $this->addData($data);
     }
