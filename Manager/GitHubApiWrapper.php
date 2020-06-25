@@ -243,7 +243,7 @@ class GitHubApiWrapper
             ]
         ];
 
-        $tag = $client->api('gitData')->tags()->create($this->distOrganization, $this->distRepository, $tagData);
+        $tag = $this->githubClient->api('gitData')->tags()->create($this->distOrganization, $this->distRepository, $tagData);
     }
 
     public function createIssue($title, $body, $milestone, $labels)
