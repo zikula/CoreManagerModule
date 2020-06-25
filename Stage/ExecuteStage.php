@@ -71,13 +71,14 @@ class ExecuteStage extends AbstractStage
                 'fail' => $this->__('Core artifacts could not be downloaded')
             ];
         } else {
-            $stages[] = [
+            // disabled because the tag actually isn't created despite a successful response
+            /*$stages[] = [
                 'name' => $this->__('create-distribution-tag'),
                 'pre' => $this->__('Create distribution tag'),
                 'during' => $this->__('Creating distribution tag'),
                 'success' => $this->__('Distribution tag created'),
                 'fail' => $this->__('Distribution tag could not be created')
-            ];
+            ];*/
             $stages[] = [
                 'name' => $this->__('download-artifacts'),
                 'pre' => $this->__('Download artifacts from last distribution build'),

@@ -159,7 +159,9 @@ class ReleaseController extends AbstractController
                     $data['github_qa_ticket_url'] = '';
                 }
                 $description = str_replace('%QATICKETURL%', $data['github_qa_ticket_url'], $data['description']);
-                $return = $gitHubApiWrapper->createRelease('dist', $data['title'], $description, $data['isPreRelease'], $data['tag'], $data['commit']);
+                $commits = $gitHubApiWrapper->getLastNCommitsOfBranch('dist', 'master', 1);
+                $lastCommit = array_shift($commits);
+                $return = $gitHubApiWrapper->createRelease('dist', $data['title'], $description, $data['isPreRelease'], $data['tag'], $lastCommit['sha']);
                 if (isset($return['id'])) {
                     $data['github_distribution_release_id'] = $return['id'];
                     $dataHelper->setData($data);
