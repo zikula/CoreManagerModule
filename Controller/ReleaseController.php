@@ -131,9 +131,10 @@ class ReleaseController extends AbstractController
                 }
                 break;
             case 'create-distribution-tag':
-                $commits = $gitHubApiWrapper->getLastNCommitsOfBranch('dist', 'master', 1);
-                $lastCommit = array_shift($commits);
-                $gitHubApiWrapper->createDistributionTag($data['tag'], $data['tag'], $lastCommit['sha']);
+                // disabled because the tag actually isn't created despite a successful response
+                //$commits = $gitHubApiWrapper->getLastNCommitsOfBranch('dist', 'master', 1);
+                //$lastCommit = array_shift($commits);
+                //$gitHubApiWrapper->createDistributionTag($data['tag'], $data['tag'], $lastCommit['sha']);
                 $result = true;
                 break;
             case 'download-artifacts':

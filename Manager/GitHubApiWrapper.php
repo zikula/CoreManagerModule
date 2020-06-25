@@ -238,7 +238,7 @@ class GitHubApiWrapper
             'type' => 'commit',
             'tagger' => [
                 'name' => 'zikula-bot',
-                'email' => 'info@ziku.la',
+                'email' => 'vorstand@ziku.la',
                 'date' => date('c')
             ]
         ];
