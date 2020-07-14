@@ -15,7 +15,7 @@
     },
     "require": {
         "php": ">=7.2.5",
-        "php-http/guzzle6-adapter": "^1.1",
+        "php-http/guzzle6-adapter": "2.*",
         "cache/filesystem-adapter": "1.*",
         "knplabs/github-api": "2.*",
         "vierbergenlars/php-semver": "3.*"
