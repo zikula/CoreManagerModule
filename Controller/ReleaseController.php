@@ -138,6 +138,7 @@ class ReleaseController extends AbstractController
                 $result = true;
                 break;
             case 'download-artifacts':
+                ini_set('memory_limit', '2G');
                 $data['artifactsArchivePath'] = $gitHubApiWrapper->downloadReleaseAssets($data['artifactsUrl']);
                 $dataHelper->setData($data);
                 $result = true;
@@ -169,9 +170,11 @@ class ReleaseController extends AbstractController
                 }
                 break;
             case 'copy-assets-to-core':
+                ini_set('memory_limit', '2G');
                 $result = $gitHubApiWrapper->createReleaseAssets('core', $data['github_core_release_id'], $data['artifactsArchivePath']);
                 break;
             case 'copy-assets-to-distribution':
+                ini_set('memory_limit', '2G');
                 $result = $gitHubApiWrapper->createReleaseAssets('dist', $data['github_distribution_release_id'], $data['artifactsArchivePath']);
                 break;
             case 'update-core-version': // currently unused
