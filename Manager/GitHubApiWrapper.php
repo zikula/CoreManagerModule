@@ -320,6 +320,8 @@ class GitHubApiWrapper
         $artifactId = array_pop($urlParts);
         $artifactRoute = 'repos/' . $urlParts[1] . '/' . $urlParts[2] . '/actions/artifacts/' . $artifactId . '/zip';
 
+        ini_set('memory_limit', '2G');
+
         // download file
         $zipPath = tempnam(sys_get_temp_dir(), 'asset-download');
         $client = $this->githubClient->getHttpClient();
