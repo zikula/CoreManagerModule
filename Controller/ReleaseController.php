@@ -177,20 +177,6 @@ class ReleaseController extends AbstractController
                 ini_set('memory_limit', '2G');
                 $result = $gitHubApiWrapper->createReleaseAssets('dist', $data['github_distribution_release_id'], $data['artifactsArchivePath']);
                 break;
-            case 'update-core-version': // currently unused
-                $coreFile = $gitHubApiWrapper->getFile(Settings::CORE_PHP_FILE, $data['commit']);
-                if (false === $coreFile) {
-                    break;
-                }
-                $version = new version($data['version']);
-                $version->inc('patch');
-                $coreFile = preg_replace(Settings::CORE_PHP_FILE_VERSION_REGEXP, $version->getVersion(), $coreFile);
-
-                $return = $gitHubApiWrapper->updateFile(Settings::CORE_PHP_FILE, $coreFile, 'Update Core version.', $data['commit']);
-                if (isset($return['commit'])) {
-                    $result = true;
-                }
-                break;
             case 'close-core-milestone':
                 // guess the milestone to close.
                 $milestone = $gitHubApiWrapper->getMilestoneByCoreVersion(new version($data['version']));

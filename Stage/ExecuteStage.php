@@ -121,13 +121,6 @@ class ExecuteStage extends AbstractStage
                 'fail' => $this->__('Assets could not be copied to distribution')
             ];
 
-            /*$stages[] = [
-                'name' => $this->__('update-core-version'),
-                'pre' => $this->__('Update Core version'),
-                'during' => $this->__('Updating Core version'),
-                'success' => $this->__('Core version updated'),
-                'fail' => $this->__('Core version could not be updated')
-            ];*/
             $stages[] = [
                 'name' => $this->__('close-core-milestone'),
                 'pre' => $this->__('Close core milestone'),
