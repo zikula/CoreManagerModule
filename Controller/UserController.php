@@ -19,7 +19,7 @@ class UserController extends AbstractController
     /**
      * @Route("/download", options={"zkNoBundlePrefix" = 1})
      */
-    public function viewCoreReleasesAction()
+    public function viewCoreReleases()
     {
         $releaseManager = $this->get('zikula_core_manager_module.releasemanager');
 

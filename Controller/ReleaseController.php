@@ -33,7 +33,7 @@ class ReleaseController extends AbstractController
      * @param $stage
      * @return RedirectResponse|\Symfony\Component\HttpFoundation\Response
      */
-    public function wizardAction(Request $request, $stage = null)
+    public function wizard(Request $request, $stage = null)
     {
         if (!$this->hasPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();
@@ -73,7 +73,7 @@ class ReleaseController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function ajaxAction(Request $request)
+    public function ajax(Request $request)
     {
         if (!$this->hasPermission('ZikulaCoreManagerModule:addRelease:', '::', ACCESS_ADD)) {
             throw new AccessDeniedException();

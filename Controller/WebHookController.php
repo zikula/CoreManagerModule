@@ -27,7 +27,7 @@ class WebHookController extends AbstractController
     /**
      * @Route("/webhook-core", methods = {"POST"}, options={"i18n"=false})
      */
-    public function coreAction(Request $request)
+    public function core(Request $request)
     {
         try {
             $payloadManager = new PayloadManager($request, true);

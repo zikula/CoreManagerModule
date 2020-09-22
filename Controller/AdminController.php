@@ -36,7 +36,7 @@ class AdminController extends AbstractController
      * @return Response
      * @throws AccessDeniedException
      */
-    public function indexAction(Request $request)
+    public function index(Request $request)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
@@ -75,7 +75,7 @@ class AdminController extends AbstractController
      * @Route("/releases/toggle-state/{id}")
      * @ParamConverter(class="ZikulaCoreManagerModule:CoreReleaseEntity")
      */
-    public function toggleReleaseStateAction(CoreReleaseEntity $release)
+    public function toggleReleaseState(CoreReleaseEntity $release)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_MODERATE)) {
             throw new AccessDeniedException();
@@ -99,7 +99,7 @@ class AdminController extends AbstractController
      * @Route("/releases/reload")
      * @Theme("admin")
      */
-    public function reloadCoreReleasesAction(Request $request)
+    public function reloadCoreReleases(Request $request)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_MODERATE)) {
             throw new AccessDeniedException();
