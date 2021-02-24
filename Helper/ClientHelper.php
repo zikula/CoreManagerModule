@@ -60,7 +60,7 @@ class ClientHelper
 
         $token = $this->variableApi->get('ZikulaCoreManagerModule', 'github_token', null);
         if (!empty($token)) {
-            $client->authenticate($token, null, GitHubClient::AUTH_HTTP_TOKEN);
+            $client->authenticate($token, null, GitHubClient::AUTH_ACCESS_TOKEN);
             try {
                 $client->getHttpClient()->get('rate_limit');
             } catch (\RuntimeException $exception) {
