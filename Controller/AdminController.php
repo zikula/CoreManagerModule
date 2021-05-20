@@ -8,6 +8,7 @@
 
 namespace Zikula\Module\CoreManagerModule\Controller;
 
+use Github\Exception\RuntimeException as GitHubRuntimeException;
 use Github\HttpClient\Message\ResponseMediator;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +37,7 @@ class AdminController extends AbstractController
      * @return Response
      * @throws AccessDeniedException
      */
-    public function index(Request $request)
+    public function indexAction(Request $request)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_ADMIN)) {
             throw new AccessDeniedException();
@@ -64,10 +65,17 @@ class AdminController extends AbstractController
             }
         }
 
+        $hasPushAccess = false;
+        try {
+            $hasPushAccess = $this->container->get('zikula_core_manager_module.client_helper')->hasGitHubClientPushAccess($client);
+        } catch (GitHubRuntimeException $exception) {
+            // authentication required / wrong credentials, so no push access
+        }
+
         return $this->render('@ZikulaCoreManagerModule/Admin/modifyconfig.html.twig', [
             'form' => $form->createView(),
             'rate' => $rate,
-            'hasPushAccess' => $this->container->get('zikula_core_manager_module.client_helper')->hasGitHubClientPushAccess($client),
+            'hasPushAccess' => $hasPushAccess,
         ]);
     }
 
@@ -75,7 +83,7 @@ class AdminController extends AbstractController
      * @Route("/releases/toggle-state/{id}")
      * @ParamConverter(class="ZikulaCoreManagerModule:CoreReleaseEntity")
      */
-    public function toggleReleaseState(CoreReleaseEntity $release)
+    public function toggleReleaseStateAction(CoreReleaseEntity $release)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_MODERATE)) {
             throw new AccessDeniedException();
@@ -99,7 +107,7 @@ class AdminController extends AbstractController
      * @Route("/releases/reload")
      * @Theme("admin")
      */
-    public function reloadCoreReleases(Request $request)
+    public function reloadCoreReleasesAction(Request $request)
     {
         if (!$this->hasPermission($this->name.'::', '::', ACCESS_MODERATE)) {
             throw new AccessDeniedException();
