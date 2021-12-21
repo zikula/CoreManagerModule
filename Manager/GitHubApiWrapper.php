@@ -137,6 +137,11 @@ class GitHubApiWrapper
         $extraVersions = [];
         $currentVersion = null;
         $lastVersion = null;
+        $existingVersions = [];
+        foreach ($semVerVersions as $version) {
+            $existingVersions[] = $version;
+        }
+
         foreach ($semVerVersions as $version) {
             if (self::versionToMajorMinorPatch($version) === $currentVersion) {
                 continue;
@@ -150,8 +155,16 @@ class GitHubApiWrapper
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version));
                 $allowedCoreVersions[] = new version(self::versionToMajorMinorPatch($version) . '-RC' . ++$currentPreRelease);
             } else {
-                // This is a full version. Allow to release a higher version if the previous version isn't equal to
-                // the higher one.
+                // This is a full version.
+
+                // Allow to release a higher minor version if it does not exist yet.
+                $newVersion = $version->getMajor() . '.' . ((int)$version->getMinor() + 1) . '.0';
+                if ($newVersion != $lastVersion && !in_array($newVersion, $existingVersions, true)) {
+                    $allowedCoreVersions[] = new version($newVersion);
+                    $existingVersions[] = $newVersion;
+                }
+
+                // Allow to release a higher patch version if the previous version isn't equal to the higher one.
                 if (!is_int($version->getPatch())) {
                     throw new \RuntimeException('The patch number of the ' . $version->getVersion() . ' version must be an integer.');
                 }
@@ -181,6 +194,7 @@ class GitHubApiWrapper
                 }
             }
         }
+
         /**
          * @var $versions version[]
          */
