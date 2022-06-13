@@ -646,16 +646,16 @@
         },
         {
             "name": "knplabs/github-api",
-            "version": "v3.6.0",
+            "version": "v3.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/KnpLabs/php-github-api.git",
-                "reference": "7f283177b96eb626e5cf6038d8771859a0af4b02"
+                "reference": "c230ab0162afeaec4318276e6a470af4b52da5fe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/7f283177b96eb626e5cf6038d8771859a0af4b02",
-                "reference": "7f283177b96eb626e5cf6038d8771859a0af4b02",
+                "url": "https://api.github.com/repos/KnpLabs/php-github-api/zipball/c230ab0162afeaec4318276e6a470af4b52da5fe",
+                "reference": "c230ab0162afeaec4318276e6a470af4b52da5fe",
                 "shasum": ""
             },
             "require": {
@@ -722,7 +722,7 @@
             ],
             "support": {
                 "issues": "https://github.com/KnpLabs/php-github-api/issues",
-                "source": "https://github.com/KnpLabs/php-github-api/tree/v3.6.0"
+                "source": "https://github.com/KnpLabs/php-github-api/tree/v3.7.0"
             },
             "funding": [
                 {
@@ -730,7 +730,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-03-24T09:08:32+00:00"
+            "time": "2022-06-12T17:59:07+00:00"
         },
         {
             "name": "league/flysystem",
@@ -2176,5 +2176,5 @@
     "platform-overrides": {
         "php": "7.2.5"
     },
-    "plugin-api-version": "2.2.0"
+    "plugin-api-version": "2.3.0"
 }
