@@ -2120,16 +2120,16 @@
         },
         {
             "name": "vierbergenlars/php-semver",
-            "version": "v3.0.3",
+            "version": "v3.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vierbergenlars/php-semver.git",
-                "reference": "0db3f3147162453642bc90f611d5f5adfcedc306"
+                "reference": "ff2f5b33f33a1e702a09c6f91f3ea34f5cf78bdf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vierbergenlars/php-semver/zipball/0db3f3147162453642bc90f611d5f5adfcedc306",
-                "reference": "0db3f3147162453642bc90f611d5f5adfcedc306",
+                "url": "https://api.github.com/repos/vierbergenlars/php-semver/zipball/ff2f5b33f33a1e702a09c6f91f3ea34f5cf78bdf",
+                "reference": "ff2f5b33f33a1e702a09c6f91f3ea34f5cf78bdf",
                 "shasum": ""
             },
             "require": {
@@ -2170,9 +2170,10 @@
             ],
             "support": {
                 "issues": "https://github.com/vierbergenlars/php-semver/issues",
-                "source": "https://github.com/vierbergenlars/php-semver/tree/v3.0.3"
+                "source": "https://github.com/vierbergenlars/php-semver/tree/v3.0.4"
             },
-            "time": "2022-08-22T06:58:37+00:00"
+            "abandoned": "composer/semver",
+            "time": "2023-05-02T06:45:47+00:00"
         }
     ],
     "packages-dev": [],
